@@ -1,0 +1,7 @@
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:521:20:WaitForLastOperation.constprop	8	static
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:102:12:FLASH_RUNPowerDownCmd	0	static
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:161:14:FLASH_EraseParallelPage	16	static
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:223:12:FLASH_ProgramHalfPage	16	static
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:299:12:FLASH_ProgramParallelHalfPage	24	static
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:378:12:DATA_EEPROM_EraseDoubleWord	16	static
+sources/platform/stm32l/Libraries/STM32L1xx_StdPeriph_Driver/src/stm32l1xx_flash_ramfunc.c:437:12:DATA_EEPROM_ProgramDoubleWord	24	static

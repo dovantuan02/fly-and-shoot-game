@@ -1,0 +1,12 @@
+sources/platform/stm32l/system.c:145:6:default_handler	0	static
+sources/platform/stm32l/system.c:193:6:nmi_handler	0	static
+sources/platform/stm32l/system.c:218:6:shell_handler	8	static
+sources/platform/stm32l/system.c:154:6:reset_handler	8	static
+sources/platform/stm32l/system.c:211:6:systick_handler	0	static
+sources/platform/stm32l/system.c:205:6:usage_fault_handler	0	static
+sources/platform/stm32l/system.c:196:6:hard_fault_handler	0	static
+sources/platform/stm32l/system.c:199:6:mem_manage_handler	0	static
+sources/platform/stm32l/system.c:202:6:bus_fault_handler	0	static
+sources/platform/stm32l/system.c:131:6:sys_delay_us	16	static
+sources/platform/stm32l/system.c:137:6:sys_delay_ms	16	static
+sources/platform/stm32l/system.c:150:9:sys_is_power_on_reset	0	static

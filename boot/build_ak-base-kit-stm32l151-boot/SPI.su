@@ -1,0 +1,11 @@
+sources/platform/stm32l/arduino/SPI/SPI.cpp:7:1:SPIClass::SPIClass()	0	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:12:1:SPIClass::SPIClass(uint8_t)	0	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:17:6:void SPIClass::begin()	48	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:68:6:void SPIClass::end()	0	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:72:6:void SPIClass::setBitOrder(uint8_t, uint8_t)	0	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:77:6:void SPIClass::setBitOrder(uint8_t)	0	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:81:6:void SPIClass::setDataMode(uint8_t)	32	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:120:6:void SPIClass::setClockDivider(uint8_t)	32	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:126:9:uint8_t SPIClass::transfer(uint8_t)	16	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:150:6:void SPIClass::setModule(uint8_t)	0	static
+sources/platform/stm32l/arduino/SPI/SPI.cpp:155:13:cpp)	0	static
