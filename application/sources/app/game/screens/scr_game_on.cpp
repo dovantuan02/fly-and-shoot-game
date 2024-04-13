@@ -156,42 +156,49 @@ void task_dispalay_game_on_handle(ak_msg_t *msg) {
             task_post_pure_msg(AC_TASK_BOM_ID           , SIG_BOM_RESET);
             task_post_pure_msg(AC_TASK_MINE_ID          , SIG_MINE_RESET);
 
-            // SET TIMER FOR OBJECT 
+            // SET TIMER FOR DISPLAY 
             timer_set(AC_TASK_DISPLAY_ID,
                       SIG_DISPLAY_GAME_ON_TICK,
                       AC_DISPLAY_GAME_ON_INTERVAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR BOM 150ms 
             timer_set(AC_TASK_BOM_ID,
                       SIG_BOM_ON_TICK,
                       AC_BOM_INTERVAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR MOVE MINE 150ms 
             timer_set(AC_TASK_MINE_ID,
                       SIG_MINE_ON_TICK,
                       AC_MINE_INTERVAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR MOVE WALL 150ms 
             timer_set(AC_TASK_WALL_ID,
                       SIG_WALL_ON_TICK,
                       AC_WALL_INTERVAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR MOVE EXPLOSION 150ms 
             timer_set(AC_TASK_EXPLOSION_ID,
                       SIG_EXPLOSION_ON_TICK,
                       AC_EXPLOSION_INTERVAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR MOVE PLANE 100ms 
             timer_set(AC_TASK_PLANE_ID,
                       SIG_PLANE_ON_TICK,
                       AC_PLANE_INTERVAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR ADD MINE 1500ms 
             timer_set(AC_TASK_MINE_ID,
                       SIG_MINE_PUSH,
                       AC_MINE_PUSH_INTERNAL,
                       TIMER_PERIODIC);
 
+            // SET TIMER FOR ADD BOM 1800m
             timer_set(AC_TASK_BOM_ID,
                       SIG_BOM_PUSH,
                       AC_BOM_PUSH_INTERNAL,
@@ -200,6 +207,7 @@ void task_dispalay_game_on_handle(ak_msg_t *msg) {
         }
 
         case SIG_DISPLAY_GAME_ON_TICK:
+            // POST SIGNAL CHECK ALL CRASH
             task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_CRASH);
             task_post_pure_msg(AC_TASK_PLANE_ID, SIG_PLANE_CRASH);
             task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_ON_TICK);

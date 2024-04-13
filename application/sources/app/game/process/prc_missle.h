@@ -7,6 +7,9 @@
 
 using namespace std;
 
+/*
+* MAX MISSLE -> GET FROM GAME SETTING MISSLE (1 -> 5)
+*/
 #define MAX_MISSLE (game_setting.max_missle)
 
 class  missle

@@ -1,12 +1,15 @@
+#include "scr_startup.h"
+
 #include "app_eeprom.h"
 
 #include "eeprom.h"
 
-#include "scr_startup.h"
 #include "scr_menu.h"
 #include "screen_infor.h"
 
-
+/***********************************************************
+* VARIABLE SCREEN STARTUP
+***********************************************************/
 static void view_scr_startup();
 
 view_dynamic_t dyn_view_startup = {
@@ -23,7 +26,7 @@ view_screen_t scr_startup = {
 
 	.focus_item = 0,
 };
-
+// VIEW LOGO STARTUP
 void view_scr_startup() {
 #define AK_LOGO_AXIS_X		(23)
 #define AK_LOGO_TEXT		(AK_LOGO_AXIS_X + 4)
@@ -43,13 +46,18 @@ void view_scr_startup() {
 	view_render.print("Active Kernel");
 }
 
+/***********************************************************
+* TASK STARTUP HANDLE 
+***********************************************************/
 void scr_startup_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case AC_DISPLAY_INITIAL: {
             APP_DBG_SIG("AC_DISPLAY_INITIAL\n");
+            // INIT SCREEN DISPLAY
             view_render.initialize();
             view_render_display_on();
 
+            // READ ALL DATA FROM EEPROM
             if (eeprom_read(EEPROM_HISTORY_ADDR,
                             (uint8_t *)&arr_score_history,
                             MAX_HISTORY) == EEPROM_DRIVER_OK) {
@@ -57,10 +65,6 @@ void scr_startup_handle(ak_msg_t *msg) {
                     APP_DBG("SCORE HISTORY [%d] :  %d\n", i, arr_score_history[i]);
                 }
             }
-            // game_setting.game_mode = EASY;
-            // game_setting.max_missle = 5;
-            // game_setting.state_sound = 0;
-            // eeprom_write(EEPROM_SETTING_ADDR, (uint8_t *)&game_setting, sizeof(game_setting));
             if (eeprom_read(EEPROM_SETTING_ADDR,
                             (uint8_t *)&game_setting,
                             sizeof(game_setting)) == EEPROM_DRIVER_OK) {

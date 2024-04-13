@@ -27,19 +27,18 @@ static const char* arr_title_menu[MAX_TITLE_MENU] =  {"  PLAY  ", "SETTING", "TU
 
 typedef enum 
 {
-    START       = 0,
-    SETTING     = 1,
-    TUTORIAL    = 2,
-    HISTORY     = 3,
-    EXIT        = 4
+    START       = 0,                // MODE 1
+    SETTING     = 1,                // MODE 2
+    TUTORIAL    = 2,                // MODE 3
+    HISTORY     = 3,                // MODE 4
+    EXIT        = 4                 // MODE 5
 }mode_menu_t;
 
-mode_menu_t mode_menu = START;
+mode_menu_t mode_menu = START;      // SET DEFAULT MODE : START
 
 /***********************************************************
 * VIEW - MENU
 ***********************************************************/
-
 static void view_scr_menu();
 
 view_dynamic_t dyn_view_menu = {
@@ -57,7 +56,7 @@ view_screen_t scr_menu= {
 	.focus_item = 0,
 };
 
-// SWITCH MODE IN MENU
+// SWITCH MODE UP IN MENU
 static inline mode_menu_t switch_mode_up(mode_menu_t curr_menu)
 {
     switch(curr_menu) {
@@ -75,7 +74,7 @@ static inline mode_menu_t switch_mode_up(mode_menu_t curr_menu)
             return curr_menu;
     }
 }
-
+// SWITCH MODE DOWN IN MENU
 static inline mode_menu_t switch_mode_down(mode_menu_t curr_menu)
 {
 

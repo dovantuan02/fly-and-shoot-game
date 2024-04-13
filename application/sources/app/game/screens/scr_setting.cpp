@@ -46,7 +46,7 @@ view_screen_t scr_setting = {
 	.focus_item = 0,
 };
 
-// SWITCH MODE SETTING
+// SWITCH MODE UP SETTING
 static inline mode_setting_t switch_mode_up(mode_setting_t curr_menu) {
     switch (curr_menu) {
         case GAME_MODE:
@@ -65,7 +65,7 @@ static inline mode_setting_t switch_mode_up(mode_setting_t curr_menu) {
             return curr_menu;
     }
 }
-
+// SWITCH MODE DOWN SETTING
 static inline mode_setting_t switch_mode_down(mode_setting_t curr_menu) {
     switch (curr_menu) {
         case GAME_MODE:
@@ -169,7 +169,7 @@ static inline void write_epprom_setting()
     eeprom_write(EEPROM_SETTING_ADDR, (uint8_t *)&game_setting, sizeof(game_setting));
 }
 
-
+// VIEW SCREEN SETTING
 void view_scr_setting() {
     view_setting(mode_setting);
 }
@@ -177,7 +177,6 @@ void view_scr_setting() {
 /***********************************************************
 * SCREEN MENU HANDLE
 ***********************************************************/
-
 void task_scr_setting_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case SCREEN_ENTRY:
