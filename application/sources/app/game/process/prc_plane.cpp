@@ -97,8 +97,8 @@ static inline void mine_crash() {
                     task_post_dynamic_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_PUSH, (uint8_t *)&explosion, sizeof(explosion));
                     // SET TIMER TRAN TO SCREEN GAME OVER
                     timer_set(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+                    break;
                 }
-                break;
             }
         }
     }
@@ -109,7 +109,7 @@ static inline void bom_crash() {
     if (!v_bom_infor.empty()) {
         // SCAN ALL BOM
         for (auto _bom : v_bom_infor) {
-            if ((_bom.x - plane.x <= (PLANE_ICON_WIDTH)) &&                 // CHECK ALL BOM(X,Y) WITH PLANE(X,Y)
+            if ((_bom.x - plane.x <= (PLANE_ICON_WIDTH )) &&                 // CHECK ALL BOM(X,Y) WITH PLANE(X,Y)
                 (plane.y >= (_bom.y + 2)) && plane.y <= (_bom.y + BOM_ICON_HEIGHT- 2)) {
                 if (plane.state == SHOW) {
                     plane.state = HIDE;
@@ -127,8 +127,8 @@ static inline void bom_crash() {
                     task_post_dynamic_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_PUSH, (uint8_t *)&explosion, sizeof(explosion));
                     // SET TIMER TRAN TO SCREEN GAME OVER
                     timer_set(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+                    break;
                 }
-                break;
             }
         }
     }

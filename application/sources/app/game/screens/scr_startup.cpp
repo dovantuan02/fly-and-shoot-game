@@ -56,7 +56,6 @@ void scr_startup_handle(ak_msg_t *msg) {
             // INIT SCREEN DISPLAY
             view_render.initialize();
             view_render_display_on();
-
             // READ ALL DATA FROM EEPROM
             if (eeprom_read(EEPROM_HISTORY_ADDR,
                             (uint8_t *)&arr_score_history,

@@ -24,14 +24,14 @@ const task_t app_task_table[] = {
 	/*************************************************************************/
 	/* TASK  GAME ON */
 	/*************************************************************************/
-	{AC_TASK_DISPLAY_GAME_ON_ID	,	TASK_PRI_LEVEL_4	,	task_dispalay_game_on_handle},
-	{AC_TASK_PLANE_ID			, 	TASK_PRI_LEVEL_4	, 	task_prc_plane_hanle		},
-	{AC_TASK_MISSLE_ID			, 	TASK_PRI_LEVEL_4	, 	task_prc_missle_handle		},
-	{AC_TASK_WALL_ID			,	TASK_PRI_LEVEL_3	, 	task_prc_wall_handle		},
-	{AC_TASK_EXPLOSION_ID		,	TASK_PRI_LEVEL_4	,	task_prc_explosion_handle	},
-	{AC_TASK_BOM_ID				,	TASK_PRI_LEVEL_3	,	task_prc_bom_handle			},
-	{AC_TASK_MINE_ID			, 	TASK_PRI_LEVEL_3	, 	task_prc_mine_handle		},
-	{AC_TASK_DISPLAY_GAME_OVER_ID, 	TASK_PRI_LEVEL_4	, 	task_scr_game_over_handle	},
+	{AC_TASK_DISPLAY_GAME_ON_ID		,	TASK_PRI_LEVEL_4	,	task_dispalay_game_on_handle},
+	{AC_TASK_PLANE_ID				, 	TASK_PRI_LEVEL_4	, 	task_prc_plane_hanle		},
+	{AC_TASK_MISSLE_ID				, 	TASK_PRI_LEVEL_4	, 	task_prc_missle_handle		},
+	{AC_TASK_WALL_ID				,	TASK_PRI_LEVEL_3	, 	task_prc_wall_handle		},
+	{AC_TASK_EXPLOSION_ID			,	TASK_PRI_LEVEL_4	,	task_prc_explosion_handle	},
+	{AC_TASK_BOM_ID					,	TASK_PRI_LEVEL_3	,	task_prc_bom_handle			},
+	{AC_TASK_MINE_ID				, 	TASK_PRI_LEVEL_3	, 	task_prc_mine_handle		},
+	{AC_TASK_DISPLAY_GAME_OVER_ID	, 	TASK_PRI_LEVEL_4	, 	task_scr_game_over_handle	},
 	
 	#if defined(TASK_ZIGBEE_EN)
 	{AC_TASK_ZIGBEE_ID			,	TASK_PRI_LEVEL_4	,	task_zigbee			},
