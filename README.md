@@ -1,4 +1,4 @@
-# FLY - AND - SHOOT GAME - AK - Embedded Base Kit
+# FLY - AND - SHOOT GAME trên AK - Embedded Base Kit
 
 **I. Giới thiệu**
 
@@ -56,7 +56,7 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 
 **2.1. Event - Driven hoạt động như thế nào ?**
 
-![Hinh 1](https://github.com/DoVanTuan2805/_fly-and-shoot-game.git/resource/images/hinh1.png)
+![<img src="resource/images/hinh1.png"]
 
                                                 *Nguồn: Automatic Control Programming*
 
@@ -83,6 +83,5 @@ Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embed
 | AC_TASK_DISPLAY_GAME_OVER_ID | TASK_PRI_LEVEL_4	 | task_scr_game_over_handle	 |
 |  |  |  |
 
-![Hinh 2](https://github.com/DoVanTuan2805/_fly-and-shoot-game.git/resource/images/hinh2.png)
-
-![Hinh 3](https://github.com/DoVanTuan2805/_fly-and-shoot-game.git/resource/imageshinh2.png)
+![<img src="resource/images/hinh2.png"]
+![<img src="resource/images/hinh3.png"]
