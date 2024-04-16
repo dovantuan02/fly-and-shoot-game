@@ -12,13 +12,13 @@ using namespace std;
 */
 #define MAX_MISSLE (game_setting.max_missle)
 
-class  missle
+class  missile
 {
     private:        
     public:
         int8_t x, y;
         icon_state_t state;
-        missle(uint8_t x, uint8_t y, icon_state_t state)
+        missile(uint8_t x, uint8_t y, icon_state_t state)
         {   
             this->x = x;
             this->y = y;
@@ -26,5 +26,5 @@ class  missle
         }
 };
 
-extern vector<missle> v_missle;
+extern vector<missile> v_missile;
 #endif

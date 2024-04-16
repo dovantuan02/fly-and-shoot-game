@@ -9,70 +9,70 @@
 #include "prc_explosion.h"
 #include "prc_mine.h"
 #include "prc_plane.h"
-#include "prc_missle.h"
+#include "prc_missile.h"
 #include "buzzer_def.h"
 
 #include "scr_bitmap.h"
 #include "screen_infor.h"
 
 /***********************************************************
-* VARIABLE PROCESS EXPLOSION
+* VARIABLE PROCESS MISSILE
 ***********************************************************/
 #define MISSLE_SETUP_X (PLANE_ICON_WIDTH)
 #define MISSLE_MOVE_X  (4)
 
 /*
-* v_missle : VECTOR MISSLE MANAGERMENT
+* v_missile : VECTOR MISSILE MANAGERMENT
 */
-vector<missle> v_missle;
+vector<missile> v_missile;
 
-// CLEAR ALL MISSLE AVAILABLE
+// CLEAR ALL MISSILE AVAILABLE
 static inline void missle_reset() {
-    if (v_missle.size() != 0) {
-        v_missle.clear();
-        v_missle.shrink_to_fit();
+    if (v_missile.size() != 0) {
+        v_missile.clear();
+        v_missile.shrink_to_fit();
     }
 }
 
-// ADD MISSLE TO MISSLE MANAGERMENT
+// ADD MISSILE TO MISSILE MANAGERMENT
 static inline void missle_push() {
     if(plane.state == SHOW)
     {
-        // CHECK MISSLE MANAGERMENT SIZE WITH MAX MISSLE
-        if (v_missle.size() < MAX_MISSLE) {                        
-            // CRATE NEW MISSLE 
-            missle new_missle(plane.x + PLANE_ICON_WIDTH + 2,           
+        // CHECK MISSILE MANAGERMENT SIZE WITH MAX MISSILE
+        if (v_missile.size() < MAX_MISSLE) {                        
+            // CRATE NEW MISSILE 
+            missile new_missle(plane.x + PLANE_ICON_WIDTH + 2,           
                             plane.y + PLANE_ICON_HEIGHT - MISSLE_ICON_HEIGHT,
                             SHOW);
             if (game_setting.state_sound)                   // CHECK SETTING SOUND
                 BUZZER_PlayTones(tones_missle_push);        // SOUND BUZZER
-            v_missle.push_back(new_missle);                 // ADD MISSLE TO MISSLE MANAGERMENT
+            v_missile.push_back(new_missle);                 // ADD MISSILE TO MISSILE MANAGERMENT
             
         }
     }
 }
 
-//  MOVE ALL MISSLE
+//  MOVE ALL MISSILE
 static inline void missle_move() {
-    if (!v_missle.empty()) {
-        for (size_t i = 0; i < v_missle.size(); i++) {          // SCAN ALL MISSLE
-            v_missle[i].x += MISSLE_MOVE_X;                     // MOVE MISSLE WITH +(X)
+    if (!v_missile.empty()) {
+        for (size_t i = 0; i < v_missile.size(); i++) {          // SCAN ALL MISSILE
+            v_missile[i].x += MISSLE_MOVE_X;                     // MOVE MISSILE WITH +(X)
 
-            if (v_missle[i].x >= LCD_WIDTH) {                   // CHECK MISSLE(X) WITH LCD_WIDTH(124)
-                v_missle.erase(v_missle.begin() + i);           // ERASE MISSLE
+            if (v_missile[i].x >= LCD_WIDTH) {                   // CHECK MISSILE(X) WITH LCD_WIDTH(124)
+                v_missile.erase(v_missile.begin() + i);           // ERASE MISSILE
             }
         }
     }
 }
 
-//  MISSLE HITS MINE OR BOM
+//  MISSILE HITS MINE OR BOM
 static inline void missle_crash() {
-    for (size_t i = 0; i < v_missle.size(); i++) {          // SCAN ALL MISSLE 
+    for (size_t i = 0; i < v_missile.size(); i++) {          // SCAN ALL MISSILE 
         for (size_t j = 0; j < v_mine.size(); j++) {        // SCAN ALL MINE
-            if ((v_mine[j].x - v_missle[i].x <= (MISSLE_ICON_WIDTH))) {             // CHECK MISSLE(X) WITH MINE(X)
-                // CHECK MISSLE(Y) WITH MINE(Y)
-                if ((v_missle[i].y) >= (v_mine[j].y ) 
-                    && (v_missle[i].y) <= (v_mine[j].y + MINE_ICON_HEIGHT - 1) ) {
+            if ((v_mine[j].x - v_missile[i].x <= (MISSLE_ICON_WIDTH))) {             // CHECK MISSILE(X) WITH MINE(X)
+                // CHECK MISSILE(Y) WITH MINE(Y)
+                if ((v_missile[i].y) >= (v_mine[j].y ) 
+                    && (v_missile[i].y) <= (v_mine[j].y + MINE_ICON_HEIGHT - 1) ) {
                     // SET COORDINATE FOR EXPLOSION
                     explosion.x = v_mine[j].x;
                     explosion.y = v_mine[j].y;
@@ -81,7 +81,7 @@ static inline void missle_crash() {
                     if (game_setting.state_sound)           // CHECK SOUND SETTING
                         BUZZER_PlayTones(tones_explosion);  // SOUND BUZZER
 
-                    v_missle.erase(v_missle.begin() + i);       // ERASE MISSLE
+                    v_missile.erase(v_missile.begin() + i);       // ERASE MISSILE
                     v_mine.erase(v_mine.begin() + j);           // ERASE MINE
 
                     // POST TO "SIG_EXPLOSION_PUSH" WITH DATA(explosion)
@@ -97,10 +97,10 @@ static inline void missle_crash() {
             }
         }
         for (size_t k = 0; k < v_bom_infor.size(); k++) {
-            if ((v_bom_infor[k].x - v_missle[i].x <= (MISSLE_ICON_WIDTH))) {            // CHECK MISSLE(X) WITH BOM(X)
+            if ((v_bom_infor[k].x - v_missile[i].x <= (MISSLE_ICON_WIDTH))) {            // CHECK MISSILE(X) WITH BOM(X)
                 
-                if ((v_missle[i].y >= (v_bom_infor[k].y)                                // CHECK MISSLE(Y) WITH BOM(Y)
-                    && (v_missle[i].y <= (v_bom_infor[k].y + BOM_ICON_HEIGHT - 1)))) {
+                if ((v_missile[i].y >= (v_bom_infor[k].y)                                // CHECK MISSILE(Y) WITH BOM(Y)
+                    && (v_missile[i].y <= (v_bom_infor[k].y + BOM_ICON_HEIGHT - 1)))) {
                     // SET EXPLOSION COORDINATE
                     explosion.x = v_bom_infor[k].x;     
                     explosion.y = v_bom_infor[k].y;
@@ -109,7 +109,7 @@ static inline void missle_crash() {
                     if (game_setting.state_sound)               // CHECK SOUND SETTING
                         BUZZER_PlayTones(tones_explosion);      // SOUND BUZZER
 
-                    v_missle.erase(v_missle.begin() + i);       // ERASE MISSLE
+                    v_missile.erase(v_missile.begin() + i);       // ERASE MISSILE
                     v_bom_infor.erase(v_bom_infor.begin() + k); // ERASE BOM
 
                     // POST TO "SIG_EXPLOSION_PUSH" WITH DATA(explosion)

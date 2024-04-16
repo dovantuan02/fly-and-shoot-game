@@ -115,7 +115,7 @@ extern void task_polling_console();
 
 
 /*	GAME TASK	*/
-extern void task_dispalay_game_on_handle(ak_msg_t *);
+extern void task_scr_game_on_handle(ak_msg_t *);
 extern void task_scr_game_over_handle(ak_msg_t *);
 extern void task_prc_plane_hanle(ak_msg_t *);
 extern void task_prc_missle_handle(ak_msg_t *);

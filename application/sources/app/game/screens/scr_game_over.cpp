@@ -112,7 +112,7 @@ void task_scr_game_over_handle(ak_msg_t *msg) {
 
         case SIG_DISPLAY_GAME_OVER_MODE_PRESSED:
             if(state_game == GAME_OVER){
-                SCREEN_TRAN(task_dispalay_game_on_handle, &scr_game_on);
+                SCREEN_TRAN(task_scr_game_on_handle, &scr_game_on);
                 state_game = GAME_ON;
                 score = 0;
             }

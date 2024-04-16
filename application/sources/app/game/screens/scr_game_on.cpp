@@ -8,7 +8,7 @@
 #include "prc_bom.h"
 #include "prc_explosion.h"
 #include "prc_mine.h"
-#include "prc_missle.h"
+#include "prc_missile.h"
 #include "prc_plane.h"
 #include "prc_tunnel_wall.h"
 #include "scr_bitmap.h"
@@ -65,8 +65,8 @@ void view_plane() {
 
 // SHOW MISSLEs
 void view_missle() {
-    if (!v_missle.empty()) {
-        for (auto _missle : v_missle) {
+    if (!v_missile.empty()) {
+        for (auto _missle : v_missile) {
             if (_missle.state == SHOW) {
                 view_render.drawBitmap(_missle.x, _missle.y, missle_icon, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, WHITE);
             }
@@ -128,7 +128,7 @@ void view_infor_fly() {
 
     view_render.setCursor(55, 57);
     view_render.print(" TRIGGERS:");
-    view_render.print(MAX_MISSLE - v_missle.size());
+    view_render.print(MAX_MISSLE - v_missile.size());
 }
 
 void view_scr_game_on() {
@@ -145,7 +145,7 @@ void view_scr_game_on() {
 * SCREEN GAME ON HANDLE
 ***********************************************************/
 
-void task_dispalay_game_on_handle(ak_msg_t *msg) {
+void task_scr_game_on_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case SCREEN_ENTRY: {
             APP_DBG_SIG("SCREEN_ENTRY\n");
@@ -208,8 +208,8 @@ void task_dispalay_game_on_handle(ak_msg_t *msg) {
 
         case SIG_DISPLAY_GAME_ON_TICK:
             // POST SIGNAL CHECK ALL CRASH
-            task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_CRASH);
             task_post_pure_msg(AC_TASK_PLANE_ID, SIG_PLANE_CRASH);
+            task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_CRASH);
             task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_ON_TICK);
             break;
 

@@ -149,7 +149,7 @@ void view_scr_menu_switch(mode_menu_t mode)
         state_game = GAME_ON;
         score = 0;
         APP_DBG("state_game : %d\n", state_game);
-        SCREEN_TRAN(task_dispalay_game_on_handle, &scr_game_on);
+        SCREEN_TRAN(task_scr_game_on_handle, &scr_game_on);
         break;
 
     case SETTING:

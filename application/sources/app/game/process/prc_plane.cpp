@@ -79,24 +79,27 @@ static inline void wall_crash() {
 static inline void mine_crash() {
     if (!v_mine.empty()) {
         // SCAN ALL MINE
-        for (auto _mine : v_mine) {        
-            if ((abs(_mine.x - plane.x) <= (PLANE_ICON_WIDTH)) &&       // CHECK ALL MINE(X,Y) WITH PLANE(X,Y)
-                (plane.y >= (_mine.y + 2)) && plane.y <= (_mine.y + MINE_ICON_HEIGHT- 2)) {
-                if (plane.state == SHOW) {
-                    plane.state = HIDE;
-                    // SET COORDINATE EXPLOSION
-                    explosion.x = plane.x;
-                    explosion.y = plane.y;
-                    explosion.ver = VER_I;
-                    // APP_DBG("PLANE : X: %d - Y: %d\n", plane.x, plane.y);
-                    // APP_DBG("MINE  : X: %d - Y: %d\n", _mine.x, _mine.y);
-
-                    // SOUND BUZZER
-                    SOUND_GAME_OVER();
-                    // POST TO "SIG_EXPLOSION_PUSH" WITH DATA(explosion)
-                    task_post_dynamic_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_PUSH, (uint8_t *)&explosion, sizeof(explosion));
-                    // SET TIMER TRAN TO SCREEN GAME OVER
-                    timer_set(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+        for (auto _mine : v_mine) {
+            // CHECK ALL MINE(X,Y) WITH PLANE(X,Y)
+            if ((PLANE_ICON_WIDTH > abs(_mine.x - plane.x) )) { 
+                if ((plane.y >= (_mine.y + 1)) && plane.y <= (_mine.y + MINE_ICON_HEIGHT - 1)) {
+                    if (plane.state == SHOW) {
+                        APP_DBG("PLANE : X: %d - Y: %d\n", plane.x, plane.y);
+                        APP_DBG("MINE  : X: %d - Y: %d\n", _mine.x, _mine.y);
+                        // SET COORDINATE EXPLOSION
+                        explosion.x = plane.x;
+                        explosion.y = plane.y;
+                        explosion.ver = VER_I;
+                        
+                        // SOUND BUZZER
+                        SOUND_GAME_OVER();
+                        plane.state = HIDE;
+                        // POST TO "SIG_EXPLOSION_PUSH" WITH DATA(explosion)
+                        task_post_dynamic_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_PUSH, (uint8_t *)&explosion, sizeof(explosion));
+                        // SET TIMER TRAN TO SCREEN GAME OVER
+                        timer_set(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+                        break;
+                    }
                     break;
                 }
             }
@@ -109,8 +112,8 @@ static inline void bom_crash() {
     if (!v_bom_infor.empty()) {
         // SCAN ALL BOM
         for (auto _bom : v_bom_infor) {
-            if ((_bom.x - plane.x <= (PLANE_ICON_WIDTH )) &&                 // CHECK ALL BOM(X,Y) WITH PLANE(X,Y)
-                (plane.y >= (_bom.y + 2)) && plane.y <= (_bom.y + BOM_ICON_HEIGHT- 2)) {
+            if ((abs(_bom.x - plane.x )<= (PLANE_ICON_WIDTH )) &&                 // CHECK ALL BOM(X,Y) WITH PLANE(X,Y)
+                (plane.y >= (_bom.y + 1)) && plane.y <= (_bom.y + BOM_ICON_HEIGHT- 1)) {
                 if (plane.state == SHOW) {
                     plane.state = HIDE;
                     // SET COORDINATE EXPLOSION
@@ -137,9 +140,9 @@ static inline void bom_crash() {
 // HANDLER CHECK ALL CRASH(WALL, MINE , BOM)
 static inline void plane_crash() {
     if(state_game == GAME_ON){
-        wall_crash();
         mine_crash();
         bom_crash();
+        wall_crash();
     }
 }
 
