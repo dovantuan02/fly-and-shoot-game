@@ -4,7 +4,7 @@
 
 **1.1. Giới thiệu sơ lược về phần cứng.**
 
-- AK-Embedded Base Kit([AK Embedded Base Kit - STM32L151 - Lập trình nhúng vi điều khiển (epcb.vn)](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) là  evaluation kit dành cho các bạn học phần mềm nhúng nâng cao và muốn thực hành với Event - Driven.
+- AK-Embedded Base Kit [AK Embedded Base Kit - STM32L151 - Lập trình nhúng vi điều khiển (epcb.vn)](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) là  evaluation kit dành cho các bạn học phần mềm nhúng nâng cao và muốn thực hành với Event - Driven.
 - Các ngoại vi và MCU được tính hợp vào trong Kit:
     - Vi điều khiển chính STM32 ARM-based 32-bit MCU: [STM32L151C8T6](https://www.st.com/en/microcontrollers-microprocessors/stm32l151c8.html)
     - Truyền nhận không dây 2.4Ghz RF Transceiver ICs: [NRF24L01P-R](https://www.nordicsemi.com/products/nrf24-series)
@@ -56,9 +56,9 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 
 **2.1. Event - Driven hoạt động như thế nào ?**
 
-![Hinh 1](https://raw.githubusercontent.com/DoVanTuan2805/_fly-and-shoot-game/main/resource/images/hinh1.png)
+![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled.png)
 
-                                                *Nguồn: Automatic Control Programming*
+                                             *Nguồn: Automatic Control Programming*
 
 - Event Driven nói một cách dễ hiểu là một hệ thống gửi thư (gửi message) để thực thi các công việc. Trong đó, Task đóng vai trò là người nhận thư, Signal đại diện cho nội dung công việc. Task & Signal nền tảng của một hệ Event Driven.
 - Thông thường mỗi Task sẽ nhận một nhóm công công việc nào nào đó, ví dụ: quản lý state-machine, quản lý hiển thị của màn hình, quản lý việc cập nhật phần mềm, quản lý hệ thống watchdog ...
@@ -67,22 +67,75 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 
 Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embedded Base Kit - STM32L151 - Event Driven: Task & Signal](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-event-driven-task-signal)  
 
-2.2. Task và Signal trong Fly - And - Shoot.
+**2.2. Task và Signal trong Fly - And - Shoot.**
 
 *Các Task và Priority trong game:*
 
 | TASK | PRIORITY | HANDLER |
 | --- | --- | --- |
-| AC_TASK_DISPLAY_GAME_ON_ID | TASK_PRI_LEVEL_4	 | task_dispalay_game_on_handle |
+| AC_TASK_DISPLAY_GAME_ON_ID | TASK_PRI_LEVEL_4	 | task_scr_game_on_handle |
 | AC_TASK_PLANE_ID | TASK_PRI_LEVEL_4	 | task_prc_plane_hanle		 |
-| AC_TASK_MISSLE_ID			 | TASK_PRI_LEVEL_4	 | task_prc_missle_handle		 |
+| AC_TASK_MISSILE_ID			 | TASK_PRI_LEVEL_4	 | task_prc_missile_handle		 |
 | AC_TASK_WALL_ID			 | TASK_PRI_LEVEL_3 | task_prc_wall_handle		 |
 | AC_TASK_EXPLOSION_ID | TASK_PRI_LEVEL_4	 | task_prc_explosion_handle	 |
 | AC_TASK_BOM_ID				 | TASK_PRI_LEVEL_3 | task_prc_bom_handle			 |
 | AC_TASK_MINE_ID			 | TASK_PRI_LEVEL_3 | task_prc_mine_handle		 |
 | AC_TASK_DISPLAY_GAME_OVER_ID | TASK_PRI_LEVEL_4	 | task_scr_game_over_handle	 |
-|  |  |  |
 
-![Hinh 2](https://raw.githubusercontent.com/DoVanTuan2805/_fly-and-shoot-game/main/resource/images/hinh2.png)
+                            **
 
-![Hinh 3](https://raw.githubusercontent.com/DoVanTuan2805/_fly-and-shoot-game/main/resource/images/hinh3.png)
+*Sơ đồ quá trình trước khi và sau khi vào game:*
+
+![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%201.png)
+
+                           *Hình 1 : Sơ đồ quá trình trước khi bắt đầu vào game*
+
+Giải thích :
+
+| SCREEN_ENTRY | Khi người dùng bắt đầu chơi game |
+| --- | --- |
+| SIG_DISPLAY_GAME_ON_TICK | Signal do timer gửi đến với chu kì 100ms cập nhật lại màn hình |
+| SIG_PLANE_SETUP | Cài đặt thông số mặc định cho tàu bay |
+| SIG_PLANE_ON_TICK | Signal do timer gửi đến với chu kì 100ms giúp tàu bay đi xuống |
+| SIG_MINE_RESET | Cài đặt thông số mặc định cho quặng |
+| SIG_MINE_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển quặng |
+| SIG_MINE_PUSH | Signal do timer gửi đến với chu kì 1500ms dùng để tạo thêm quặng |
+| SIG_BOM_RESET | Cài đặt lại tất cả các thông số bom |
+| SIG_BOM_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển bom |
+| SIG_BOM_PUSH | Signal do timer gửi đến với chu kì 1800ms dùng để tạo thêm bom |
+| SIG_MISSILE_RESET | Cài đặt lại tất cả các thông số cho đạn |
+| SIG_WALL_RESET | Cài đặt lại tất cả các thông số cho hầm |
+| SIG_WALL_ON_TICK | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển hầm |
+| SIG_EXPLOSION_RESET | Cài đặt lại tất cả các thông số cho vụ nổ |
+| SIG_EXPLOSION_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để tạo hoạt ảnh cho vụ nổ |
+| state_game | Biến lưu trạng thái của game |
+
+![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%202.png)
+
+                              *Hình 2 : Sơ đồ quá trình khi game đang chạy*
+
+Giải thích :
+
+| SIG_DISPLAY_GAME_ON_TICK | Signal do timer gửi đến với chu kì 100ms  |
+| --- | --- |
+| SIG_PLANE_CRASH | Signal kiểm tra tàu bay có chạm vào bom, quặng hay tường  |
+| SIG_DISPLAY_GAME_OVER_ON_TICK | Signal tạo ra khoảng chờ để chuyển đến màn hình game over |
+| SIG_MISSILE_ON_TICK | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển bom |
+| SIG_MISSILE_CRASH | Signal kiểm tra đạn có chạm vào bom hay quặng  |
+| RELOAD SCREEN | Giúp cập nhật lại toàn bộ màn hình |
+
+![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%203.png)
+
+                         *Hình 3 : Sơ đồ người dùng tác động vào khi game đang chạy*
+
+Giải thích :
+
+| SIG_PLANE_UP | Player nhấn [Up] tạo ra signal giúp tàu bay đi lên |
+| --- | --- |
+| SIG_MISSILE_PUSH | Player nhấn [Mode] tạo ra signal giúp bắn ra đạn |
+
+                                                      **
+
+![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%204.png)
+
+                                                      *Hình 4: Sơ đồ khi game over*
