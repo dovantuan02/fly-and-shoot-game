@@ -11,7 +11,7 @@
 #include "fs_plane.h"
 #include "fs_missile.h"
 #include "fs_config.h"
-#include "buzzer_def.h"
+#include "fs_buzzer_def.h"
 
 #include "scr_bitmap.h"
 

@@ -9,7 +9,7 @@
 #include "fs_tunnel_wall.h"
 #include "fs_mine.h"
 #include "fs_explosion.h"
-#include "buzzer_def.h"
+#include "fs_buzzer_def.h"
 
 #include "scr_bitmap.h"
 #include "scr_game_over.h"

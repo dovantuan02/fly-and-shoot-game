@@ -15,7 +15,7 @@
 #include "fs_config.h"
 
 #include "fs_missile.h"
-#include "buzzer_def.h" 
+#include "fs_buzzer_def.h" 
 button_t btn_mode;
 button_t btn_up;
 button_t btn_down;
@@ -29,27 +29,30 @@ void btn_mode_callback(void* b) {
             APP_DBG("SCREEN NOW : %d\n",fs_state_game );
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID			, AC_DISPLAY_BUTON_MODE_PRESSED);
-            } else if (fs_state_game == FS_GAME_ON) {
-                task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_PUSH);
-            } else if (fs_state_game == FS_GAME_OVER) {		
-                task_post_pure_msg(AC_TASK_DISPLAY_GAME_OVER_ID	, SIG_DISPLAY_GAME_OVER_MODE_PRESSED);
+            } 
+			else if (fs_state_game == FS_GAME_ON) {
+                task_post_pure_msg(AC_TASK_MISSLE_ID			, SIG_MISSLE_PUSH);
+            } 
+			else if (fs_state_game == FS_GAME_OVER) {
+                task_post_pure_msg(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_MODE_PRESSED);
             }
-        } break;
-
+            break;
+        }
         case BUTTON_SW_STATE_LONG_PRESSED: {
             // APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
 			if (fs_state_game == FS_GAME_OFF) {
 				task_post_pure_msg(AC_TASK_DISPLAY_ID			, AC_DISPLAY_BUTON_MODE_LONG_PRESSED);
 			}
-        } break;
+        	break;
+		}
 
         case BUTTON_SW_STATE_RELEASED: {
             // APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_RELEASED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID			, AC_DISPLAY_BUTON_MODE_RELEASED);
             }
-        } break;
-
+        	break;
+		}
         default:
             break;
 	}
@@ -68,23 +71,20 @@ void btn_up_callback(void* b) {
 		{
 			task_post_pure_msg(AC_TASK_PLANE_ID, SIG_PLANE_UP);
 		}
-	}
 		break;
-
+	}
 	case BUTTON_SW_STATE_LONG_PRESSED: {
 		//APP_DBG("[btn_up_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
-	}
 		break;
-
+	}
 	case BUTTON_SW_STATE_RELEASED: {
 		//APP_DBG("[btn_up_callback] BUTTON_SW_STATE_RELEASED\n");
 		if(fs_state_game == FS_GAME_OFF)
 		{
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_UP_RELEASED);
 		}
-	}
 		break;
-
+	}
 	default:
 		break;
 	}
@@ -102,24 +102,20 @@ void btn_down_callback(void* b) {
 		else if(fs_state_game == FS_GAME_OVER) {
 			task_post_pure_msg(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_DOWN_PRESSED);
 		}
-
-	}
 		break;
-
+	}
 	case BUTTON_SW_STATE_LONG_PRESSED: {
 		//APP_DBG("[btn_down_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
-	}
 		break;
-
+	}
 	case BUTTON_SW_STATE_RELEASED: {
 		//APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
 		if(fs_state_game == FS_GAME_OFF)
 		{
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_RELEASED);
 		}
-	}
 		break;
-
+	}
 	default:
 		break;
 	}
