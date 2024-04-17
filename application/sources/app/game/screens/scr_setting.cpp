@@ -8,7 +8,7 @@
 
 #include "scr_setting.h"
 #include "scr_menu.h"
-#include "screen_infor.h"
+#include "fs_config.h"
 
 /***********************************************************
 * VARIABLE AND ENUM VIEW SETTING
@@ -19,9 +19,9 @@ typedef enum {
     MAX_MISSLE,
     STATE_SOUND, 
     EXIT
-} mode_setting_t;
+} fs_setting_option_t;
 
-mode_setting_t mode_setting = GAME_MODE;
+fs_setting_option_t fs_option_setting = GAME_MODE;
 
 /***********************************************************
 * VIEW - MENU
@@ -46,169 +46,168 @@ view_screen_t scr_setting = {
 	.focus_item = 0,
 };
 
-// SWITCH MODE UP SETTING
-static inline mode_setting_t switch_mode_up(mode_setting_t curr_menu) {
+// switch mode up setting
+static inline fs_setting_option_t fs_switch_option_setting_up(fs_setting_option_t curr_menu) {
     switch (curr_menu) {
         case GAME_MODE:
             return EXIT;
-
         case EXIT:
             return STATE_SOUND;
-
         case STATE_SOUND:
             return MAX_MISSLE;
-
         case MAX_MISSLE:
             return GAME_MODE;
-
-        default:
-            return curr_menu;
-    }
-}
-// SWITCH MODE DOWN SETTING
-static inline mode_setting_t switch_mode_down(mode_setting_t curr_menu) {
-    switch (curr_menu) {
-        case GAME_MODE:
-            return MAX_MISSLE;
-
-        case MAX_MISSLE:
-            return STATE_SOUND;
-
-        case STATE_SOUND:
-            return EXIT;
-
-        case EXIT:
-            return GAME_MODE;
-
         default:
             return curr_menu;
     }
 }
 
-// SWITCH GAME MODE (EASY, NORMAL , HARD)
-static inline game_mode_t switch_game_mode(game_mode_t curr_game_mode)
-{
-    switch (curr_game_mode) {
+// switch mode down setting
+static inline fs_setting_option_t fs_switch_option_setting_down(fs_setting_option_t curr_menu) {
+    switch (curr_menu) {
+        case GAME_MODE:
+            return MAX_MISSLE;
+        case MAX_MISSLE:
+            return STATE_SOUND;
+        case STATE_SOUND:
+            return EXIT;
+        case EXIT:
+            return GAME_MODE;
+        default:
+            return curr_menu;
+    }
+}
+
+// switch setting game mode (easy, normal , hard)
+static inline fs_game_mode_t fs_switch_game_mode( fs_game_mode_t curr_setting_game_mode) {
+    switch (curr_setting_game_mode) {
         case EASY:
             return NORMAL;
-
         case NORMAL:
             return HARD;
-
         case HARD:
             return EASY;
-
         default:
-            return curr_game_mode;
+            return curr_setting_game_mode;
     }
 }
 
-// SHOW VIEW SETTING
-static void view_setting(mode_setting_t view_mode) {
-#define NUM_CELL (3)
-#define CELL_Y (17) 
+// show view setting
+static void fs_view_setting(fs_setting_option_t view_mode) {
    view_render.setTextColor(WHITE);
     view_render.setTextSize(1);
     uint8_t temp = view_mode;
-    if(temp > 2)
+    if (temp > 2) {
         temp = view_mode - 1;
-    for (int i = 0; i < NUM_CELL; i++) {
-        view_render.setCursor(15, 10 + (i * CELL_Y));
+    }
+    for (int i = 0; i < FS_NUM_CELL; i++) {
+        view_render.setCursor(15, 10 + (i * FS_CELL_Y));
         if (i != temp) {
-            view_render.drawRoundRect(ROUND_RECT_X,
-                                      ROUND_RECT_Y + (i * CELL_Y),
-                                      ROUND_RECT_WIDTH,
-                                      ROUND_RECT_HEIGHT,
+            view_render.drawRoundRect(FS_ROUND_RECT_X,\
+                                      FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
+                                      FS_ROUND_RECT_WIDTH,\
+                                      FS_ROUND_RECT_HEIGHT,\
                                       3, WHITE);
             view_render.setTextColor(WHITE);
-            if (view_mode > 2)
+            if (view_mode > 2) {
                 view_render.print(arr_title_setting[i + 1]);
-
-            else
+            }
+            else {
                 view_render.print(arr_title_setting[i]);
-        } else {
+            }
+        } 
+        else {
             view_render.setTextColor(BLACK);
-            view_render.fillRoundRect(ROUND_RECT_X,
-                                      ROUND_RECT_Y + (temp * CELL_Y),
-                                      ROUND_RECT_WIDTH,
-                                      ROUND_RECT_HEIGHT,
+            view_render.fillRoundRect(FS_ROUND_RECT_X,\
+                                      FS_ROUND_RECT_Y + (temp * FS_CELL_Y),\
+                                      FS_ROUND_RECT_WIDTH,\
+                                      FS_ROUND_RECT_HEIGHT,\
                                       3, WHITE);
-            if (view_mode > 2)
+            if (view_mode > 2) {
                 view_render.print(arr_title_setting[i + 1]);
-
-            else
+            }
+            else {
                 view_render.print(arr_title_setting[i]);
+            }
         }
         if (view_mode > 2) {
             if (i == 0) {
-                view_render.print(game_setting.max_missle);
-            } else if (i == 1) {
-                view_render.print(game_setting.state_sound == false ? "OFF" : "ON");
+                view_render.print(fs_game_setting.fs_setting_missle);
+            } 
+            else if (i == 1) {
+                view_render.print(fs_game_setting.fs_setting_sound == false ? "OFF" : "ON");
             }
         }
         else if (view_mode <= 2) {
             if (i == 0) {
-                if (game_setting.game_mode == EASY)
+                if (fs_game_setting.fs_setting_game_mode == EASY) {
                     view_render.print("EASY");
-                else if (game_setting.game_mode == NORMAL)
+                } 
+                else if (fs_game_setting.fs_setting_game_mode == NORMAL) {
                     view_render.print("NORMAL");
-                else
+                } 
+                else {
                     view_render.print("HARD");
-            } else if (i == 1) {
-                view_render.print(game_setting.max_missle);
-            } else if (i == 2) {
-                view_render.print(game_setting.state_sound == false ? "OFF" : "ON");
+                }
+            } 
+            else if (i == 1) {
+                view_render.print(fs_game_setting.fs_setting_missle);
+            } 
+            else if (i == 2) {
+                view_render.print(fs_game_setting.fs_setting_sound == false ? "OFF" : "ON");
             }
         }
     }
 }
 
-// WRITE SETTING TO EEPROM
+// write setting to eeprom
 static inline void write_epprom_setting()
 {
-    eeprom_write(EEPROM_SETTING_ADDR, (uint8_t *)&game_setting, sizeof(game_setting));
+    eeprom_write(EEPROM_SETTING_ADDR, (uint8_t *)&fs_game_setting, sizeof(fs_game_setting));
 }
 
-// VIEW SCREEN SETTING
+// view screen setting
 void view_scr_setting() {
-    view_setting(mode_setting);
+    fs_view_setting(fs_option_setting);
 }
 
 /***********************************************************
 * SCREEN MENU HANDLE
 ***********************************************************/
+
 void task_scr_setting_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case SCREEN_ENTRY:
-            mode_setting = GAME_MODE;
+        case SCREEN_ENTRY: {
+            fs_option_setting = GAME_MODE;
             break;
-
-        case AC_DISPLAY_BUTON_UP_PRESSED:
-            mode_setting = switch_mode_up(mode_setting);
+        }
+        case AC_DISPLAY_BUTON_UP_PRESSED: {
+            fs_option_setting = fs_switch_option_setting_up(fs_option_setting);
             break;
-
-        case AC_DISPLAY_BUTON_DOWN_PRESSED:
-            mode_setting = switch_mode_down(mode_setting);
+        }
+        case AC_DISPLAY_BUTON_DOWN_PRESSED: {
+            fs_option_setting = fs_switch_option_setting_down(fs_option_setting);
             break;
-
-        case AC_DISPLAY_BUTON_MODE_LONG_PRESSED:
-            break;
-
-        case AC_DISPLAY_BUTON_MODE_PRESSED:
+        }
+        case AC_DISPLAY_BUTON_MODE_PRESSED: {  
             // APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED - SETTING\n");
-            if (mode_setting == GAME_MODE)
-                game_setting.game_mode = switch_game_mode(game_setting.game_mode);
-            else if (mode_setting == MAX_MISSLE) {
-                game_setting.max_missle++;
-                game_setting.max_missle = game_setting.max_missle > 5 ? 1 : game_setting.max_missle;
-            } else if (mode_setting == STATE_SOUND) {
-                game_setting.state_sound = game_setting.state_sound ^ 1;
-            } else {
+            if (fs_option_setting == GAME_MODE) {
+                fs_game_setting.fs_setting_game_mode = fs_switch_game_mode(fs_game_setting.fs_setting_game_mode);
+            } 
+            else if (fs_option_setting == MAX_MISSLE) {
+                fs_game_setting.fs_setting_missle++;
+                fs_game_setting.fs_setting_missle = fs_game_setting.fs_setting_missle > 5 ? 1 : fs_game_setting.fs_setting_missle;
+            } 
+            else if (fs_option_setting == STATE_SOUND) {
+                fs_game_setting.fs_setting_sound =
+                    fs_game_setting.fs_setting_sound ^ 1;
+            } 
+            else {
                 SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
                 write_epprom_setting();
             }
             break;
-
+        }
         default:
             break;
     }

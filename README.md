@@ -108,7 +108,7 @@ Giải thích :
 | SIG_WALL_ON_TICK | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển hầm |
 | SIG_EXPLOSION_RESET | Cài đặt lại tất cả các thông số cho vụ nổ |
 | SIG_EXPLOSION_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để tạo hoạt ảnh cho vụ nổ |
-| state_game | Biến lưu trạng thái của game |
+| fs_state_game | Biến lưu trạng thái của game |
 
 ![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%202.png)
 

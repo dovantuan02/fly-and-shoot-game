@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include <vector>
 
-#include "screen_infor.h"
+#include "fs_config.h"
+
 using namespace std;
 
 typedef struct 
@@ -12,8 +13,8 @@ typedef struct
     int8_t x;
     int8_t y;
     uint8_t ver;
-    icon_state_t state;
-}mine_infor_t;
+    fs_game_icon_state_t state;
+}fs_game_mine_infor_t;
 
-extern vector<mine_infor_t> v_mine;
+extern vector<fs_game_mine_infor_t> fs_vec_mine;
 #endif

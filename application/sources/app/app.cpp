@@ -38,10 +38,8 @@
 #include "task_if.h"
 #include "task_life.h"
 #include "task_list.h"
-#include "task_rf24_if.h"
 #include "task_shell.h"
 #include "task_uart_if.h"
-#include "task_zigbee.h"
 
 /* sys include */
 #include "sys_boot.h"
@@ -352,8 +350,6 @@ void app_init_state_machine() {
  */
 void app_task_init() {
     SCREEN_CTOR(&scr_mng_app, scr_startup_handle, &scr_startup);
-
-    task_post_pure_msg(AC_TASK_RF24_IF_ID, AC_RF24_IF_INIT_NETWORK);
     task_post_pure_msg(AC_TASK_UART_IF_ID, AC_UART_IF_INIT);
 }
 

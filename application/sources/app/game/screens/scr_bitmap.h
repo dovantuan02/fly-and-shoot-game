@@ -40,13 +40,13 @@ extern const unsigned char bom_icon [] PROGMEM;
 
 #define EXPLOSION_ICON_HEIGHT   7
 #define EXPLOSION_ICON_WIDTH    7
-extern const unsigned char explosion_I[] PROGMEM;
-extern const unsigned char explosion_II[] PROGMEM;
+extern const unsigned char explosion_I_icon[] PROGMEM;
+extern const unsigned char explosion_II_icon[] PROGMEM;
 
 #define MINE_ICON_HEIGHT   5
 #define MINE_ICON_WIDTH    5
-extern const unsigned char mine_I [] PROGMEM;
-extern const unsigned char mine_II [] PROGMEM;
+extern const unsigned char mine_I_icon [] PROGMEM;
+extern const unsigned char mine_II_icon [] PROGMEM;
 
 #define MAP_HEIGHT  54
 #define MAP_WIDTH   128

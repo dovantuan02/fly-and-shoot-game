@@ -1,6 +1,6 @@
 #include "scr_history.h"
 #include "scr_menu.h"
-#include "screen_infor.h"
+#include "fs_config.h"
 
 /***********************************************************
 * VARIABLE AND STRUCT VIEW HISTORY
@@ -9,9 +9,9 @@ typedef struct
 {
     int8_t pointer;
     int8_t page_history;
-} table_infor_t;
+} fs_table_setting_infor_t;
 
-table_infor_t table_infor;
+fs_table_setting_infor_t table_setting_infor;
 
 /***********************************************************
 * VIEW - HISTORY
@@ -33,35 +33,31 @@ view_screen_t scr_history = {
     .focus_item = 0,
 };
 
-void view_scr_history()
-{
-#define TEXT_X              (10)
-#define TEXT_Y              (10)
+void view_scr_history() {
+#define TEXT_X (10)
+#define TEXT_Y (10)
 
     view_render.setTextColor(WHITE);
     view_render.setTextSize(1);
-    for (int i = 0; i < NUM_CELL; i++) {
-        view_render.setCursor(TEXT_X, TEXT_Y + (i * CELL_Y));
+    for (int i = 0; i < FS_NUM_CELL; i++) {
+        view_render.setCursor(TEXT_X, TEXT_Y + (i * FS_CELL_Y));
         char temp[18];
-        
-        if (i != table_infor.pointer) {
-            view_render.drawRoundRect(ROUND_RECT_X,
-                                      ROUND_RECT_Y + (i * CELL_Y),
-                                      ROUND_RECT_WIDTH,
-                                      ROUND_RECT_HEIGHT,
-                                      3, WHITE);
+
+        if (i != table_setting_infor.pointer) {
+            view_render.drawRoundRect(
+                FS_ROUND_RECT_X, FS_ROUND_RECT_Y + (i * FS_CELL_Y),
+                FS_ROUND_RECT_WIDTH, FS_ROUND_RECT_HEIGHT, 3, WHITE);
             view_render.setTextColor(WHITE);
-        } else {
+        } 
+        else {
             view_render.setTextColor(BLACK);
-            view_render.fillRoundRect(ROUND_RECT_X,
-                                      ROUND_RECT_Y + (i * CELL_Y),
-                                      ROUND_RECT_WIDTH,
-                                      ROUND_RECT_HEIGHT,
-                                      3, WHITE);
+            view_render.fillRoundRect(
+                FS_ROUND_RECT_X, FS_ROUND_RECT_Y + (i * FS_CELL_Y),
+                FS_ROUND_RECT_WIDTH, FS_ROUND_RECT_HEIGHT, 3, WHITE);
         }
-        sprintf(temp, "   SCORE %d : ", (table_infor.page_history * 3) + i + 1);
+        sprintf(temp, "   SCORE %d : ", (table_setting_infor.page_history * 3) + i + 1);
         view_render.print(temp);
-        view_render.print(arr_score_history[(table_infor.page_history * 3) + i]);
+        view_render.print(fs_game_score_history[(table_setting_infor.page_history * 3) + i]);
     }
 }
 
@@ -71,35 +67,31 @@ void view_scr_history()
 
 void task_scr_history_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case SCREEN_ENTRY:
-            break;
-
-        case AC_DISPLAY_BUTON_MODE_PRESSED:
+        case AC_DISPLAY_BUTON_MODE_PRESSED: {
             SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
             break;
+        }
 
-        case AC_DISPLAY_BUTON_UP_RELEASED:
-            table_infor.pointer--;
-            if(table_infor.pointer < 0)
-            {
-                table_infor.pointer = 2;
-                table_infor.page_history--;
-                if(table_infor.page_history < 0)
-                    table_infor.page_history = (MAX_HISTORY / 3) - 1;
+        case AC_DISPLAY_BUTON_UP_RELEASED: {
+            table_setting_infor.pointer--;
+            if (table_setting_infor.pointer < 0) {
+                table_setting_infor.pointer = 2;
+                table_setting_infor.page_history--;
+                if (table_setting_infor.page_history < 0)
+                    table_setting_infor.page_history = (FS_MAX_HISTORY / 3) - 1;
             }
             break;
-
-        case AC_DISPLAY_BUTON_DOWN_RELEASED:
-            table_infor.pointer++;
-            if(table_infor.pointer > 2)
-            {
-                table_infor.pointer = 0;
-                table_infor.page_history++;
-                if(table_infor.page_history > (MAX_HISTORY / 3) - 1)
-                    table_infor.page_history = 0;
+        }
+        case AC_DISPLAY_BUTON_DOWN_RELEASED: {
+            table_setting_infor.pointer++;
+            if (table_setting_infor.pointer > 2) {
+                table_setting_infor.pointer = 0;
+                table_setting_infor.page_history++;
+                if (table_setting_infor.page_history > (FS_MAX_HISTORY / 3) - 1)
+                    table_setting_infor.page_history = 0;
             }
             break;
-
+        }
         default:
             break;
     }

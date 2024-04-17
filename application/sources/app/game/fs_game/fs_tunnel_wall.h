@@ -3,7 +3,7 @@
 #include <vector>
 #include "stdint.h"
 
-#include "screen_infor.h"
+#include "fs_config.h"
 
 using namespace std;
 
@@ -20,9 +20,9 @@ typedef struct
     int16_t x;
     int8_t y;
     enum ver_wall_t ver;
-}wall_infor_t;
+}fs_game_wall_infor_t;
 
-extern vector<vector<uint8_t>> v_limit_y;
-extern vector<wall_infor_t> v_wall;
+extern vector<vector<uint8_t>> fs_vec_limit_wall_y;
+extern vector<fs_game_wall_infor_t> fs_vec_wall;
 
 #endif

@@ -1,4 +1,5 @@
 {
+  
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
@@ -64,6 +65,9 @@
     "string_view": "cpp",
     "initializer_list": "cpp",
     "utility": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "forward_list": "cpp",
+    "unordered_map": "cpp"
   }
+
 }

@@ -15,9 +15,9 @@ typedef struct
     int8_t x;
     int8_t y;
     ver_infor_t ver;
-} explosion_infor_t;
+} fs_game_explosion_infor_t;
 
 
-extern vector<explosion_infor_t> v_explosion;
-extern explosion_infor_t explosion;
+extern vector<fs_game_explosion_infor_t> fs_vec_explosion;
+extern fs_game_explosion_infor_t fs_explosion;
 #endif

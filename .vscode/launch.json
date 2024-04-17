@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/tuan/_fly-and-shoot-game/application/sources/app/game/process",
-      "program": "/home/tuan/_fly-and-shoot-game/application/sources/app/game/process/build/Debug/outDebug",
+      "cwd": "/home/tuan/_fly-and-shoot-game/application/sources/app/game/screens",
+      "program": "/home/tuan/_fly-and-shoot-game/application/sources/app/game/screens/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

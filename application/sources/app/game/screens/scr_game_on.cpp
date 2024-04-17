@@ -5,35 +5,36 @@
 #include "task_list.h"
 #include "timer.h"
 
-#include "prc_bom.h"
-#include "prc_explosion.h"
-#include "prc_mine.h"
-#include "prc_missile.h"
-#include "prc_plane.h"
-#include "prc_tunnel_wall.h"
+#include "fs_bom.h"
+#include "fs_explosion.h"
+#include "fs_mine.h"
+#include "fs_missile.h"
+#include "fs_plane.h"
+#include "fs_tunnel_wall.h"
 #include "scr_bitmap.h"
 
 
-#include "screen_infor.h"
+#include "fs_config.h"
 #include "scr_game_on.h"
 
 /***********************************************************
 * VARIABLE AND ARRAY BITMAP VIEW GAME ON
 ***********************************************************/
 
-#define NUM_MINE_ICON (2)
-#define NUM_WALL_ICON (2)
+#define FS_NUM_MINE_ICON        (2)
+#define FS_NUM_WALL_ICON        (2)
+#define FS_NUM_EXPLOSION_ICON   (2)
 
-static const unsigned char *arr_mine_icon[NUM_MINE_ICON] = {
-    mine_I, mine_II
+static const unsigned char *fs_arr_mine_icon[FS_NUM_MINE_ICON] = {
+    mine_I_icon, mine_II_icon
 };
 
-static const unsigned char *arr_wall_icon[NUM_WALL_ICON] = {
+static const unsigned char *fs_arr_wall_icon[FS_NUM_WALL_ICON] = {
     map_I, map_II
 };
 
-static const unsigned char *arr_explosion_icon[NUM_WALL_ICON] = {
-    explosion_I, explosion_II
+static const unsigned char *fs_arr_explosion_icon[FS_NUM_EXPLOSION_ICON] = {
+    explosion_I_icon, explosion_II_icon
 };
 
 /***********************************************************
@@ -57,88 +58,97 @@ view_screen_t scr_game_on = {
     .focus_item = 0,
 };
 
-// SHOW PLANEs
-void view_plane() {
-    if (plane.state == SHOW)
-        view_render.drawBitmap(plane.x, plane.y, plane_icon, PLANE_ICON_WIDTH, PLANE_ICON_HEIGHT, WHITE);
+// show plane
+void fs_game_view_plane() {
+    if (fs_plane.state == SHOW)
+        view_render.drawBitmap(fs_plane.x, fs_plane.y, \
+                                plane_icon, \
+                                PLANE_ICON_WIDTH, PLANE_ICON_HEIGHT, \
+                                WHITE);
 }
 
-// SHOW MISSLEs
-void view_missle() {
-    if (!v_missile.empty()) {
-        for (auto _missle : v_missile) {
+// show all missile available
+void fs_game_view_missle() {
+    if (!fs_vec_missile.empty()) {
+        for (auto _missle : fs_vec_missile) {
             if (_missle.state == SHOW) {
-                view_render.drawBitmap(_missle.x, _missle.y, missle_icon, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, WHITE);
+                view_render.drawBitmap(_missle.x, _missle.y, \
+                                        missle_icon, \
+                                        MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, \
+                                        WHITE);
             }
         }
     }
 }
 
-// SHOW WALLs
-void view_wall() {
-    if (!v_wall.empty()) {
+// show all wall
+void fs_game_view_wall() {
+    if (!fs_vec_wall.empty()) {
         for (uint8_t i = 0; i < NUM_WALL; i++) {
-            view_render.drawBitmap(v_wall[i].x, v_wall[i].y, arr_wall_icon[v_wall[i].ver], MAP_WIDTH, MAP_HEIGHT, WHITE);
+            view_render.drawBitmap(fs_vec_wall[i].x, fs_vec_wall[i].y, \
+                                    fs_arr_wall_icon[fs_vec_wall[i].ver], \
+                                    MAP_WIDTH, MAP_HEIGHT, \
+                                    WHITE);
         }
     }
-    // APP_DBG("WALL : v_wall[0].x : %d - v_wall[0].y : %d\n", v_wall[0].x, v_wall[0].y);
+    // APP_DBG("WALL : fs_vec_wall[0].x : %d - fs_vec_wall[0].y : %d\n", fs_vec_wall[0].x, fs_vec_wall[0].y);
 }
 
-// SHOW EXPLOSIONs
-void view_explosion() {
-    for (auto _explosion : v_explosion) {
-        view_render.drawBitmap(_explosion.x, _explosion.y,
-                               arr_explosion_icon[_explosion.ver],
-                               BOM_ICON_WIDTH, BOM_ICON_HEIGHT,
+// show all explosion available
+void fs_game_view_explosion() {
+    for (auto _explosion : fs_vec_explosion) {
+        view_render.drawBitmap(_explosion.x, _explosion.y,\
+                               fs_arr_explosion_icon[_explosion.ver],\
+                               BOM_ICON_WIDTH, BOM_ICON_HEIGHT,\
                                WHITE);
     }
 }
 
-// SHOW BOMs
-void view_bom() {
-    if (!v_bom_infor.empty()) {
-        for(auto _bom : v_bom_infor) {
-            view_render.drawBitmap(_bom.x, _bom.y,
-                                   bom_icon,
-                                   BOM_ICON_WIDTH, BOM_ICON_HEIGHT,
+// show all bom available
+void fs_game_view_bom() {
+    if (!fs_vec_bom.empty()) {
+        for(auto _bom : fs_vec_bom) {
+            view_render.drawBitmap(_bom.x, _bom.y,\
+                                   bom_icon,\
+                                   BOM_ICON_WIDTH, BOM_ICON_HEIGHT,\
                                    WHITE);
         }
     }
 }
 
-// SHOW MINEs
-void view_mine() {
-    if (!v_mine.empty()) {
-        for (size_t i = 0; i < v_mine.size(); i++) {
-            if (v_mine[i].state == SHOW) {
-                view_render.drawBitmap(v_mine[i].x, v_mine[i].y,
-                                       arr_mine_icon[v_mine[i].ver],
-                                       MINE_ICON_WIDTH, MINE_ICON_HEIGHT,
+// show all mine available
+void fs_game_view_mine() {
+    if (!fs_vec_mine.empty()) {
+        for (size_t i = 0; i < fs_vec_mine.size(); i++) {
+            if (fs_vec_mine[i].state == SHOW) {
+                view_render.drawBitmap(fs_vec_mine[i].x, fs_vec_mine[i].y,\
+                                       fs_arr_mine_icon[fs_vec_mine[i].ver],\
+                                       MINE_ICON_WIDTH, MINE_ICON_HEIGHT,\
                                        WHITE);
             }
         }
     }
 }
 
-// SHOW INFOR (SCORE AND MISSLE AVAILABLE)
-void view_infor_fly() {
+// show infor (score and missle available)
+void fs_game_view_infor_fly() {
     view_render.setCursor(0, 57);
     view_render.print("SCORE:");
-    view_render.print(score);
+    view_render.print(fs_game_score);
 
     view_render.setCursor(55, 57);
     view_render.print(" TRIGGERS:");
-    view_render.print(MAX_MISSLE - v_missile.size());
+    view_render.print(FS_MAX_MISSLE - fs_vec_missile.size());
 }
 
 void view_scr_game_on() {
-    view_wall();
-    view_mine();
-    view_explosion();
-    view_bom();
-    view_plane();
-    view_missle();
-    view_infor_fly();
+    fs_game_view_wall();
+    fs_game_view_mine();
+    fs_game_view_explosion();
+    fs_game_view_bom();
+    fs_game_view_plane();
+    fs_game_view_missle();
+    fs_game_view_infor_fly();
 }
 
 /***********************************************************
@@ -149,70 +159,69 @@ void task_scr_game_on_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case SCREEN_ENTRY: {
             APP_DBG_SIG("SCREEN_ENTRY\n");
-            // SET UP AND RESET ACTIVE OBJECT
+            // set up and reset active object
             task_post_pure_msg(AC_TASK_PLANE_ID         , SIG_PLANE_SETUP);
             task_post_pure_msg(AC_TASK_WALL_ID          , SIG_WALL_SETUP);
             task_post_pure_msg(AC_TASK_EXPLOSION_ID     , SIG_EXPLOSION_RESET);
             task_post_pure_msg(AC_TASK_BOM_ID           , SIG_BOM_RESET);
             task_post_pure_msg(AC_TASK_MINE_ID          , SIG_MINE_RESET);
 
-            // SET TIMER FOR DISPLAY 
-            timer_set(AC_TASK_DISPLAY_ID,
-                      SIG_DISPLAY_GAME_ON_TICK,
-                      AC_DISPLAY_GAME_ON_INTERVAL,
+            // set timer for display 
+            timer_set(AC_TASK_DISPLAY_ID,\
+                      SIG_DISPLAY_GAME_ON_TICK,\
+                      AC_DISPLAY_GAME_ON_INTERVAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR BOM 150ms 
-            timer_set(AC_TASK_BOM_ID,
-                      SIG_BOM_ON_TICK,
-                      AC_BOM_INTERVAL,
+            // set timer for bom 150ms 
+            timer_set(AC_TASK_BOM_ID,\
+                      SIG_BOM_ON_TICK,\
+                      AC_BOM_INTERVAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR MOVE MINE 150ms 
-            timer_set(AC_TASK_MINE_ID,
-                      SIG_MINE_ON_TICK,
-                      AC_MINE_INTERVAL,
+            // set timer for move mine 150ms 
+            timer_set(AC_TASK_MINE_ID,\
+                      SIG_MINE_ON_TICK,\
+                      AC_MINE_INTERVAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR MOVE WALL 150ms 
-            timer_set(AC_TASK_WALL_ID,
-                      SIG_WALL_ON_TICK,
-                      AC_WALL_INTERVAL,
+            // set timer for move wall 150ms 
+            timer_set(AC_TASK_WALL_ID,\
+                      SIG_WALL_ON_TICK,\
+                      AC_WALL_INTERVAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR MOVE EXPLOSION 150ms 
-            timer_set(AC_TASK_EXPLOSION_ID,
-                      SIG_EXPLOSION_ON_TICK,
-                      AC_EXPLOSION_INTERVAL,
+            // set timer for move explosion 150ms 
+            timer_set(AC_TASK_EXPLOSION_ID,\
+                      SIG_EXPLOSION_ON_TICK,\
+                      AC_EXPLOSION_INTERVAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR MOVE PLANE 100ms 
-            timer_set(AC_TASK_PLANE_ID,
-                      SIG_PLANE_ON_TICK,
-                      AC_PLANE_INTERVAL,
+            // set timer for move plane 100ms 
+            timer_set(AC_TASK_PLANE_ID,\
+                      SIG_PLANE_ON_TICK,\
+                      AC_PLANE_INTERVAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR ADD MINE 1500ms 
-            timer_set(AC_TASK_MINE_ID,
-                      SIG_MINE_PUSH,
-                      AC_MINE_PUSH_INTERNAL,
+            // set timer for add mine 1500ms 
+            timer_set(AC_TASK_MINE_ID,\
+                      SIG_MINE_PUSH,\
+                      AC_MINE_PUSH_INTERNAL,\
                       TIMER_PERIODIC);
 
-            // SET TIMER FOR ADD BOM 1800m
-            timer_set(AC_TASK_BOM_ID,
-                      SIG_BOM_PUSH,
-                      AC_BOM_PUSH_INTERNAL,
+            // set timer for add bom 1800m
+            timer_set(AC_TASK_BOM_ID,\
+                      SIG_BOM_PUSH,\
+                      AC_BOM_PUSH_INTERNAL,\
                       TIMER_PERIODIC);
             break;
         }
-
-        case SIG_DISPLAY_GAME_ON_TICK:
+        case SIG_DISPLAY_GAME_ON_TICK: {  
             // POST SIGNAL CHECK ALL CRASH
             task_post_pure_msg(AC_TASK_PLANE_ID, SIG_PLANE_CRASH);
             task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_CRASH);
             task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_ON_TICK);
             break;
-
+        }
         default:
             break;
     }

@@ -4,9 +4,10 @@
             "name": "linux-gcc-x64",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/application/**",
-                "${workspaceFolder}/application/sources/ak",
+                "${workspaceFolder}/application",
+                "${workspaceFolder}/application/sources",
                 "${workspaceFolder}/application/sources/app",
+                "${workspaceFolder}/application/sources/ak",
                 "${workspaceFolder}/application/sources/app/game"
             ],
             "compilerPath": "/usr/bin/gcc",
