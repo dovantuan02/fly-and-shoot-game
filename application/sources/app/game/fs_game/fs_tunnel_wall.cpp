@@ -22,7 +22,7 @@ using namespace std;
 /*
 * fs_vec_wall : VECTOR WALL MANAGERMENT
 */
-vector<fs_game_wall_infor_t> fs_vec_wall;
+vector<fs_wall_infor_t> fs_vec_wall;
 
 /*
 * fs_vec_limit_wall_y : VECTOR WALL TOP AND BOT LIMMIT MANAGERMENT
@@ -48,7 +48,7 @@ static inline void fs_game_wall_reset() {
 // set default for all wall
 static inline void fs_game_wall_setup() {
     for (uint8_t i = 0; i < NUM_WALL; i++) {
-        fs_game_wall_infor_t temp_wall;
+        fs_wall_infor_t temp_wall;
 
         temp_wall.x = i * 128;
         temp_wall.y = 0;
@@ -83,24 +83,24 @@ static inline void fs_game_wall_update() {
 
 void task_fs_wall_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case FS_GAME_WALL_RESET: {
+        case FS_GAME_WALL_RESET_SIG: {
             APP_DBG_SIG("FS_GAME_WALL_RESET\n");
             fs_game_wall_reset();
             break;
         }
-        case FS_GAME_WALL_SETUP: {
+        case FS_GAME_WALL_SETUP_SIG: {
             APP_DBG_SIG("FS_GAME_WALL_SETUP\n");
             fs_game_wall_setup();
             break;
         }
 
-        case FS_GAME_WALL_UPDATE: {
+        case FS_GAME_WALL_UPDATE_SIG: {
             // APP_DBG_SIG("FS_GAME_WALL_UPDATE\n");
             fs_game_wall_update();
             break;
         }
-        case FS_GAME_WALL_ON_TICK: {
-            task_post_pure_msg(FS_GAME_TASK_WALL_ID, FS_GAME_WALL_UPDATE);
+        case FS_GAME_WALL_ON_TICK_SIG: {
+            task_post_pure_msg(FS_GAME_TASK_WALL_ID, FS_GAME_WALL_UPDATE_SIG);
             break;
         }
         default:

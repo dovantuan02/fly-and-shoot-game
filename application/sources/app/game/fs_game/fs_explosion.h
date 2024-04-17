@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "fs_config.h"
 using namespace std;
 
 enum ver_infor_t {
@@ -12,12 +13,11 @@ enum ver_infor_t {
 
 typedef struct 
 {
-    int8_t x;
-    int8_t y;
+    fs_game_coordinate_t coordinate;
     ver_infor_t ver;
-} fs_game_explosion_infor_t;
+} fs_explosion_infor_t;
 
 
-extern vector<fs_game_explosion_infor_t> fs_vec_explosion;
-extern fs_game_explosion_infor_t fs_explosion;
+extern vector<fs_explosion_infor_t> fs_vec_explosion;
+extern fs_explosion_infor_t fs_explosion;
 #endif

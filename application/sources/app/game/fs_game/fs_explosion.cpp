@@ -11,9 +11,9 @@
 /*
 * fs_vec_explosion : VECTOR EXPLOSION MANAGERMENT
 */
-vector<fs_game_explosion_infor_t> fs_vec_explosion;
+vector<fs_explosion_infor_t> fs_vec_explosion;
 
-fs_game_explosion_infor_t fs_explosion = {0, 0, VER_I};            // set default for explosion
+fs_explosion_infor_t fs_explosion = {0, 0, VER_I};            // set default for explosion
 
 // clear all explosion
 void fs_game_explosion_reset() {
@@ -49,22 +49,22 @@ void fs_game_explosion_show()
 
 void task_fs_explosion_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case FS_GAME_EXPLOSION_RESET: {
+        case FS_GAME_EXPLOSION_RESET_SIG: {
             fs_game_explosion_reset();
             break;
         }
-        case FS_GAME_EXPLOSION_PUSH: {  
+        case FS_GAME_EXPLOSION_PUSH_SIG: {  
             // APP_DBG("EXPLOSION : X : %d , Y : %d\n", fs_explosion.x, fs_explosion.y );
             fs_game_explosion_push();
             break;
         }
-        case FS_GAME_EXPLOSION_UPDATE: {
+        case FS_GAME_EXPLOSION_UPDATE_SIG: {
             fs_game_explosion_show();
             break;
         }
 
-        case FS_GAME_EXPLOSION_ON_TICK: {
-            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_UPDATE);
+        case FS_GAME_EXPLOSION_ON_TICK_SIG: {
+            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_UPDATE_SIG);
             break;
         }
 

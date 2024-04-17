@@ -44,6 +44,12 @@ typedef enum {
 
 typedef struct
 {
+    int8_t x;
+    int8_t y;
+}fs_game_coordinate_t;
+
+typedef struct
+{
     bool fs_setting_sound = false;
     uint8_t fs_setting_missle = 5;
     fs_game_mode_t fs_setting_game_mode = FS_GAME_MODE_EASY;

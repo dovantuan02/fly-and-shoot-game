@@ -18,7 +18,7 @@
 
 #define BOM_MOVE_X        (4)
 
-vector<fs_game_bom_infor_t> fs_vec_bom;        // variable bom managerment
+vector<fs_bom_infor_t> fs_vec_bom;        // variable bom managerment
 
 // clear all bom available
 static inline void fs_game_bom_reset() {
@@ -36,11 +36,11 @@ static inline void fs_game_bom_push() {
             uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);  // get bot limmit
             uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);  // get top limmit
 
-            fs_game_bom_infor_t temp_bom;
+            fs_bom_infor_t temp_bom;
 
-            temp_bom.x = LCD_WIDTH;
+            temp_bom.coordinate.x = LCD_WIDTH;
             // set coordinate for bom
-            temp_bom.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit;
+            temp_bom.coordinate.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit;
             // add bom to array bom managerment
             fs_vec_bom.push_back(temp_bom);
         }
@@ -51,8 +51,8 @@ static inline void fs_game_bom_push() {
 static inline void fs_game_bom_move() {
     if (!fs_vec_bom.empty()) {
         for (size_t i = 0; i < fs_vec_bom.size(); i++) {  // scan all bom
-            fs_vec_bom[i].x -= BOM_MOVE_X;  // move coordinate x bom
-            if (fs_vec_bom[i].x < 0) {      // check bom x < 0 ?
+            fs_vec_bom[i].coordinate.x -= BOM_MOVE_X;  // move coordinate x bom
+            if (fs_vec_bom[i].coordinate.x < 0) {      // check bom x < 0 ?
                 fs_vec_bom.erase(fs_vec_bom.begin() - i);  // erase bom
             }
         }
@@ -65,23 +65,23 @@ static inline void fs_game_bom_move() {
 
 void task_fs_bom_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case FS_GAME_BOM_RESET: {
+        case FS_GAME_BOM_RESET_SIG: {
             APP_DBG_SIG("FS_GAME_BOM_RESET\n");
             fs_game_bom_reset();
             break;
         }
-        case FS_GAME_BOM_PUSH: {
+        case FS_GAME_BOM_PUSH_SIG: {
             APP_DBG_SIG("FS_GAME_BOM_PUSH\n");
             fs_game_bom_push();
             break;
         }
-        case FS_GAME_BOM_MOVE: {
+        case FS_GAME_BOM_MOVE_SIG: {
             // APP_DBG_SIG("FS_GAME_BOM_MOVE\n");
             fs_game_bom_move();
             break;
         }
-        case FS_GAME_BOM_ON_TICK: {
-            task_post_pure_msg(FS_GAME_TASK_BOM_ID, FS_GAME_BOM_MOVE);
+        case FS_GAME_BOM_ON_TICK_SIG: {
+            task_post_pure_msg(FS_GAME_TASK_BOM_ID, FS_GAME_BOM_MOVE_SIG);
             break;
         }
         default:

@@ -20,9 +20,9 @@ typedef struct
     int16_t x;
     int8_t y;
     enum ver_wall_t ver;
-}fs_game_wall_infor_t;
+}fs_wall_infor_t;
 
 extern vector<vector<uint8_t>> fs_vec_limit_wall_y;
-extern vector<fs_game_wall_infor_t> fs_vec_wall;
+extern vector<fs_wall_infor_t> fs_vec_wall;
 
 #endif

@@ -26,7 +26,7 @@
 /*
 * fs_vec_mine : VECTOR MINE MANAGERMENT
 */
-vector<fs_game_mine_infor_t> fs_vec_mine;
+vector<fs_mine_infor_t> fs_vec_mine;
 
 // clear all mine
 static inline void fs_game_mine_reset() {
@@ -44,11 +44,11 @@ static inline void fs_game_mine_push() {
         // get top y limmit
         uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);
 
-        fs_game_mine_infor_t temp_mine;
+        fs_mine_infor_t temp_mine;
 
-        temp_mine.x = LCD_WIDTH;
+        temp_mine.coordinate.x = LCD_WIDTH;
         // set mine y range (top y limmit - bot y limmit)
-        temp_mine.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit; 
+        temp_mine.coordinate.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit; 
         temp_mine.state = FS_SHOW;
         temp_mine.ver = rand() % 2;                   // random mine 
         fs_vec_mine.push_back(temp_mine);             // add mine to mine managerment
@@ -59,7 +59,7 @@ static inline void fs_game_mine_push() {
                 *   check all bom with mine
                 *   if bom(x,y) equal mine(x,y) ->? erase 
                 */
-                if (temp_mine.x == fs_vec_bom[i].x && abs(temp_mine.y - fs_vec_bom[i].y) < 10) {    
+                if (temp_mine.coordinate.x == fs_vec_bom[i].coordinate.x && abs(temp_mine.coordinate.y - fs_vec_bom[i].coordinate.y) < 10) {    
                     fs_vec_mine.pop_back();
                 }
             }
@@ -71,8 +71,8 @@ static inline void fs_game_mine_push() {
 static inline void fs_game_mine_move() {
     if (!fs_vec_mine.empty()) {
         for (size_t i = 0; i < fs_vec_mine.size(); i++) {            // scan all mine
-            if (fs_vec_mine[i].x > 0) {                              // mine(x)  bigger min lcd(x) 
-                fs_vec_mine[i].x -= MINE_MOVE_X;                     // move mine x
+            if (fs_vec_mine[i].coordinate.x > 0) {                              // mine(x)  bigger min lcd(x) 
+                fs_vec_mine[i].coordinate.x -= MINE_MOVE_X;                     // move mine x
                 continue;
             }
             fs_vec_mine.erase(fs_vec_mine.begin() + i);             // erase mine
@@ -86,22 +86,22 @@ static inline void fs_game_mine_move() {
 
 void task_fs_mine_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case FS_GAME_MINE_RESET: {
+        case FS_GAME_MINE_RESET_SIG: {
             fs_game_mine_reset();
             break;
         }
 
-        case FS_GAME_MINE_PUSH: {
+        case FS_GAME_MINE_PUSH_SIG: {
             fs_game_mine_push();
             break;
         }
 
-        case FS_GAME_MINE_MOVE: {
+        case FS_GAME_MINE_MOVE_SIG: {
             fs_game_mine_move();
             break;
         }
-        case FS_GAME_MINE_ON_TICK: {
-            task_post_pure_msg(FS_GAME_TASK_MINE_ID, FS_GAME_MINE_MOVE);
+        case FS_GAME_MINE_ON_TICK_SIG: {
+            task_post_pure_msg(FS_GAME_TASK_MINE_ID, FS_GAME_MINE_MOVE_SIG);
             break;
         }
         default:

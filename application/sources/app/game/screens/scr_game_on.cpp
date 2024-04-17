@@ -61,7 +61,7 @@ view_screen_t scr_game_on = {
 // show plane
 void fs_game_view_plane() {
     if (fs_plane.state == FS_SHOW)
-        view_render.drawBitmap(fs_plane.x, fs_plane.y, \
+        view_render.drawBitmap(fs_plane.coordinate.x, fs_plane.coordinate.y, \
                                 plane_icon, \
                                 PLANE_ICON_WIDTH, PLANE_ICON_HEIGHT, \
                                 WHITE);
@@ -72,7 +72,7 @@ void fs_game_view_missle() {
     if (!fs_vec_missile.empty()) {
         for (auto _missle : fs_vec_missile) {
             if (_missle.state == FS_SHOW) {
-                view_render.drawBitmap(_missle.x, _missle.y, \
+                view_render.drawBitmap(_missle.coordinate.x, _missle.coordinate.y, \
                                         missle_icon, \
                                         MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, \
                                         WHITE);
@@ -97,7 +97,7 @@ void fs_game_view_wall() {
 // show all explosion available
 void fs_game_view_explosion() {
     for (auto _explosion : fs_vec_explosion) {
-        view_render.drawBitmap(_explosion.x, _explosion.y,\
+        view_render.drawBitmap(_explosion.coordinate.x, _explosion.coordinate.y,\
                                fs_arr_explosion_icon[_explosion.ver],\
                                BOM_ICON_WIDTH, BOM_ICON_HEIGHT,\
                                WHITE);
@@ -108,7 +108,7 @@ void fs_game_view_explosion() {
 void fs_game_view_bom() {
     if (!fs_vec_bom.empty()) {
         for(auto _bom : fs_vec_bom) {
-            view_render.drawBitmap(_bom.x, _bom.y,\
+            view_render.drawBitmap(_bom.coordinate.x, _bom.coordinate.y,\
                                    bom_icon,\
                                    BOM_ICON_WIDTH, BOM_ICON_HEIGHT,\
                                    WHITE);
@@ -121,7 +121,7 @@ void fs_game_view_mine() {
     if (!fs_vec_mine.empty()) {
         for (size_t i = 0; i < fs_vec_mine.size(); i++) {
             if (fs_vec_mine[i].state == FS_SHOW) {
-                view_render.drawBitmap(fs_vec_mine[i].x, fs_vec_mine[i].y,\
+                view_render.drawBitmap(fs_vec_mine[i].coordinate.x, fs_vec_mine[i].coordinate.y,\
                                        fs_arr_mine_icon[fs_vec_mine[i].ver],\
                                        MINE_ICON_WIDTH, MINE_ICON_HEIGHT,\
                                        WHITE);
@@ -160,66 +160,66 @@ void task_scr_game_on_handle(ak_msg_t *msg) {
         case SCREEN_ENTRY: {
             APP_DBG_SIG("SCREEN_ENTRY\n");
             // set up and reset active object
-            task_post_pure_msg(FS_GAME_TASK_PLANE_ID         , FS_GAME_PLANE_SETUP);
-            task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_SETUP);
-            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET);
-            task_post_pure_msg(FS_GAME_TASK_BOM_ID           , FS_GAME_BOM_RESET);
-            task_post_pure_msg(FS_GAME_TASK_MINE_ID          , FS_GAME_MINE_RESET);
+            task_post_pure_msg(FS_GAME_TASK_PLANE_ID         , FS_GAME_PLANE_SETUP_SIG);
+            task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_SETUP_SIG);
+            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET_SIG);
+            task_post_pure_msg(FS_GAME_TASK_BOM_ID           , FS_GAME_BOM_RESET_SIG);
+            task_post_pure_msg(FS_GAME_TASK_MINE_ID          , FS_GAME_MINE_RESET_SIG);
 
             // set timer for display 
             timer_set(AC_TASK_DISPLAY_ID,\
-                      FS_GAME_DISPLAY_GAME_ON_TICK,\
+                      FS_GAME_DISPLAY_ON_TICK,\
                       AC_DISPLAY_GAME_ON_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for bom 150ms 
             timer_set(FS_GAME_TASK_BOM_ID,\
-                      FS_GAME_BOM_ON_TICK,\
+                      FS_GAME_BOM_ON_TICK_SIG,\
                       AC_BOM_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for move mine 150ms 
             timer_set(FS_GAME_TASK_MINE_ID,\
-                      FS_GAME_MINE_ON_TICK,\
+                      FS_GAME_MINE_ON_TICK_SIG,\
                       AC_MINE_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for move wall 150ms 
             timer_set(FS_GAME_TASK_WALL_ID,\
-                      FS_GAME_WALL_ON_TICK,\
+                      FS_GAME_WALL_ON_TICK_SIG,\
                       AC_WALL_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for move explosion 150ms 
             timer_set(FS_GAME_TASK_EXPLOSION_ID,\
-                      FS_GAME_EXPLOSION_ON_TICK,\
+                      FS_GAME_EXPLOSION_ON_TICK_SIG,\
                       AC_EXPLOSION_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for move plane 100ms 
             timer_set(FS_GAME_TASK_PLANE_ID,\
-                      FS_GAME_PLANE_ON_TICK,\
+                      FS_GAME_PLANE_ON_TICK_SIG,\
                       AC_PLANE_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for add mine 1500ms 
             timer_set(FS_GAME_TASK_MINE_ID,\
-                      FS_GAME_MINE_PUSH,\
+                      FS_GAME_MINE_PUSH_SIG,\
                       AC_MINE_PUSH_INTERNAL,\
                       TIMER_PERIODIC);
 
             // set timer for add bom 1800m
             timer_set(FS_GAME_TASK_BOM_ID,\
-                      FS_GAME_BOM_PUSH,\
+                      FS_GAME_BOM_PUSH_SIG,\
                       AC_BOM_PUSH_INTERNAL,\
                       TIMER_PERIODIC);
             break;
         }
-        case FS_GAME_DISPLAY_GAME_ON_TICK: {  
+        case FS_GAME_DISPLAY_ON_TICK: {  
             // POST SIGNAL CHECK ALL CRASH
-            task_post_pure_msg(FS_GAME_TASK_PLANE_ID    , FS_GAME_PLANE_CRASH);
-            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_CRASH);
-            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_ON_TICK);
+            task_post_pure_msg(FS_GAME_TASK_PLANE_ID    , FS_GAME_PLANE_CRASH_SIG);
+            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_CRASH_SIG);
+            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_ON_TICK_SIG);
             break;
         }
         default:
