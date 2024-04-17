@@ -33,11 +33,8 @@ static inline void fs_game_bom_reset() {
 static inline void fs_game_bom_push() {
     if (fs_vec_bom.size() < MAX_BOM) {
         if (!fs_vec_limit_wall_y.empty()) {
-            uint8_t bot_limmit =
-                MAP_HEIGHT -
-                fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);  // get bot limmit
-            uint8_t top_limmit =
-                fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);  // get top limmit
+            uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);  // get bot limmit
+            uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);  // get top limmit
 
             fs_game_bom_infor_t temp_bom;
 
