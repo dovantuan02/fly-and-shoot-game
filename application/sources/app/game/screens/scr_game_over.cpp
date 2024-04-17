@@ -87,7 +87,7 @@ void task_scr_game_over_handle(ak_msg_t *msg) {
             timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_ON_TICK_SIG);
             timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_PUSH_SIG);
 
-            timer_remove_attr(AC_TASK_DISPLAY_ID             , FS_GAME_DISPLAY_GAME_ON_TICK);
+            timer_remove_attr(AC_TASK_DISPLAY_ID             , FS_GAME_DISPLAY_ON_TICK);
             timer_remove_attr(FS_GAME_TASK_BOM_ID            , FS_GAME_BOM_PUSH_SIG);
 
             task_post_pure_msg(FS_GAME_TASK_MINE_ID          , FS_GAME_MINE_RESET_SIG);

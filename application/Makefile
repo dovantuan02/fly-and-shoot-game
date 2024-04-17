@@ -64,7 +64,6 @@ include sources/ak/Makefile.mk
 include sources/app/Makefile.mk
 include sources/common/Makefile.mk
 include sources/driver/Makefile.mk
-include sources/libraries/Makefile.mk
 include sources/sys/Makefile.mk
 include sources/networks/Makefile.mk
 include sources/platform/stm32l/Makefile.mk

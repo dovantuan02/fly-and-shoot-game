@@ -64,15 +64,15 @@ void scr_startup_handle(ak_msg_t *msg) {
                             (uint8_t *)&fs_game_score_history,\
                             FS_MAX_HISTORY) == EEPROM_DRIVER_OK) {
                 for (uint8_t i = 0; i < FS_MAX_HISTORY; i++) {
-                    APP_DBG("SCORE HISTORY [%d] :  %d\n", i, fs_game_score_history[i]);
+                    // APP_DBG("SCORE HISTORY [%d] :  %d\n", i, fs_game_score_history[i]);
                 }
             }
             if (eeprom_read(EEPROM_SETTING_ADDR,\
                             (uint8_t *)&fs_game_setting,\
                             sizeof(fs_game_setting)) == EEPROM_DRIVER_OK) {
-                APP_DBG("SETTING MODE   :  %d\n", fs_game_setting.fs_setting_game_mode);
-                APP_DBG("SETTING MISSLE :  %d\n", fs_game_setting.fs_setting_missle);
-                APP_DBG("SETTING SOUND  :  %d\n", fs_game_setting.fs_setting_sound);
+                APP_DBG("GAME SETTING MODE   :  %d\n", fs_game_setting.fs_setting_game_mode);
+                APP_DBG("GAME SETTING MISSLE :  %d\n", fs_game_setting.fs_setting_missle);
+                APP_DBG("GAME SETTING SOUND  :  %d\n", fs_game_setting.fs_setting_sound);
             }
 
             timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_LOGO, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);

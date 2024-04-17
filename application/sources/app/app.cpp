@@ -49,7 +49,6 @@
 #include "sys_irq.h"
 
 /* arduino include */
-#include "ArduinoJson.h"
 #include "HardwareSerial.h"
 #include "SPI.h"
 #include "WString.h"

@@ -50,10 +50,10 @@ static inline void fs_game_bom_push() {
 // move all bom to left screen
 static inline void fs_game_bom_move() {
     if (!fs_vec_bom.empty()) {
-        for (size_t i = 0; i < fs_vec_bom.size(); i++) {  // scan all bom
-            fs_vec_bom[i].coordinate.x -= BOM_MOVE_X;  // move coordinate x bom
-            if (fs_vec_bom[i].coordinate.x < 0) {      // check bom x < 0 ?
-                fs_vec_bom.erase(fs_vec_bom.begin() - i);  // erase bom
+        for (size_t i = 0; i < fs_vec_bom.size(); i++) {    // scan all bom
+            fs_vec_bom[i].coordinate.x -= BOM_MOVE_X;       // move coordinate x bom
+            if (fs_vec_bom[i].coordinate.x < 0) {           // check bom x < 0 ?
+                fs_vec_bom.erase(fs_vec_bom.begin() - i);   // erase bom
             }
         }
     }
