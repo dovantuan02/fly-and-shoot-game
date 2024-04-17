@@ -49,7 +49,7 @@ static inline void fs_game_mine_push() {
         temp_mine.x = LCD_WIDTH;
         // set mine y range (top y limmit - bot y limmit)
         temp_mine.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit; 
-        temp_mine.state = SHOW;
+        temp_mine.state = FS_SHOW;
         temp_mine.ver = rand() % 2;                   // random mine 
         fs_vec_mine.push_back(temp_mine);             // add mine to mine managerment
 
@@ -86,22 +86,22 @@ static inline void fs_game_mine_move() {
 
 void task_fs_mine_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case SIG_MINE_RESET: {
+        case FS_GAME_MINE_RESET: {
             fs_game_mine_reset();
             break;
         }
 
-        case SIG_MINE_PUSH: {
+        case FS_GAME_MINE_PUSH: {
             fs_game_mine_push();
             break;
         }
 
-        case SIG_MINE_MOVE: {
+        case FS_GAME_MINE_MOVE: {
             fs_game_mine_move();
             break;
         }
-        case SIG_MINE_ON_TICK: {
-            task_post_pure_msg(AC_TASK_MINE_ID, SIG_MINE_MOVE);
+        case FS_GAME_MINE_ON_TICK: {
+            task_post_pure_msg(FS_GAME_TASK_MINE_ID, FS_GAME_MINE_MOVE);
             break;
         }
         default:

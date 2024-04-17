@@ -31,10 +31,10 @@ void btn_mode_callback(void* b) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID			, AC_DISPLAY_BUTON_MODE_PRESSED);
             } 
 			else if (fs_state_game == FS_GAME_ON) {
-                task_post_pure_msg(AC_TASK_MISSLE_ID			, SIG_MISSLE_PUSH);
+                task_post_pure_msg(FS_GAME_TASK_MISSLE_ID			, FS_GAME_MISSLE_PUSH);
             } 
 			else if (fs_state_game == FS_GAME_OVER) {
-                task_post_pure_msg(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_MODE_PRESSED);
+                task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_GAME_OVER_MODE_PRESSED);
             }
             break;
         }
@@ -69,7 +69,7 @@ void btn_up_callback(void* b) {
 		}
 		else if(fs_state_game == FS_GAME_ON)
 		{
-			task_post_pure_msg(AC_TASK_PLANE_ID, SIG_PLANE_UP);
+			task_post_pure_msg(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_UP);
 		}
 		break;
 	}
@@ -100,7 +100,7 @@ void btn_down_callback(void* b) {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_PRESSED);
 		}
 		else if(fs_state_game == FS_GAME_OVER) {
-			task_post_pure_msg(AC_TASK_DISPLAY_GAME_OVER_ID, SIG_DISPLAY_GAME_OVER_DOWN_PRESSED);
+			task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_GAME_OVER_DOWN_PRESSED);
 		}
 		break;
 	}
@@ -112,7 +112,7 @@ void btn_down_callback(void* b) {
 		//APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
 		if(fs_state_game == FS_GAME_OFF)
 		{
-			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_RELEASED);
+			task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_ON_ID, AC_DISPLAY_BUTON_DOWN_RELEASED);
 		}
 		break;
 	}

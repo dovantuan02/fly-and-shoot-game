@@ -49,22 +49,22 @@ void fs_game_explosion_show()
 
 void task_fs_explosion_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case SIG_EXPLOSION_RESET: {
+        case FS_GAME_EXPLOSION_RESET: {
             fs_game_explosion_reset();
             break;
         }
-        case SIG_EXPLOSION_PUSH: {  
+        case FS_GAME_EXPLOSION_PUSH: {  
             // APP_DBG("EXPLOSION : X : %d , Y : %d\n", fs_explosion.x, fs_explosion.y );
             fs_game_explosion_push();
             break;
         }
-        case SIG_EXPLOSION_UPDATE: {
+        case FS_GAME_EXPLOSION_UPDATE: {
             fs_game_explosion_show();
             break;
         }
 
-        case SIG_EXPLOSION_ON_TICK: {
-            task_post_pure_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_UPDATE);
+        case FS_GAME_EXPLOSION_ON_TICK: {
+            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_UPDATE);
             break;
         }
 

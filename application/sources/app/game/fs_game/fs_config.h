@@ -32,21 +32,21 @@ extern fs_game_state_t fs_state_game;
 
 typedef enum 
 {
-    HIDE,
-    SHOW
+    FS_HIDE,
+    FS_SHOW
 }fs_game_icon_state_t;
 
 typedef enum {
-    EASY = 2,
-    NORMAL = 3,
-    HARD = 4
+    FS_GAME_MODE_EASY = 2,
+    FS_GAME_MODE_NORMAL = 3,
+    FS_GAME_MODE_HARD = 4
 } fs_game_mode_t;
 
 typedef struct
 {
     bool fs_setting_sound = false;
     uint8_t fs_setting_missle = 5;
-    fs_game_mode_t fs_setting_game_mode = EASY;
+    fs_game_mode_t fs_setting_game_mode = FS_GAME_MODE_EASY;
 } fs_game_setting_t;
 
 extern fs_game_setting_t fs_game_setting;

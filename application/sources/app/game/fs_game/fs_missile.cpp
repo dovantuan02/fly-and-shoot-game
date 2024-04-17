@@ -43,13 +43,13 @@ static inline void fs_game_missle_reset() {
 
 // add missile to missile managerment
 static inline void fs_game_missle_push() {
-    if (fs_plane.state == SHOW) {
+    if (fs_plane.state == FS_SHOW) {
         // check missile managerment size with max missile
         if (fs_vec_missile.size() < FS_MAX_MISSLE) {                        
             // crate new missile 
             fs_game_missile_infor_t new_missle(fs_plane.x + PLANE_ICON_WIDTH + 2, \
                                                 fs_plane.y + PLANE_ICON_HEIGHT - MISSLE_ICON_HEIGHT,\
-                                                SHOW);
+                                                FS_SHOW);
             // check setting sound
             if (fs_game_setting.fs_setting_sound) {
                 BUZZER_PlayTones(tones_missle_push);
@@ -91,7 +91,7 @@ static inline void fs_game_missle_crash() {
                     fs_vec_mine.erase(fs_vec_mine.begin() + j);                       // erase mine
 
                     // post to "sig_explosion_push" with data(fs_explosion)
-                    task_post_dynamic_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_PUSH, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
                     
                     // check mine ver : 0 -> fs_game_score + 1    ||   1 -> fs_game_score + 2
                     if (fs_vec_mine[i].ver == 0) {       
@@ -118,7 +118,7 @@ static inline void fs_game_missle_crash() {
                     fs_vec_bom.erase(fs_vec_bom.begin() + k);               // erase bom
 
                     // post to "sig_explosion_push" with data(fs_explosion)
-                    task_post_dynamic_msg(AC_TASK_EXPLOSION_ID, SIG_EXPLOSION_PUSH, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
                 }
             }
         }
@@ -131,25 +131,25 @@ static inline void fs_game_missle_crash() {
 
 void task_fs_missle_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case SIG_MISSLE_PUSH: {
-            APP_DBG_SIG("SIG_MISSLE_PUSH\n");
+        case FS_GAME_MISSLE_PUSH: {
+            APP_DBG_SIG("FS_GAME_MISSLE_PUSH\n");
             fs_game_missle_push();
         } break;
 
-        case SIG_MISSLE_MOVE: {  // APP_DBG_SIG("SIG_MISSLE_MOVE\n");
+        case FS_GAME_MISSLE_MOVE: {  // APP_DBG_SIG("FS_GAME_MISSLE_MOVE\n");
             fs_game_missle_move();
         } break;
 
-        case SIG_MISSLE_RESET: {
-            APP_DBG_SIG("SIG_MISSLE_RESET\n");
+        case FS_GAME_MISSLE_RESET: {
+            APP_DBG_SIG("FS_GAME_MISSLE_RESET\n");
             fs_game_missle_reset();
         } break;
 
-        case SIG_MISSLE_ON_TICK: {
-            task_post_pure_msg(AC_TASK_MISSLE_ID, SIG_MISSLE_MOVE);
+        case FS_GAME_MISSLE_ON_TICK: {
+            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID, FS_GAME_MISSLE_MOVE);
             break;
         }
-        case SIG_MISSLE_CRASH: {  // APP_DBG_SIG("SIG_MISSLE_CRASH\n");
+        case FS_GAME_MISSLE_CRASH: {  // APP_DBG_SIG("FS_GAME_MISSLE_CRASH\n");
             fs_game_missle_crash();
             break;
         }

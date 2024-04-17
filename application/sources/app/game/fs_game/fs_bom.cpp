@@ -65,23 +65,23 @@ static inline void fs_game_bom_move() {
 
 void task_fs_bom_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-        case SIG_BOM_RESET: {
-            APP_DBG_SIG("SIG_BOM_RESET\n");
+        case FS_GAME_BOM_RESET: {
+            APP_DBG_SIG("FS_GAME_BOM_RESET\n");
             fs_game_bom_reset();
             break;
         }
-        case SIG_BOM_PUSH: {
-            APP_DBG_SIG("SIG_BOM_PUSH\n");
+        case FS_GAME_BOM_PUSH: {
+            APP_DBG_SIG("FS_GAME_BOM_PUSH\n");
             fs_game_bom_push();
             break;
         }
-        case SIG_BOM_MOVE: {
-            // APP_DBG_SIG("SIG_BOM_MOVE\n");
+        case FS_GAME_BOM_MOVE: {
+            // APP_DBG_SIG("FS_GAME_BOM_MOVE\n");
             fs_game_bom_move();
             break;
         }
-        case SIG_BOM_ON_TICK: {
-            task_post_pure_msg(AC_TASK_BOM_ID, SIG_BOM_MOVE);
+        case FS_GAME_BOM_ON_TICK: {
+            task_post_pure_msg(FS_GAME_TASK_BOM_ID, FS_GAME_BOM_MOVE);
             break;
         }
         default:

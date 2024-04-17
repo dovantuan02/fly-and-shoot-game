@@ -67,7 +67,9 @@
     "utility": "cpp",
     "valarray": "cpp",
     "forward_list": "cpp",
-    "unordered_map": "cpp"
+    "unordered_map": "cpp",
+    "cstring": "cpp",
+    "random": "cpp"
   }
 
 }

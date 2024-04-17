@@ -81,12 +81,12 @@ static inline fs_setting_option_t fs_switch_option_setting_down(fs_setting_optio
 // switch setting game mode (easy, normal , hard)
 static inline fs_game_mode_t fs_switch_game_mode( fs_game_mode_t curr_setting_game_mode) {
     switch (curr_setting_game_mode) {
-        case EASY:
-            return NORMAL;
-        case NORMAL:
-            return HARD;
-        case HARD:
-            return EASY;
+        case FS_GAME_MODE_EASY:
+            return FS_GAME_MODE_NORMAL;
+        case FS_GAME_MODE_NORMAL:
+            return FS_GAME_MODE_HARD;
+        case FS_GAME_MODE_HARD:
+            return FS_GAME_MODE_EASY;
         default:
             return curr_setting_game_mode;
     }
@@ -140,10 +140,10 @@ static void fs_view_setting(fs_setting_option_t view_mode) {
         }
         else if (view_mode <= 2) {
             if (i == 0) {
-                if (fs_game_setting.fs_setting_game_mode == EASY) {
+                if (fs_game_setting.fs_setting_game_mode == FS_GAME_MODE_EASY) {
                     view_render.print("EASY");
                 } 
-                else if (fs_game_setting.fs_setting_game_mode == NORMAL) {
+                else if (fs_game_setting.fs_setting_game_mode == FS_GAME_MODE_NORMAL) {
                     view_render.print("NORMAL");
                 } 
                 else {

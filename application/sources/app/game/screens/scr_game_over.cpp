@@ -77,40 +77,40 @@ void task_scr_game_over_handle(ak_msg_t *msg) {
         case SCREEN_ENTRY: {
             APP_DBG_SIG("SCREEN_ENTRY_GAME_OVER\n");
 
-            // REMOVE TIMER ACTIVE OBJECTs
-            timer_remove_attr(AC_TASK_MINE_ID           , SIG_MINE_ON_TICK);
-            timer_remove_attr(AC_TASK_MINE_ID           , SIG_MINE_PUSH);
+            // remove timer active objects
+            timer_remove_attr(FS_GAME_TASK_MINE_ID           , FS_GAME_MINE_ON_TICK);
+            timer_remove_attr(FS_GAME_TASK_MINE_ID           , FS_GAME_MINE_PUSH);
 
-            timer_remove_attr(AC_TASK_WALL_ID           , SIG_WALL_ON_TICK);
-            timer_remove_attr(AC_TASK_PLANE_ID          , SIG_PLANE_ON_TICK);
+            timer_remove_attr(FS_GAME_TASK_WALL_ID           , FS_GAME_WALL_ON_TICK);
+            timer_remove_attr(FS_GAME_TASK_PLANE_ID          , FS_GAME_PLANE_ON_TICK);
 
-            timer_remove_attr(AC_TASK_EXPLOSION_ID      , SIG_EXPLOSION_ON_TICK);
-            timer_remove_attr(AC_TASK_EXPLOSION_ID      , SIG_EXPLOSION_PUSH);
+            timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_ON_TICK);
+            timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_PUSH);
 
-            timer_remove_attr(AC_TASK_DISPLAY_ID        , SIG_DISPLAY_GAME_ON_TICK);
-            timer_remove_attr(AC_TASK_BOM_ID            , SIG_BOM_PUSH);
+            timer_remove_attr(AC_TASK_DISPLAY_ID             , FS_GAME_DISPLAY_GAME_ON_TICK);
+            timer_remove_attr(FS_GAME_TASK_BOM_ID            , FS_GAME_BOM_PUSH);
 
-            task_post_pure_msg(AC_TASK_MINE_ID          , SIG_MINE_RESET);
-            task_post_pure_msg(AC_TASK_MISSLE_ID        , SIG_MISSLE_RESET);
-            task_post_pure_msg(AC_TASK_WALL_ID          , SIG_WALL_RESET);
-            task_post_pure_msg(AC_TASK_BOM_ID           , SIG_BOM_RESET);
-            task_post_pure_msg(AC_TASK_EXPLOSION_ID     , SIG_EXPLOSION_RESET);
+            task_post_pure_msg(FS_GAME_TASK_MINE_ID          , FS_GAME_MINE_RESET);
+            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID        , FS_GAME_MISSLE_RESET);
+            task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_RESET);
+            task_post_pure_msg(FS_GAME_TASK_BOM_ID           , FS_GAME_BOM_RESET);
+            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET);
 
             // SAVE SCORE TO HISTORY
             fs_write_history_epprom();
             break;
         }
-        case SIG_DISPLAY_GAME_OVER_DOWN_PRESSED: {
+        case FS_GAME_DISPLAY_GAME_OVER_DOWN_PRESSED: {
             fs_state_game = FS_GAME_OFF;
             SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
             break;
         }
-        case SIG_DISPLAY_GAME_OVER_ON_TICK: {
+        case FS_GAME_DISPLAY_GAME_OVER_ON_TICK: {
             fs_state_game = FS_GAME_OVER;
             SCREEN_TRAN(task_scr_game_over_handle, &scr_game_over);
             break;
         }
-        case SIG_DISPLAY_GAME_OVER_MODE_PRESSED: {
+        case FS_GAME_DISPLAY_GAME_OVER_MODE_PRESSED: {
             if (fs_state_game == FS_GAME_OVER) {
                 SCREEN_TRAN(task_scr_game_on_handle, &scr_game_on);
                 fs_state_game = FS_GAME_ON;
