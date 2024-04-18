@@ -17,8 +17,8 @@
 /***********************************************************
 * VARIABLE PROCESS PLANE
 ***********************************************************/
-#define PLANE_Y_DOWN (1)
-#define PLANE_Y_UP   (6)
+#define FS_PLANE_Y_DOWN (1)
+#define FS_PLANE_Y_UP   (6)
 
 /*
 *   fs_plane : VARIABLE CONTROL PLANE
@@ -40,7 +40,7 @@ static inline void fs_game_plane_setup() {
 
 // plane down every 100ms
 static inline void fs_game_plane_down() {
-    fs_plane.coordinate.y += PLANE_Y_DOWN;
+    fs_plane.coordinate.y += FS_PLANE_Y_DOWN;
     if (fs_plane.coordinate.y > MAP_HEIGHT) {
         fs_plane.state = FS_HIDE;
         fs_plane.coordinate.y = MAX_LCD_HEIGHT;
@@ -49,7 +49,7 @@ static inline void fs_game_plane_down() {
 
 // player press button -> plane up
 static inline void fs_game_plane_up() {
-    fs_plane.coordinate.y -= PLANE_Y_UP;
+    fs_plane.coordinate.y -= FS_PLANE_Y_UP;
 }
 
 // plane touch wall top or bot

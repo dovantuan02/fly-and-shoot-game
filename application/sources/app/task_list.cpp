@@ -23,14 +23,14 @@ const task_t app_task_table[] = {
 	/*************************************************************************/
 	/* TASK  GAME ON */
 	/*************************************************************************/
-	{FS_GAME_TASK_DISPLAY_GAME_ON_ID	,	TASK_PRI_LEVEL_4	,	task_scr_game_on_handle},
+	{FS_GAME_TASK_DISPLAY_GAME_ON_ID	,	TASK_PRI_LEVEL_4	,	task_scr_fs_game_on_handle},
 	{FS_GAME_TASK_PLANE_ID				, 	TASK_PRI_LEVEL_4	, 	task_fs_plane_hanle		},
 	{FS_GAME_TASK_MISSLE_ID				, 	TASK_PRI_LEVEL_4	, 	task_fs_missle_handle		},
 	{FS_GAME_TASK_WALL_ID				,	TASK_PRI_LEVEL_4	, 	task_fs_wall_handle		},
 	{FS_GAME_TASK_EXPLOSION_ID			,	TASK_PRI_LEVEL_4	,	task_fs_explosion_handle	},
 	{FS_GAME_TASK_BOM_ID				,	TASK_PRI_LEVEL_4	,	task_fs_bom_handle			},
 	{FS_GAME_TASK_MINE_ID				, 	TASK_PRI_LEVEL_4	, 	task_fs_mine_handle		},
-	{FS_GAME_TASK_DISPLAY_GAME_OVER_ID	, 	TASK_PRI_LEVEL_4	, 	task_scr_game_over_handle	},
+	{FS_GAME_TASK_DISPLAY_GAME_OVER_ID	, 	TASK_PRI_LEVEL_4	, 	task_scr_fs_game_over_handle	},
 	
 	#if defined(TASK_ZIGBEE_EN)
 	{AC_TASK_ZIGBEE_ID			,	TASK_PRI_LEVEL_4	,	task_zigbee			},

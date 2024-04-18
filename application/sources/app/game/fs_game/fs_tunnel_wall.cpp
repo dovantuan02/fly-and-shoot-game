@@ -16,8 +16,8 @@ using namespace std;
 /***********************************************************
 * VARIABLE PROCESS PLANE
 ***********************************************************/
-#define WALL_MOVE_X (4)
-#define SPLIT_WALL_X (4)
+#define FS_WALL_MOVE_X  (4)
+#define FS_SPLIT_WALL_X (4)
 
 /*
 * fs_vec_wall : VECTOR WALL MANAGERMENT
@@ -62,7 +62,7 @@ static inline void fs_game_wall_update() {
     if (!fs_vec_wall.empty()) {
         // move "x" map
         for (uint8_t i = 0; i < NUM_WALL; i++) {                         // scan all wall
-            fs_vec_wall[i].x -= WALL_MOVE_X;                             // move wall(x)
+            fs_vec_wall[i].x -= FS_WALL_MOVE_X;                             // move wall(x)
             if (fs_vec_wall[i].x < (-LCD_WIDTH)) {                       // check wall with -lcd_width(-124)
                 fs_vec_wall[i].x = LCD_WIDTH + 1;                        // restore wall(x) -> 124
             }

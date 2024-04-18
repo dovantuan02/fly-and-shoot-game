@@ -16,12 +16,12 @@
 /***********************************************************
 * VARIABLE PROCESS EXPLOSION
 ***********************************************************/
-#define MINE_MOVE_X (4)
+#define FS_MINE_MOVE_X  (4)
 
 /*
 * max bom -> get from game setting mode (easy = 2, normal = 3, hard = 4)
 */
-#define MAX_MINE    (fs_game_setting.fs_setting_game_mode + 3)
+#define FS_MAX_MINE    (fs_game_setting.fs_setting_game_mode + 3)
 
 /*
 * fs_vec_mine : VECTOR MINE MANAGERMENT
@@ -38,7 +38,7 @@ static inline void fs_game_mine_reset() {
 
 // add mine to mine managerment
 static inline void fs_game_mine_push() {
-    if (static_cast<int>(fs_vec_mine.size()) <= MAX_MINE) {
+    if (static_cast<int>(fs_vec_mine.size()) <= FS_MAX_MINE) {
         // get bot y limmit 
         uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);
         // get top y limmit
@@ -72,7 +72,7 @@ static inline void fs_game_mine_move() {
     if (!fs_vec_mine.empty()) {
         for (size_t i = 0; i < fs_vec_mine.size(); i++) {            // scan all mine
             if (fs_vec_mine[i].coordinate.x > 0) {                              // mine(x)  bigger min lcd(x) 
-                fs_vec_mine[i].coordinate.x -= MINE_MOVE_X;                     // move mine x
+                fs_vec_mine[i].coordinate.x -= FS_MINE_MOVE_X;                     // move mine x
                 continue;
             }
             fs_vec_mine.erase(fs_vec_mine.begin() + i);             // erase mine

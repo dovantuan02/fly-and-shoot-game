@@ -37,10 +37,14 @@ typedef enum
 }fs_game_icon_state_t;
 
 typedef enum {
+    FS_GAME_MODE_FISRT = 1,
     FS_GAME_MODE_EASY = 2,
     FS_GAME_MODE_NORMAL = 3,
-    FS_GAME_MODE_HARD = 4
+    FS_GAME_MODE_HARD = 4,
+    FS_GAME_MODE_END
 } fs_game_mode_t;
+
+#define FS_GAME_MODE_OPTION_MAX     (FS_GAME_MODE_END - FS_GAME_MODE_FISRT -1)
 
 typedef struct
 {

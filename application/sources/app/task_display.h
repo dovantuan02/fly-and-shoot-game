@@ -18,6 +18,6 @@
 
 extern scr_mng_t scr_mng_app;
 
-extern void scr_startup_handle(ak_msg_t* msg);
+extern void task_scr_fs_startup_handle(ak_msg_t* msg);
 
 #endif // __TASK_DISPLAY_H__

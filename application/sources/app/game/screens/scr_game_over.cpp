@@ -17,13 +17,13 @@
 * VIEW - GAME OVER
 ***********************************************************/
 
-static void view_scr_game_over();
+static void view_scr_fs_game_over();
 
 view_dynamic_t dyn_view_game_over = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    view_scr_game_over};
+    view_scr_fs_game_over};
 
 view_screen_t scr_game_over = {
     &dyn_view_game_over,
@@ -55,24 +55,22 @@ void fs_write_history_epprom() {
 }
 
 // show score now
-void view_scr_game_over() {
+void view_scr_fs_game_over() {
     view_render.setCursor(40, 10);
     view_render.print("GAME OVER");
     view_render.drawRoundRect(10, 25, 110, 18, 5, WHITE);
     view_render.setCursor(20, 30);
     view_render.print("YOUR SCORE : ");
     view_render.print(fs_game_score);
-    char temp[22];
-    sprintf(temp, " MENU         RE-PLAY");
     view_render.setCursor(0, 54);
-    view_render.print(temp);
+    view_render.print(" MENU         RE-PLAY");
 }
 
 /***********************************************************
 * SCREEN GAME ON HANDLE
 ***********************************************************/
 
-void task_scr_game_over_handle(ak_msg_t *msg) {
+void task_scr_fs_game_over_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case SCREEN_ENTRY: {
             APP_DBG_SIG("SCREEN_ENTRY_GAME_OVER\n");
@@ -102,18 +100,18 @@ void task_scr_game_over_handle(ak_msg_t *msg) {
         }
         case FS_GAME_DISPLAY_OVER_DOWN_PRESSED: {
             fs_state_game = FS_GAME_OFF;
-            SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
+            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
         case FS_GAME_DISPLAY_OVER_ON_TICK: {
             APP_DBG("FS_GAME_DISPLAY_OVER_ON_TICK\n");
             fs_state_game = FS_GAME_OVER;
-            SCREEN_TRAN(task_scr_game_over_handle, &scr_game_over);
+            SCREEN_TRAN(task_scr_fs_game_over_handle, &scr_game_over);
             break;
         }
         case FS_GAME_DISPLAY_OVER_MODE_PRESSED: {
             if (fs_state_game == FS_GAME_OVER) {
-                SCREEN_TRAN(task_scr_game_on_handle, &scr_game_on);
+                SCREEN_TRAN(task_scr_fs_game_on_handle, &scr_game_on);
                 fs_state_game = FS_GAME_ON;
                 fs_game_score = 0;
             }

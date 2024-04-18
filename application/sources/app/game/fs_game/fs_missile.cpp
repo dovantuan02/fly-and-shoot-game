@@ -20,8 +20,8 @@
 * VARIABLE PROCESS MISSILE
 ***********************************************************/
 
-#define MISSLE_SETUP_X (PLANE_ICON_WIDTH)
-#define MISSLE_MOVE_X  (4)
+#define FS_MISSLE_SETUP_X (PLANE_ICON_WIDTH)
+#define FS_MISSLE_MOVE_X  (4)
 
 /*
 * fs_vec_missile : VECTOR MISSILE MANAGERMENT
@@ -63,7 +63,7 @@ static inline void fs_game_missle_push() {
 static inline void fs_game_missle_move() {
     if (!fs_vec_missile.empty()) {
         for (size_t i = 0; i < fs_vec_missile.size(); i++) {          // SCAN ALL MISSILE
-            fs_vec_missile[i].coordinate.x += MISSLE_MOVE_X;                     // MOVE MISSILE WITH +(X)
+            fs_vec_missile[i].coordinate.x += FS_MISSLE_MOVE_X;                     // MOVE MISSILE WITH +(X)
 
             if (fs_vec_missile[i].coordinate.x >= LCD_WIDTH) {                   // CHECK MISSILE(X) WITH LCD_WIDTH(124)
                 fs_vec_missile.erase(fs_vec_missile.begin() + i);           // ERASE MISSILE

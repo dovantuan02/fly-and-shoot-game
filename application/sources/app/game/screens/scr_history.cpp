@@ -17,13 +17,13 @@ fs_table_setting_infor_t table_setting_infor;
 * VIEW - HISTORY
 ***********************************************************/
 
-static void view_scr_history();
+static void view_scr_fs_history();
 
 view_dynamic_t dyn_view_history = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    view_scr_history};
+    view_scr_fs_history};
 
 view_screen_t scr_history = {
     &dyn_view_history,
@@ -33,7 +33,7 @@ view_screen_t scr_history = {
     .focus_item = 0,
 };
 
-void view_scr_history() {
+void view_scr_fs_history() {
 #define TEXT_X (10)
 #define TEXT_Y (10)
 
@@ -65,10 +65,10 @@ void view_scr_history() {
 * SCREEN HISTORY HANDLE
 ***********************************************************/
 
-void task_scr_history_handle(ak_msg_t *msg) {
+void task_scr_fs_history_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case AC_DISPLAY_BUTON_MODE_PRESSED: {
-            SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
+            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
 

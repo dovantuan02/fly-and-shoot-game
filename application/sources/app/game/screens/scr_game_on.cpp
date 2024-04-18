@@ -41,13 +41,13 @@ static const unsigned char *fs_arr_explosion_icon[FS_NUM_EXPLOSION_ICON] = {
 * VIEW - GAME ON
 ***********************************************************/
 
-static void view_scr_game_on();
+static void view_scr_fs_game_on();
 
 view_dynamic_t dyn_view_game_on = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    view_scr_game_on
+    view_scr_fs_game_on
 };
 
 view_screen_t scr_game_on = {
@@ -141,7 +141,7 @@ void fs_game_view_infor_fly() {
     view_render.print(FS_MAX_MISSLE - fs_vec_missile.size());
 }
 
-void view_scr_game_on() {
+void view_scr_fs_game_on() {
     fs_game_view_wall();
     fs_game_view_mine();
     fs_game_view_explosion();
@@ -155,7 +155,7 @@ void view_scr_game_on() {
 * SCREEN GAME ON HANDLE
 ***********************************************************/
 
-void task_scr_game_on_handle(ak_msg_t *msg) {
+void task_scr_fs_game_on_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case SCREEN_ENTRY: {
             APP_DBG_SIG("SCREEN_ENTRY\n");

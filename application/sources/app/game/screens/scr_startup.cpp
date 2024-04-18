@@ -10,13 +10,13 @@
 /***********************************************************
 * VARIABLE SCREEN STARTUP
 ***********************************************************/
-static void view_scr_startup();
+static void view_scr_fs_startup();
 
 view_dynamic_t dyn_view_startup = {
 	{
 		.item_type = ITEM_TYPE_DYNAMIC,
 	},
-	view_scr_startup
+	view_scr_fs_startup
 };
 
 view_screen_t scr_startup = {
@@ -28,7 +28,7 @@ view_screen_t scr_startup = {
 };
 
 // view logo startup
-void view_scr_startup() {
+void view_scr_fs_startup() {
 #define AK_LOGO_AXIS_X		(23)
 #define AK_LOGO_TEXT		(AK_LOGO_AXIS_X + 4)
 	/* ak logo */
@@ -51,11 +51,11 @@ void view_scr_startup() {
 * TASK STARTUP HANDLE 
 ***********************************************************/
 
-void scr_startup_handle(ak_msg_t *msg) {
+void task_scr_fs_startup_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case AC_DISPLAY_INITIAL: {
             APP_DBG_SIG("AC_DISPLAY_INITIAL\n");
-            // INIT SCREEN DISPLAY
+            // init screen display
             view_render.initialize();
             view_render_display_on();
             
@@ -81,12 +81,12 @@ void scr_startup_handle(ak_msg_t *msg) {
         case AC_DISPLAY_BUTON_MODE_RELEASED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_RELEASED\n");
             timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
-            SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
+            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
         case AC_DISPLAY_SHOW_LOGO: {
             APP_DBG_SIG("AC_DISPLAY_SHOW_LOGO\n");
-            SCREEN_TRAN(task_scr_menu_handler, &scr_menu);
+            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
         case AC_DISPLAY_SHOW_IDLE: {
