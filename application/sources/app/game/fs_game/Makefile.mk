@@ -10,4 +10,3 @@ SOURCES_CPP += sources/app/game/fs_game/fs_tunnel_wall.cpp
 SOURCES_CPP += sources/app/game/fs_game/fs_explosion.cpp
 SOURCES_CPP += sources/app/game/fs_game/fs_mine.cpp
 SOURCES_CPP += sources/app/game/fs_game/fs_bom.cpp
-SOURCES_CPP += sources/app/game/fs_game/fs_config.cpp

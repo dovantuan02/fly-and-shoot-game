@@ -28,8 +28,6 @@ typedef enum
     FS_GAME_OVER
 }fs_game_state_t;
 
-extern fs_game_state_t fs_state_game;
-
 typedef enum 
 {
     FS_HIDE,
@@ -59,6 +57,7 @@ typedef struct
     fs_game_mode_t fs_setting_game_mode = FS_GAME_MODE_EASY;
 } fs_game_setting_t;
 
+extern fs_game_state_t fs_state_game;
 extern fs_game_setting_t fs_game_setting;
 extern uint8_t fs_game_score;
 extern uint16_t fs_game_score_history[FS_MAX_HISTORY];
