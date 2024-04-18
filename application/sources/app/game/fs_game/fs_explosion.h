@@ -1,5 +1,5 @@
-#ifndef PRC_EXPLOSION_H
-#define PRC_EXPLOSION_H
+#ifndef FS_EXPLOSION_H
+#define FS_EXPLOSION_H
 
 #include <vector>
 
@@ -20,4 +20,5 @@ typedef struct
 
 extern vector<fs_explosion_infor_t> fs_vec_explosion;
 extern fs_explosion_infor_t fs_explosion;
-#endif
+
+#endif  //FS_EXPLOSION_H

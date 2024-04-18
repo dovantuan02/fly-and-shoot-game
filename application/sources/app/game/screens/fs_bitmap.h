@@ -1,5 +1,6 @@
-#ifndef SRC_BITMAP_H
-#define SRC_BITMAP_H
+#ifndef FS_BITMAP_H
+#define FS_BITMAP_H
+
 #include "pgmspace.h"
 
 #define PLANE_ICON_HEIGHT   6
@@ -33,4 +34,4 @@ extern const unsigned char map_II [] PROGMEM;
 #define QR_TUTORIAL_WIDTH       60
 extern const unsigned char QR_tutorial[] PROGMEM;
 
-#endif
+#endif  //FS_BITMAP_H

@@ -9,10 +9,9 @@
 #include "fs_tunnel_wall.h"
 #include "fs_explosion.h"
 #include "fs_mine.h"
-
-#include "scr_bitmap.h"
 #include "fs_config.h"
 
+#include "fs_bitmap.h"
 /***********************************************************
 * VARIABLE PROCESS EXPLOSION
 ***********************************************************/

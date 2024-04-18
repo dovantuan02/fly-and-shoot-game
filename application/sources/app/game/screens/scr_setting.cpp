@@ -23,7 +23,7 @@ typedef enum {
     FS_SETTING_END
 } fs_option_setting_t;
 
-#define FS_OPTION_SETTING_MAX       (FS_SETTING_END - FS_SETTING_FISRT - 1)
+#define FS_OPTION_SETTING_MAX   (FS_SETTING_END - FS_SETTING_FISRT - 1)
 #define FS_MAX_TITLE_SETTING    (4)
 
 fs_option_setting_t fs_option_setting = FS_SETTING_GAME_MODE;

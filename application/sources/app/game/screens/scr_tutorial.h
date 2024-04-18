@@ -7,4 +7,4 @@ extern view_dynamic_t dyn_view_tutorial;
 extern view_screen_t scr_tutorial;
 extern void task_scr_fs_tutorial_handle(ak_msg_t *msg);
 
-#endif
+#endif  //SCR_TUTORIAL_H

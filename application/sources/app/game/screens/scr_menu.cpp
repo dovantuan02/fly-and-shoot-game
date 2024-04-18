@@ -10,12 +10,12 @@
 #include "scr_menu.h"
 #include "scr_idle.h"
 #include "scr_game_on.h"
-#include "scr_bitmap.h"
 #include "scr_tutorial.h"
 #include "scr_setting.h"
 #include "scr_history.h"
-#include "fs_config.h"
+#include "fs_bitmap.h"
 
+#include "fs_config.h"
 #include "fs_buzzer_def.h"
 
 /***********************************************************

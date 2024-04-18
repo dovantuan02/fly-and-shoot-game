@@ -8,7 +8,7 @@
 #include "fs_plane.h"
 #include "fs_config.h"
 
-#include "scr_bitmap.h"
+#include "fs_bitmap.h"
 #include "scr_game_over.h"
 
 using namespace std;
@@ -52,7 +52,7 @@ static inline void fs_game_wall_setup() {
 
         temp_wall.x = i * 128;
         temp_wall.y = 0;
-        temp_wall.ver = WALL_I;
+        temp_wall.ver = FS_WALL_I;
         fs_vec_wall.push_back(temp_wall);
     }
 }

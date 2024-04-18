@@ -1,4 +1,5 @@
 #include <queue>
+
 #include "app.h"
 #include "app_dbg.h"
 #include "task_display.h"
@@ -11,12 +12,10 @@
 #include "fs_missile.h"
 #include "fs_plane.h"
 #include "fs_tunnel_wall.h"
-#include "scr_bitmap.h"
-
-
 #include "fs_config.h"
-#include "scr_game_on.h"
 
+#include "scr_game_on.h"
+#include "fs_bitmap.h"
 /***********************************************************
 * VARIABLE AND ARRAY BITMAP VIEW GAME ON
 ***********************************************************/

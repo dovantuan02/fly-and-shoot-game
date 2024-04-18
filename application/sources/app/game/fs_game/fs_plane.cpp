@@ -11,7 +11,7 @@
 #include "fs_explosion.h"
 #include "fs_buzzer_def.h"
 
-#include "scr_bitmap.h"
+#include "fs_bitmap.h"
 #include "scr_game_over.h"
 
 /***********************************************************

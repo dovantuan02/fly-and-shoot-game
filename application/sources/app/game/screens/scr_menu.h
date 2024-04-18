@@ -7,4 +7,5 @@
 extern view_dynamic_t dyn_view_menu;
 extern view_screen_t scr_menu;
 extern void task_scr_fs_menu_handler(ak_msg_t *msg);
-#endif
+
+#endif  //SCR_MENU_H

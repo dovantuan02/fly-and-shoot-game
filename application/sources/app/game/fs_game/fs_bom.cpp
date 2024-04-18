@@ -5,7 +5,7 @@
 #include "fs_bom.h"
 #include "fs_tunnel_wall.h"
 
-#include "scr_bitmap.h"
+#include "fs_bitmap.h"
 
 /***********************************************************
 * VARIABLE PROCESS BOM
@@ -14,15 +14,15 @@
 /*
 * max bom -> get from game setting mode (easy = 2, normal = 3, hard = 4)
 */
-#define MAX_BOM           (fs_game_setting.fs_setting_game_mode)
+#define FS_MAX_BOM           (fs_game_setting.fs_setting_game_mode)
 
-#define BOM_MOVE_X        (4)
+#define FS_BOM_MOVE_X        (4)
 
 vector<fs_bom_infor_t> fs_vec_bom;        // variable bom managerment
 
 // clear all bom available
 static inline void fs_game_bom_reset() {
-    // APP_DBG("MAX BOM : %d\n", MAX_BOM);
+    // APP_DBG("MAX BOM : %d\n", FS_MAX_BOM);
     if (!fs_vec_bom.empty()) {
         fs_vec_bom.clear();
         fs_vec_bom.shrink_to_fit();
@@ -31,7 +31,7 @@ static inline void fs_game_bom_reset() {
 
 // add bom with top and bot limmit
 static inline void fs_game_bom_push() {
-    if (fs_vec_bom.size() < MAX_BOM) {
+    if (fs_vec_bom.size() < FS_MAX_BOM) {
         if (!fs_vec_limit_wall_y.empty()) {
             uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);  // get bot limmit
             uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);  // get top limmit
@@ -51,7 +51,7 @@ static inline void fs_game_bom_push() {
 static inline void fs_game_bom_move() {
     if (!fs_vec_bom.empty()) {
         for (size_t i = 0; i < fs_vec_bom.size(); i++) {    // scan all bom
-            fs_vec_bom[i].coordinate.x -= BOM_MOVE_X;       // move coordinate x bom
+            fs_vec_bom[i].coordinate.x -= FS_BOM_MOVE_X;       // move coordinate x bom
             if (fs_vec_bom[i].coordinate.x < 0) {           // check bom x < 0 ?
                 fs_vec_bom.erase(fs_vec_bom.begin() - i);   // erase bom
             }

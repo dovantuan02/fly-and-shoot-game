@@ -1,5 +1,5 @@
-#ifndef PRC_MAP_H
-#define PRC_MAP_H
+#ifndef FS_TUNNEL_WALL_H
+#define FS_TUNNEL_WALL_H
 #include <vector>
 #include "stdint.h"
 
@@ -11,8 +11,8 @@ using namespace std;
 
 enum ver_wall_t
 {
-    WALL_I = 0,
-    WALL_II
+    FS_WALL_I = 0,
+    FS_WALL_II
 };
 
 typedef struct 
@@ -25,4 +25,4 @@ typedef struct
 extern vector<vector<uint8_t>> fs_vec_limit_wall_y;
 extern vector<fs_wall_infor_t> fs_vec_wall;
 
-#endif
+#endif  //FS_TUNNEL_WALL_H

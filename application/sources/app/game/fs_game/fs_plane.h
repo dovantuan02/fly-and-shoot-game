@@ -1,5 +1,5 @@
-#ifndef PRC_PLANE_H
-#define PRC_PLANE_H
+#ifndef FS_PLANE_H
+#define FS_PLANE_H
 
 #include "app.h"
 
@@ -12,4 +12,5 @@ typedef struct
 } fs_plane_infor_t;
 
 extern fs_plane_infor_t fs_plane;
-#endif
+
+#endif  //FS_PLANE_H

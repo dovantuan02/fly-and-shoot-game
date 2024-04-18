@@ -3,7 +3,7 @@
 #include "screen_manager.h"
 
 #include "scr_tutorial.h"
-#include "scr_bitmap.h"
+#include "fs_bitmap.h"
 #include "scr_menu.h"
 
 /***********************************************************

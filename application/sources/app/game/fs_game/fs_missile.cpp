@@ -13,7 +13,7 @@
 #include "fs_config.h"
 #include "fs_buzzer_def.h"
 
-#include "scr_bitmap.h"
+#include "fs_bitmap.h"
 
 
 /***********************************************************

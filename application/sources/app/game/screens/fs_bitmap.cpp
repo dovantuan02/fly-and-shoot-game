@@ -1,4 +1,5 @@
-#include "scr_bitmap.h"
+#include "fs_bitmap.h"
+
 #include "view_render.h"
 
 // pixel size 7x7px

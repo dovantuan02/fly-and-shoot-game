@@ -14,4 +14,4 @@ typedef struct
 }fs_bom_infor_t;
 
 extern vector<fs_bom_infor_t> fs_vec_bom;
-#endif
+#endif  //FS_BOM_H

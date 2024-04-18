@@ -1,5 +1,5 @@
-#ifndef SCREEN_INFOR_H
-#define SCREEN_INFOR_H
+#ifndef FS_CONFIG_H
+#define FS_CONFIG_H
 
 #include "stdio.h"
 #include <vector>
@@ -63,4 +63,4 @@ extern uint8_t fs_game_score;
 extern uint16_t fs_game_score_history[FS_MAX_HISTORY];
 
 
-#endif
+#endif  //FS_CONFIG_H
