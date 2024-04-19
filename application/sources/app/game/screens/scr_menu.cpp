@@ -23,7 +23,7 @@
 ***********************************************************/
 #define FS_MAX_TITLE_MENU      (5)
 
-static const char* fs_arr_title_menu[FS_MAX_TITLE_MENU] =  {"  PLAY  ", "SETTING", "TUTORIAL", "HISTORY", "  EXIT  "};
+static const char* fs_arr_title_menu[FS_MAX_TITLE_MENU] =  {"PLAY  ", "SETTING", "TUTORIAL", "HISTORY", "EXIT  "};
 
 typedef enum 
 {
@@ -90,36 +90,35 @@ static inline fs_option_menu_t fs_switch_option_menu (fs_option_menu_t fs_curr_o
 
 // view title menu screen
 void fs_view_menu() {
-#define TEXT_X              (42)
+#define TEXT_X              (15)
 #define TEXT_Y              (10)
 
     view_render.setTextSize(1);
-
+    view_render.setTextColor(WHITE);
+    
     uint8_t temp_option = static_cast<int>(fs_option_menu);
     if(temp_option > FS_NUM_CELL)
     {
         temp_option = temp_option - FS_NUM_CELL;
     }
     for (int i = 0; i < FS_NUM_CELL; i++) {
+        view_render.setCursor(TEXT_X, TEXT_Y + (i * FS_CELL_Y));
         if(i == (temp_option - 1))
         {
             view_render.fillRoundRect(FS_ROUND_RECT_X,\
                             FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                            FS_ROUND_RECT_WIDTH,\
-                            FS_ROUND_RECT_HEIGHT,\
-                            3, WHITE);
-            view_render.setCursor(TEXT_X, TEXT_Y + (i * FS_CELL_Y));
-            view_render.setTextColor(BLACK);
+                            FS_SLIDER_WIDTH,\
+                            FS_SLIDER_HEIGHT,\
+                            1, WHITE);
+            
             view_render.print(fs_arr_title_menu[static_cast<int>(fs_option_menu) - 1]);
         }
             else {
-                view_render.setTextColor(WHITE);
-                view_render.setCursor(TEXT_X, TEXT_Y + (i * FS_CELL_Y));
-                view_render.drawRoundRect(FS_ROUND_RECT_X,\
+                view_render.fillRoundRect(FS_ROUND_RECT_X,\
                                             FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                            FS_ROUND_RECT_WIDTH,\
-                                            FS_ROUND_RECT_HEIGHT,\
-                                            2, WHITE);
+                                            FS_SLIDER_WIDTH,\
+                                            FS_SLIDER_HEIGHT,\
+                                            1, BLACK);
                 if (static_cast<int>(fs_option_menu) <= 3) {
                     view_render.print(fs_arr_title_menu[i]);
                 }
@@ -129,11 +128,11 @@ void fs_view_menu() {
                         view_render.print(fs_arr_title_menu[FS_NUM_CELL + i]);
                     }
                     else {
-                        view_render.drawRoundRect(FS_ROUND_RECT_X,\
+                        view_render.fillRoundRect(FS_ROUND_RECT_X,\
                                             FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                            FS_ROUND_RECT_WIDTH,\
-                                            FS_ROUND_RECT_HEIGHT,\
-                                            2, BLACK);
+                                            FS_SLIDER_WIDTH,\
+                                            FS_SLIDER_HEIGHT,\
+                                            1, BLACK);
                     }
                 }
         } 

@@ -11,8 +11,8 @@ using namespace std;
 #define FS_NUM_CELL            (3)
 #define FS_CELL_Y              (17)
 
-#define FS_ROUND_RECT_WIDTH    (118)
-#define FS_ROUND_RECT_HEIGHT   (15)
+#define FS_SLIDER_WIDTH    (5)
+#define FS_SLIDER_HEIGHT   (15)
 #define FS_ROUND_RECT_X        (5)
 #define FS_ROUND_RECT_Y        (6)
 

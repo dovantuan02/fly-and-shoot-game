@@ -89,32 +89,27 @@ static inline fs_game_mode_t fs_switch_game_mode( fs_game_mode_t curr_setting_ga
 static void fs_view_setting() {
     view_render.setTextColor(WHITE);
     view_render.setTextSize(1);
-    view_render.setTextSize(1);
-
     uint8_t temp_option = static_cast<int>(fs_option_setting);
     if (temp_option > FS_NUM_CELL) {
         temp_option = temp_option - FS_NUM_CELL;
     }
     for (int i = 0; i < FS_NUM_CELL; i++) {
+        view_render.setCursor(15, 10 + (i * FS_CELL_Y));
         if (i == (temp_option - 1)) {
             view_render.fillRoundRect(FS_ROUND_RECT_X,\
                                         FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                        FS_ROUND_RECT_WIDTH, \
-                                        FS_ROUND_RECT_HEIGHT, \
-                                        3, WHITE);
-            view_render.setCursor(15, 10 + (i * FS_CELL_Y));
-            view_render.setTextColor(BLACK);
-            view_render.print(
-                fs_arr_title_setting[static_cast<int>(fs_option_setting) - 1]);
+                                        FS_SLIDER_WIDTH, \
+                                        FS_SLIDER_HEIGHT, \
+                                        1, WHITE);
+            
+            view_render.print(fs_arr_title_setting[static_cast<int>(fs_option_setting) - 1]);
         } 
         else {
-            view_render.setTextColor(WHITE);
-            view_render.setCursor(15, 10 + (i * FS_CELL_Y));
             view_render.drawRoundRect(FS_ROUND_RECT_X, \
                                         FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                        FS_ROUND_RECT_WIDTH, \
-                                        FS_ROUND_RECT_HEIGHT, \
-                                        2, WHITE);
+                                        FS_SLIDER_WIDTH, \
+                                        FS_SLIDER_HEIGHT, \
+                                        1, BLACK);
             if (static_cast<int>(fs_option_setting) <= 3) {
                 view_render.print(fs_arr_title_setting[i]);
             } 
@@ -125,9 +120,9 @@ static void fs_view_setting() {
                 else {
                     view_render.drawRoundRect(FS_ROUND_RECT_X,\
                                                 FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                                FS_ROUND_RECT_WIDTH,\
-                                                FS_ROUND_RECT_HEIGHT,\
-                                                2, BLACK);
+                                                FS_SLIDER_WIDTH,\
+                                                FS_SLIDER_HEIGHT,\
+                                                1, BLACK);
                 }
             }
         }

@@ -47,14 +47,14 @@ void view_scr_fs_history() {
         if (i != table_setting_infor.pointer) {
             view_render.drawRoundRect(
                 FS_ROUND_RECT_X, FS_ROUND_RECT_Y + (i * FS_CELL_Y),
-                FS_ROUND_RECT_WIDTH, FS_ROUND_RECT_HEIGHT, 3, WHITE);
+                FS_SLIDER_WIDTH, FS_SLIDER_WIDTH, 3, WHITE);
             view_render.setTextColor(WHITE);
         } 
         else {
             view_render.setTextColor(BLACK);
             view_render.fillRoundRect(
                 FS_ROUND_RECT_X, FS_ROUND_RECT_Y + (i * FS_CELL_Y),
-                FS_ROUND_RECT_WIDTH, FS_ROUND_RECT_HEIGHT, 3, WHITE);
+                FS_SLIDER_WIDTH, FS_SLIDER_WIDTH, 3, WHITE);
         }
         sprintf(temp, "   SCORE %d : ", (table_setting_infor.page_history * 3) + i + 1);
         view_render.print(temp);
