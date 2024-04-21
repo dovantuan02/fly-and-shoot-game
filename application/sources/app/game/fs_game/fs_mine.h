@@ -8,13 +8,12 @@
 
 using namespace std;
 
-typedef struct 
-{
+typedef struct {
+    bool visible;
     fs_game_coordinate_t coordinate;
     uint8_t ver;
-    fs_game_icon_state_t state;
-}fs_mine_infor_t;
+} fs_mine_info_t;
 
-extern vector<fs_mine_infor_t> fs_vec_mine;
+extern vector<fs_mine_info_t> fs_vec_mine;
 
 #endif  //FS_MINE_H

@@ -25,7 +25,7 @@
 /*
 * fs_vec_mine : VECTOR MINE MANAGERMENT
 */
-vector<fs_mine_infor_t> fs_vec_mine;
+vector<fs_mine_info_t> fs_vec_mine;
 
 // clear all mine
 static inline void fs_game_mine_reset() {
@@ -43,12 +43,12 @@ static inline void fs_game_mine_push() {
         // get top y limmit
         uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);
 
-        fs_mine_infor_t temp_mine;
+        fs_mine_info_t temp_mine;
 
         temp_mine.coordinate.x = LCD_WIDTH;
         // set mine y range (top y limmit - bot y limmit)
         temp_mine.coordinate.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit; 
-        temp_mine.state = FS_SHOW;
+        temp_mine.visible = true;
         temp_mine.ver = rand() % 2;                   // random mine 
         fs_vec_mine.push_back(temp_mine);             // add mine to mine managerment
 
@@ -99,10 +99,12 @@ void task_fs_mine_handle(ak_msg_t *msg) {
             fs_game_mine_move();
             break;
         }
+        
         case FS_GAME_MINE_ON_TICK_SIG: {
             task_post_pure_msg(FS_GAME_TASK_MINE_ID, FS_GAME_MINE_MOVE_SIG);
             break;
         }
+
         default:
             break;
     }

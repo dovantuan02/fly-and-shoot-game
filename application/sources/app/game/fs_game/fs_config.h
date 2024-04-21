@@ -26,32 +26,24 @@ typedef enum
     FS_GAME_ON,
     FS_GAME_OFF,
     FS_GAME_OVER
-}fs_game_state_t;
-
-typedef enum 
-{
-    FS_HIDE,
-    FS_SHOW
-}fs_game_icon_state_t;
+} fs_game_state_t;
 
 typedef enum {
     FS_GAME_MODE_FISRT = 1,
-    FS_GAME_MODE_EASY = 2,
-    FS_GAME_MODE_NORMAL = 3,
-    FS_GAME_MODE_HARD = 4,
+    FS_GAME_MODE_EASY,
+    FS_GAME_MODE_NORMAL,
+    FS_GAME_MODE_HARD,
     FS_GAME_MODE_END
 } fs_game_mode_t;
 
 #define FS_GAME_MODE_OPTION_MAX     (FS_GAME_MODE_END - FS_GAME_MODE_FISRT -1)
 
-typedef struct
-{
+typedef struct {
     int8_t x;
     int8_t y;
-}fs_game_coordinate_t;
+} fs_game_coordinate_t;
 
-typedef struct
-{
+typedef struct {
     bool fs_setting_sound = false;
     uint8_t fs_setting_missle = 5;
     fs_game_mode_t fs_setting_game_mode = FS_GAME_MODE_EASY;

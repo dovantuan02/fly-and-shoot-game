@@ -59,7 +59,7 @@ view_screen_t scr_game_on = {
 
 // show plane
 void fs_game_view_plane() {
-    if (fs_plane.state == FS_SHOW)
+    if (fs_plane.visible == true)
         view_render.drawBitmap(fs_plane.coordinate.x, fs_plane.coordinate.y, \
                                 plane_icon, \
                                 PLANE_ICON_WIDTH, PLANE_ICON_HEIGHT, \
@@ -70,7 +70,7 @@ void fs_game_view_plane() {
 void fs_game_view_missle() {
     if (!fs_vec_missile.empty()) {
         for (auto _missle : fs_vec_missile) {
-            if (_missle.state == FS_SHOW) {
+            if (_missle.visible == true) {
                 view_render.drawBitmap(_missle.coordinate.x, _missle.coordinate.y, \
                                         missle_icon, \
                                         MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, \
@@ -119,7 +119,7 @@ void fs_game_view_bom() {
 void fs_game_view_mine() {
     if (!fs_vec_mine.empty()) {
         for (size_t i = 0; i < fs_vec_mine.size(); i++) {
-            if (fs_vec_mine[i].state == FS_SHOW) {
+            if (fs_vec_mine[i].visible == true) {
                 view_render.drawBitmap(fs_vec_mine[i].coordinate.x, fs_vec_mine[i].coordinate.y,\
                                        fs_arr_mine_icon[fs_vec_mine[i].ver],\
                                        MINE_ICON_WIDTH, MINE_ICON_HEIGHT,\
@@ -214,6 +214,7 @@ void task_scr_fs_game_on_handle(ak_msg_t *msg) {
                       TIMER_PERIODIC);
             break;
         }
+
         case FS_GAME_DISPLAY_ON_TICK: {  
             // POST SIGNAL CHECK ALL CRASH
             task_post_pure_msg(FS_GAME_TASK_PLANE_ID    , FS_GAME_PLANE_CRASH_SIG);
@@ -221,6 +222,7 @@ void task_scr_fs_game_on_handle(ak_msg_t *msg) {
             task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_ON_TICK_SIG);
             break;
         }
+        
         default:
             break;
     }

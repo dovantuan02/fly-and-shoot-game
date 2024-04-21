@@ -22,7 +22,7 @@ using namespace std;
 /*
 * fs_vec_wall : VECTOR WALL MANAGERMENT
 */
-vector<fs_wall_infor_t> fs_vec_wall;
+vector<fs_wall_info_t> fs_vec_wall;
 
 /*
 * fs_vec_limit_wall_y : VECTOR WALL TOP AND BOT LIMMIT MANAGERMENT
@@ -48,7 +48,7 @@ static inline void fs_game_wall_reset() {
 // set default for all wall
 static inline void fs_game_wall_setup() {
     for (uint8_t i = 0; i < NUM_WALL; i++) {
-        fs_wall_infor_t temp_wall;
+        fs_wall_info_t temp_wall;
 
         temp_wall.x = i * 128;
         temp_wall.y = 0;

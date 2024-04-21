@@ -26,7 +26,7 @@
 /*
 * fs_vec_missile : VECTOR MISSILE MANAGERMENT
 */
-vector<fs_missile_infor_t> fs_vec_missile;
+vector<fs_missile_info_t> fs_vec_missile;
 
 #define FS_SOUND_EXPLOSION()               \
     if (fs_game_setting.fs_setting_sound) {        \
@@ -43,13 +43,13 @@ static inline void fs_game_missle_reset() {
 
 // add missile to missile managerment
 static inline void fs_game_missle_push() {
-    if (fs_plane.state == FS_SHOW) {
+    if (fs_plane.visible == true) {
         // check missile managerment size with max missile
         if (fs_vec_missile.size() < FS_MAX_MISSLE) {                        
             // crate new missile 
-            fs_missile_infor_t new_missle(fs_plane.coordinate.x + PLANE_ICON_WIDTH + 2, \
+            fs_missile_info_t new_missle(fs_plane.coordinate.x + PLANE_ICON_WIDTH + 2, \
                                                 fs_plane.coordinate.y + PLANE_ICON_HEIGHT - MISSLE_ICON_HEIGHT,\
-                                                FS_SHOW);
+                                                true);
             // check setting sound
             if (fs_game_setting.fs_setting_sound) {
                 BUZZER_PlayTones(tones_missle_push);
@@ -134,25 +134,31 @@ void task_fs_missle_handle(ak_msg_t *msg) {
         case FS_GAME_MISSLE_PUSH_SIG: {
             APP_DBG_SIG("FS_GAME_MISSLE_PUSH\n");
             fs_game_missle_push();
-        } break;
+            break;
+        } 
 
-        case FS_GAME_MISSLE_MOVE_SIG: {  // APP_DBG_SIG("FS_GAME_MISSLE_MOVE\n");
+        case FS_GAME_MISSLE_MOVE_SIG: {  
+            // APP_DBG_SIG("FS_GAME_MISSLE_MOVE\n");
             fs_game_missle_move();
-        } break;
+            break;
+        } 
 
         case FS_GAME_MISSLE_RESET_SIG: {
             APP_DBG_SIG("FS_GAME_MISSLE_RESET\n");
             fs_game_missle_reset();
-        } break;
+            break;
+        } 
 
         case FS_GAME_MISSLE_ON_TICK_SIG: {
             task_post_pure_msg(FS_GAME_TASK_MISSLE_ID, FS_GAME_MISSLE_MOVE_SIG);
             break;
         }
+
         case FS_GAME_MISSLE_CRASH_SIG: {  // APP_DBG_SIG("FS_GAME_MISSLE_CRASH\n");
             fs_game_missle_crash();
             break;
         }
+		
         default:
             break;
     }

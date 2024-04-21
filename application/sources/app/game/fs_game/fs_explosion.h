@@ -6,19 +6,17 @@
 #include "fs_config.h"
 using namespace std;
 
-enum ver_infor_t {
+typedef enum  {
     VER_I = 0,
     VER_II
-};
+} fs_ver_info_t;
 
-typedef struct 
-{
+typedef struct {
     fs_game_coordinate_t coordinate;
-    ver_infor_t ver;
-} fs_explosion_infor_t;
+    fs_ver_info_t ver;
+} fs_explosion_info_t;
 
-
-extern vector<fs_explosion_infor_t> fs_vec_explosion;
-extern fs_explosion_infor_t fs_explosion;
+extern vector<fs_explosion_info_t> fs_vec_explosion;
+extern fs_explosion_info_t fs_explosion;
 
 #endif  //FS_EXPLOSION_H

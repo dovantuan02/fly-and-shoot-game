@@ -21,8 +21,8 @@
 #include <vector>
 
 extern view_dynamic_t dyn_view_idle;
-
 extern view_screen_t scr_idle;
+
 extern void scr_idle_handle(ak_msg_t* msg);
 
 #endif //__SCR_IDLE_H__

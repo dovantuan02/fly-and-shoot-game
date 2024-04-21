@@ -8,10 +8,9 @@
 
 using namespace std;
 
-typedef struct
-{
+typedef struct {
     fs_game_coordinate_t coordinate;
-}fs_bom_infor_t;
+} fs_bom_info_t;
 
-extern vector<fs_bom_infor_t> fs_vec_bom;
+extern vector<fs_bom_info_t> fs_vec_bom;
 #endif  //FS_BOM_H

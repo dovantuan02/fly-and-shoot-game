@@ -103,27 +103,39 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
                 APP_DBG("GAME SETTING MODE   :  %d\n", fs_game_setting.fs_setting_game_mode);
                 APP_DBG("GAME SETTING MISSLE :  %d\n", fs_game_setting.fs_setting_missle);
                 APP_DBG("GAME SETTING SOUND  :  %d\n", fs_game_setting.fs_setting_sound);
+
+                if (fs_game_setting.fs_setting_game_mode == 0 &&\
+                    fs_game_setting.fs_setting_missle == 0 &&\
+                    fs_game_setting.fs_setting_sound == 0) {
+                    fs_game_setting.fs_setting_game_mode = FS_GAME_MODE_EASY;
+                    fs_game_setting.fs_setting_missle = 5;
+                    fs_game_setting.fs_setting_sound = true;
+                }
             }
 
             timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_LOGO, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
             break;
         }
+
         case AC_DISPLAY_BUTON_MODE_RELEASED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_RELEASED\n");
             timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
+
         case AC_DISPLAY_SHOW_LOGO: {
             APP_DBG_SIG("AC_DISPLAY_SHOW_LOGO\n");
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
+
         case AC_DISPLAY_SHOW_IDLE: {
             APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
             SCREEN_TRAN(scr_idle_handle, &scr_idle);
             break;
         }
+        
         default:
             break;
     }

@@ -25,18 +25,15 @@
 
 static const char* fs_arr_title_menu[FS_MAX_TITLE_MENU] =  {"PLAY  ", "SETTING", "TUTORIAL", "HISTORY", "EXIT  "};
 
-typedef enum 
-{
-    FS_MENU_FISRT       = 0,
-
-    FS_MENU_START,                      // OPTION 1
-    FS_MENU_SETTING,                    // OPTION 2
-    FS_MENU_TUTORIAL,                   // OPTION 2
-    FS_MENU_HISTORY,                    // OPTION 4
-    FS_MENU_EXIT,                       // OPTION 5
-
+typedef enum {
+    FS_MENU_FISRT = 0,
+    FS_MENU_START,     // OPTION 1
+    FS_MENU_SETTING,   // OPTION 2
+    FS_MENU_TUTORIAL,  // OPTION 2
+    FS_MENU_HISTORY,   // OPTION 4
+    FS_MENU_EXIT,      // OPTION 5
     FS_MENU_END
-}fs_option_menu_t;
+} fs_option_menu_t;
 
 #define FS_OPTION_MENU_MAX       (FS_MENU_END - FS_MENU_FISRT - 1)
 
@@ -194,6 +191,7 @@ void task_scr_fs_menu_handler(ak_msg_t* msg) {
                         TIMER_ONE_SHOT);
             break;
         }
+        
         case AC_DISPLAY_BUTON_UP_PRESSED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_UP_PRESSED\n");
             fs_option_menu = fs_switch_option_menu(fs_option_menu, msg);
@@ -203,6 +201,7 @@ void task_scr_fs_menu_handler(ak_msg_t* msg) {
                         TIMER_ONE_SHOT);
             break;
         }
+
         case AC_DISPLAY_BUTON_MODE_PRESSED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED\n");
             fs_view_scr_menu_switch(fs_option_menu);
@@ -217,11 +216,13 @@ void task_scr_fs_menu_handler(ak_msg_t* msg) {
                         TIMER_ONE_SHOT);
             break;
         }
+
         case AC_DISPLAY_SHOW_IDLE: {
             APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE");
             SCREEN_TRAN(scr_idle_handle, &scr_idle);
             break;
         }
+
         default:
             break;
     }

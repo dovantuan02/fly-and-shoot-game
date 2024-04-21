@@ -18,7 +18,7 @@
 
 #define FS_BOM_MOVE_X        (4)
 
-vector<fs_bom_infor_t> fs_vec_bom;        // variable bom managerment
+vector<fs_bom_info_t> fs_vec_bom;        // variable bom managerment
 
 // clear all bom available
 static inline void fs_game_bom_reset() {
@@ -36,7 +36,7 @@ static inline void fs_game_bom_push() {
             uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);  // get bot limmit
             uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);  // get top limmit
 
-            fs_bom_infor_t temp_bom;
+            fs_bom_info_t temp_bom;
 
             temp_bom.coordinate.x = LCD_WIDTH;
             // set coordinate for bom
@@ -70,20 +70,24 @@ void task_fs_bom_handle(ak_msg_t *msg) {
             fs_game_bom_reset();
             break;
         }
+
         case FS_GAME_BOM_PUSH_SIG: {
             APP_DBG_SIG("FS_GAME_BOM_PUSH\n");
             fs_game_bom_push();
             break;
         }
+        
         case FS_GAME_BOM_MOVE_SIG: {
             // APP_DBG_SIG("FS_GAME_BOM_MOVE\n");
             fs_game_bom_move();
             break;
         }
+
         case FS_GAME_BOM_ON_TICK_SIG: {
             task_post_pure_msg(FS_GAME_TASK_BOM_ID, FS_GAME_BOM_MOVE_SIG);
             break;
         }
+        
         default:
             break;
     }

@@ -5,12 +5,11 @@
 
 #include "fs_config.h"
 
-typedef struct 
-{
+typedef struct {
+    bool visible;
     fs_game_coordinate_t coordinate;
-    fs_game_icon_state_t state;
-} fs_plane_infor_t;
+} fs_plane_info_t;
 
-extern fs_plane_infor_t fs_plane;
+extern fs_plane_info_t fs_plane;
 
 #endif  //FS_PLANE_H

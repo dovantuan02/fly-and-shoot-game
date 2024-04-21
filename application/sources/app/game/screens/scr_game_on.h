@@ -5,6 +5,7 @@
 
 extern view_dynamic_t dyn_view_game_on;
 extern view_screen_t scr_game_on;
+
 extern void task_scr_fs_game_on_handle(ak_msg_t *msg);
 
 

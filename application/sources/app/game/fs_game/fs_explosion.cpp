@@ -11,9 +11,9 @@
 /*
 * fs_vec_explosion : VECTOR EXPLOSION MANAGERMENT
 */
-vector<fs_explosion_infor_t> fs_vec_explosion;
+vector<fs_explosion_info_t> fs_vec_explosion;
 
-fs_explosion_infor_t fs_explosion = {0, 0, VER_I};            // set default for explosion
+fs_explosion_info_t fs_explosion = {0, 0, VER_I};            // set default for explosion
 
 // clear all explosion
 void fs_game_explosion_reset() {

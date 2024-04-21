@@ -23,7 +23,7 @@
 /*
 *   fs_plane : VARIABLE CONTROL PLANE
 */
-fs_plane_infor_t fs_plane;
+fs_plane_info_t fs_plane;
 
 // play sound when plane crash
 #define FS_SOUND_GAME_OVER()               \
@@ -35,14 +35,14 @@ fs_plane_infor_t fs_plane;
 static inline void fs_game_plane_setup() {
     fs_plane.coordinate.x = 5;
     fs_plane.coordinate.y = 15;
-    fs_plane.state = FS_SHOW;
+    fs_plane.visible = true;
 }
 
 // plane down every 100ms
 static inline void fs_game_plane_down() {
     fs_plane.coordinate.y += FS_PLANE_Y_DOWN;
     if (fs_plane.coordinate.y > MAP_HEIGHT) {
-        fs_plane.state = FS_HIDE;
+        fs_plane.visible = false;
         fs_plane.coordinate.y = MAX_LCD_HEIGHT;
     }
 }
@@ -57,8 +57,8 @@ static inline void fs_game_wall_crash() {
     // check plane(y) with wall limmit(x,y)
     if ((fs_plane.coordinate.y + PLANE_ICON_HEIGHT) > (MAP_HEIGHT - fs_vec_limit_wall_y[1][0]) 
         || fs_plane.coordinate.y < fs_vec_limit_wall_y[0][0]) {     
-        if (fs_plane.state == FS_SHOW) {
-            fs_plane.state = FS_HIDE;
+        if (fs_plane.visible == true) {
+            fs_plane.visible = false;
             // set coordinate explosion
             fs_explosion.coordinate.x = fs_plane.coordinate.x;
             fs_explosion.coordinate.y = fs_plane.coordinate.y;
@@ -85,7 +85,7 @@ static inline void fs_game_mine_crash() {
             // check all mine(x,y) with plane(x,y)
             if ((PLANE_ICON_WIDTH > abs(_mine.coordinate.x - fs_plane.coordinate.x) )) { 
                 if ((fs_plane.coordinate.y >= (_mine.coordinate.y + 1)) && fs_plane.coordinate.y <= (_mine.coordinate.y + MINE_ICON_HEIGHT - 1)) {
-                    if (fs_plane.state == FS_SHOW) {
+                    if (fs_plane.visible == true) {
                         APP_DBG("PLANE : X: %d - Y: %d\n", fs_plane.coordinate.x, fs_plane.coordinate.y);
                         APP_DBG("MINE  : X: %d - Y: %d\n", _mine.coordinate.x, _mine.coordinate.y);
                         // set coordinate explosion
@@ -95,7 +95,7 @@ static inline void fs_game_mine_crash() {
                         
                         // sound buzzer
                         FS_SOUND_GAME_OVER();
-                        fs_plane.state = FS_HIDE;
+                        fs_plane.visible = false;
                         // post to "sig_explosion_push" with data(fs_explosion)
                         task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
                         // set timer tran to screen game over
@@ -116,8 +116,8 @@ static inline void fs_game_bom_crash() {
         for (auto _bom : fs_vec_bom) {
             if ((abs(_bom.coordinate.x - fs_plane.coordinate.x )<= (PLANE_ICON_WIDTH )) &&                 // check all bom(x,y) with plane(x,y)
                 (fs_plane.coordinate.y >= (_bom.coordinate.y + 1)) && fs_plane.coordinate.y <= (_bom.coordinate.y + BOM_ICON_HEIGHT- 1)) {
-                if (fs_plane.state == FS_SHOW) {
-                    fs_plane.state = FS_HIDE;
+                if (fs_plane.visible == true) {
+                    fs_plane.visible = false;
                     // set coordinate explosion
                     fs_explosion.coordinate.x = fs_plane.coordinate.x;
                     fs_explosion.coordinate.y = fs_plane.coordinate.y;
@@ -159,25 +159,30 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
             fs_game_plane_setup();
             break;
         }
+
         case FS_GAME_PLANE_DOWN_SIG: {  
             // APP_DBG_SIG("FS_GAME_PLANE_DOWN\n");
             fs_game_plane_down();
             break;
         }
+
         case FS_GAME_PLANE_UP_SIG: {  
             // APP_DBG_SIG("FS_GAME_PLANE_UP\n");
             fs_game_plane_up();
             break;
         }
+
         case FS_GAME_PLANE_CRASH_SIG: {  
             // APP_DBG_SIG("FS_GAME_PLANE_CRASH\n");
             fs_game_plane_crash();
             break;
         }
+        
         case FS_GAME_PLANE_ON_TICK_SIG: {
             task_post_pure_msg(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_DOWN_SIG);
             break;
         }
+        
         default:
             break;
     }

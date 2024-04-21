@@ -18,7 +18,7 @@ typedef enum {
     FS_SETTING_FISRT = 0,
     FS_SETTING_GAME_MODE,
     FS_SETTING_MAX_MISSLE,
-    FS_SETTING_STATE_SOUND, 
+    FS_SETTING_STATE_SOUND,
     FS_SETTING_EXIT,
     FS_SETTING_END
 } fs_option_setting_t;
@@ -170,14 +170,17 @@ void task_scr_fs_setting_handle(ak_msg_t *msg) {
             fs_option_setting = FS_SETTING_GAME_MODE;
             break;
         }
+
         case AC_DISPLAY_BUTON_UP_PRESSED: {
             fs_option_setting = fs_switch_option_setting(fs_option_setting, msg);
             break;
         }
+
         case AC_DISPLAY_BUTON_DOWN_PRESSED: {
             fs_option_setting = fs_switch_option_setting(fs_option_setting, msg);
             break;
         }
+
         case AC_DISPLAY_BUTON_MODE_PRESSED: {  
             // APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED - SETTING\n");
             if (fs_option_setting == FS_SETTING_GAME_MODE) {
@@ -197,6 +200,7 @@ void task_scr_fs_setting_handle(ak_msg_t *msg) {
             }
             break;
         }
+        
         default:
             break;
     }

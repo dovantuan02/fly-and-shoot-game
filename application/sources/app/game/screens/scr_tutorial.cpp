@@ -44,14 +44,17 @@ void task_scr_fs_tutorial_handle(ak_msg_t *msg) {
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
+
         case AC_DISPLAY_BUTON_UP_RELEASED: {
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
+
         case AC_DISPLAY_BUTON_DOWN_RELEASED: {
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
+        
         default:
             break;
     }

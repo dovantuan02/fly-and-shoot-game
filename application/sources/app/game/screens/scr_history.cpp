@@ -6,13 +6,12 @@
 /***********************************************************
 * VARIABLE AND STRUCT VIEW HISTORY
 ***********************************************************/
-typedef struct
-{
+typedef struct {
     int8_t pointer;
     int8_t page_history;
-} fs_table_setting_infor_t;
+} fs_table_setting_info_t;
 
-fs_table_setting_infor_t table_setting_infor;
+fs_table_setting_info_t table_setting_infor;
 
 /***********************************************************
 * VIEW - HISTORY
@@ -87,6 +86,7 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
             }
             break;
         }
+
         case AC_DISPLAY_BUTON_DOWN_RELEASED: {
             APP_DBG("AC_DISPLAY_BUTON_DOWN_RELEASED - HISTORY\n");
             table_setting_infor.pointer++;
@@ -99,6 +99,7 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
             }
             break;
         }
+
         default:
             break;
     }
