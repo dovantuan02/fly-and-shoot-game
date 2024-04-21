@@ -45,16 +45,18 @@ void view_scr_fs_history() {
         char temp[18];
 
         if (i != table_setting_infor.pointer) {
-            view_render.drawRoundRect(
-                FS_ROUND_RECT_X, FS_ROUND_RECT_Y + (i * FS_CELL_Y),
-                FS_SLIDER_WIDTH, FS_SLIDER_WIDTH, 3, WHITE);
-            view_render.setTextColor(WHITE);
+            view_render.fillRoundRect(FS_ROUND_RECT_X,\
+                                        FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
+                                        FS_SLIDER_WIDTH,\
+                                        FS_SLIDER_HEIGHT, 1, BLACK);
+            
         } 
         else {
-            view_render.setTextColor(BLACK);
-            view_render.fillRoundRect(
-                FS_ROUND_RECT_X, FS_ROUND_RECT_Y + (i * FS_CELL_Y),
-                FS_SLIDER_WIDTH, FS_SLIDER_WIDTH, 3, WHITE);
+            // view_render.setTextColor(BLACK);
+            view_render.fillRoundRect(FS_ROUND_RECT_X,\
+                                        FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
+                                        FS_SLIDER_WIDTH,\
+                                        FS_SLIDER_HEIGHT, 1, WHITE);
         }
         sprintf(temp, "   SCORE %d : ", (table_setting_infor.page_history * 3) + i + 1);
         view_render.print(temp);
@@ -74,22 +76,26 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
         }
 
         case AC_DISPLAY_BUTON_UP_RELEASED: {
+            APP_DBG("AC_DISPLAY_BUTON_UP_RELEASED - HISTORY\n");
             table_setting_infor.pointer--;
             if (table_setting_infor.pointer < 0) {
                 table_setting_infor.pointer = 2;
                 table_setting_infor.page_history--;
-                if (table_setting_infor.page_history < 0)
+                if (table_setting_infor.page_history < 0) {
                     table_setting_infor.page_history = (FS_MAX_HISTORY / 3) - 1;
+                }
             }
             break;
         }
         case AC_DISPLAY_BUTON_DOWN_RELEASED: {
+            APP_DBG("AC_DISPLAY_BUTON_DOWN_RELEASED - HISTORY\n");
             table_setting_infor.pointer++;
             if (table_setting_infor.pointer > 2) {
                 table_setting_infor.pointer = 0;
                 table_setting_infor.page_history++;
-                if (table_setting_infor.page_history > (FS_MAX_HISTORY / 3) - 1)
+                if (table_setting_infor.page_history > (FS_MAX_HISTORY / 3) - 1) {
                     table_setting_infor.page_history = 0;
+                }
             }
             break;
         }

@@ -112,7 +112,7 @@ void btn_down_callback(void* b) {
 		//APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
 		if(fs_state_game == FS_GAME_OFF)
 		{
-			task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_ON_ID, AC_DISPLAY_BUTON_DOWN_RELEASED);
+			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_RELEASED);
 		}
 		break;
 	}
