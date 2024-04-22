@@ -181,6 +181,13 @@ void view_scr_fs_menu()
 
 void task_scr_fs_menu_handler(ak_msg_t* msg) {
     switch (msg->sig) {
+        case SCREEN_ENTRY: {
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
+            break;
+        }
         case AC_DISPLAY_BUTON_DOWN_PRESSED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_DOWN_PRESSED\n");
             fs_option_menu = fs_switch_option_menu(fs_option_menu,  msg);

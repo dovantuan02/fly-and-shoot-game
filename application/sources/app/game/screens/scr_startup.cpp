@@ -57,6 +57,12 @@ view_screen_t scr_startup = {
 	.focus_item = 0,
 };
 
+void fs_init_setting() {
+    fs_game_setting.fs_setting_game_mode = FS_GAME_MODE_EASY;
+    fs_game_setting.fs_setting_missle = 5;
+    fs_game_setting.fs_setting_sound = true;
+}
+
 // view logo startup
 void view_scr_fs_startup() {
 #define AK_LOGO_AXIS_X		(23)
@@ -107,13 +113,15 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
                 if (fs_game_setting.fs_setting_game_mode == 0 &&\
                     fs_game_setting.fs_setting_missle == 0 &&\
                     fs_game_setting.fs_setting_sound == 0) {
-                    fs_game_setting.fs_setting_game_mode = FS_GAME_MODE_EASY;
-                    fs_game_setting.fs_setting_missle = 5;
-                    fs_game_setting.fs_setting_sound = true;
+
+                    fs_init_setting();
                 }
             }
 
-            timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_LOGO, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_LOGO,\
+                        AC_DISPLAY_STARTUP_INTERVAL,\
+                        TIMER_ONE_SHOT);
             break;
         }
 

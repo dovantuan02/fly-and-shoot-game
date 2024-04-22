@@ -167,21 +167,37 @@ void view_scr_fs_setting() {
 void task_scr_fs_setting_handle(ak_msg_t *msg) {
     switch (msg->sig) {
         case SCREEN_ENTRY: {
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             fs_option_setting = FS_SETTING_GAME_MODE;
             break;
         }
 
         case AC_DISPLAY_BUTON_UP_PRESSED: {
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             fs_option_setting = fs_switch_option_setting(fs_option_setting, msg);
             break;
         }
 
         case AC_DISPLAY_BUTON_DOWN_PRESSED: {
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             fs_option_setting = fs_switch_option_setting(fs_option_setting, msg);
             break;
         }
 
         case AC_DISPLAY_BUTON_MODE_PRESSED: {  
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             // APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED - SETTING\n");
             if (fs_option_setting == FS_SETTING_GAME_MODE) {
                 fs_game_setting.fs_setting_game_mode = fs_switch_game_mode(fs_game_setting.fs_setting_game_mode);
@@ -201,6 +217,11 @@ void task_scr_fs_setting_handle(ak_msg_t *msg) {
             break;
         }
         
+        case AC_DISPLAY_SHOW_IDLE: {
+            SCREEN_TRAN(scr_idle_handle, &scr_idle);
+            break;
+        }
+
         default:
             break;
     }

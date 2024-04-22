@@ -69,13 +69,29 @@ void view_scr_fs_history() {
 
 void task_scr_fs_history_handle(ak_msg_t *msg) {
     switch (msg->sig) {
+        case SCREEN_ENTRY: {
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
+            break;
+        }
+
         case AC_DISPLAY_BUTON_MODE_PRESSED: {
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
 
         case AC_DISPLAY_BUTON_UP_RELEASED: {
             APP_DBG("AC_DISPLAY_BUTON_UP_RELEASED - HISTORY\n");
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             table_setting_infor.pointer--;
             if (table_setting_infor.pointer < 0) {
                 table_setting_infor.pointer = 2;
@@ -89,6 +105,10 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
 
         case AC_DISPLAY_BUTON_DOWN_RELEASED: {
             APP_DBG("AC_DISPLAY_BUTON_DOWN_RELEASED - HISTORY\n");
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             table_setting_infor.pointer++;
             if (table_setting_infor.pointer > 2) {
                 table_setting_infor.pointer = 0;
@@ -97,6 +117,11 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
                     table_setting_infor.page_history = 0;
                 }
             }
+            break;
+        }
+
+        case AC_DISPLAY_SHOW_IDLE: {
+            SCREEN_TRAN(scr_idle_handle, &scr_idle);
             break;
         }
 
