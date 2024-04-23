@@ -62,7 +62,7 @@ static inline void fs_game_wall_crash() {
             // set coordinate explosion
             fs_explosion.coordinate.x = fs_plane.coordinate.x;
             fs_explosion.coordinate.y = fs_plane.coordinate.y;
-            fs_explosion.ver = VER_I;
+            fs_explosion.ver = FS_EXPLOSION_VER_I;
 
             // sound buzzer
             FS_SOUND_GAME_OVER();
@@ -91,7 +91,7 @@ static inline void fs_game_mine_crash() {
                         // set coordinate explosion
                         fs_explosion.coordinate.x = fs_plane.coordinate.x;
                         fs_explosion.coordinate.y = fs_plane.coordinate.y;
-                        fs_explosion.ver = VER_I;
+                        fs_explosion.ver = FS_EXPLOSION_VER_I;
                         
                         // sound buzzer
                         FS_SOUND_GAME_OVER();
@@ -121,7 +121,7 @@ static inline void fs_game_bom_crash() {
                     // set coordinate explosion
                     fs_explosion.coordinate.x = fs_plane.coordinate.x;
                     fs_explosion.coordinate.y = fs_plane.coordinate.y;
-                    fs_explosion.ver = VER_I;
+                    fs_explosion.ver = FS_EXPLOSION_VER_I;
                     // APP_DBG("PLANE : X: %d - Y: %d\n", fs_plane.x, fs_plane.y);
                     // APP_DBG("MINE  : X: %d - Y: %d\n", _mine.x, _mine.y);
 

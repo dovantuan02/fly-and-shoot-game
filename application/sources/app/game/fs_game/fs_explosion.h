@@ -7,8 +7,8 @@
 using namespace std;
 
 typedef enum  {
-    VER_I = 0,
-    VER_II
+    FS_EXPLOSION_VER_I = 0,
+    FS_EXPLOSION_VER_II
 } fs_ver_info_t;
 
 typedef struct {

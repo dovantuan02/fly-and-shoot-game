@@ -83,7 +83,7 @@ static inline void fs_game_missle_crash() {
                     // set coordinate for fs_explosion
                     fs_explosion.coordinate.x = fs_vec_mine[j].coordinate.x;
                     fs_explosion.coordinate.y = fs_vec_mine[j].coordinate.y;
-                    fs_explosion.ver = VER_I;
+                    fs_explosion.ver = FS_EXPLOSION_VER_I;
 
                     FS_SOUND_EXPLOSION();
 
@@ -110,7 +110,7 @@ static inline void fs_game_missle_crash() {
                     // set fs_explosion coordinate
                     fs_explosion.coordinate.x = fs_vec_bom[k].coordinate.x;     
                     fs_explosion.coordinate.y = fs_vec_bom[k].coordinate.y;
-                    fs_explosion.ver = VER_I;
+                    fs_explosion.ver = FS_EXPLOSION_VER_I;
 
                     FS_SOUND_EXPLOSION();
 
