@@ -29,7 +29,7 @@ void fs_game_explosion_push() {
 }
 
 // animate explsion and erase when complete
-void fs_game_explosion_show()
+void fs_game_explosion_update()
 {
     if (!fs_vec_explosion.empty()) {
         for (size_t i = 0; i < fs_vec_explosion.size();i++) {        // scan all explosion
@@ -53,18 +53,15 @@ void task_fs_explosion_handle(ak_msg_t *msg) {
             fs_game_explosion_reset();
             break;
         }
+        
         case FS_GAME_EXPLOSION_PUSH_SIG: {  
             // APP_DBG("EXPLOSION : X : %d , Y : %d\n", fs_explosion.x, fs_explosion.y );
             fs_game_explosion_push();
             break;
         }
-        case FS_GAME_EXPLOSION_UPDATE_SIG: {
-            fs_game_explosion_show();
-            break;
-        }
 
         case FS_GAME_EXPLOSION_ON_TICK_SIG: {
-            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_UPDATE_SIG);
+            fs_game_explosion_update();
             break;
         }
 

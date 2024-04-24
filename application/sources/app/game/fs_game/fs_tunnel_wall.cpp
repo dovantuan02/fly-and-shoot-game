@@ -88,19 +88,15 @@ void task_fs_wall_handle(ak_msg_t *msg) {
             fs_game_wall_reset();
             break;
         }
+        
         case FS_GAME_WALL_SETUP_SIG: {
             APP_DBG_SIG("FS_GAME_WALL_SETUP\n");
             fs_game_wall_setup();
             break;
         }
 
-        case FS_GAME_WALL_UPDATE_SIG: {
-            // APP_DBG_SIG("FS_GAME_WALL_UPDATE\n");
-            fs_game_wall_update();
-            break;
-        }
         case FS_GAME_WALL_ON_TICK_SIG: {
-            task_post_pure_msg(FS_GAME_TASK_WALL_ID, FS_GAME_WALL_UPDATE_SIG);
+            fs_game_wall_update();
             break;
         }
         default:

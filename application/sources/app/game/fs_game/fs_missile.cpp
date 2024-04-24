@@ -137,12 +137,6 @@ void task_fs_missle_handle(ak_msg_t *msg) {
             break;
         } 
 
-        case FS_GAME_MISSLE_MOVE_SIG: {  
-            // APP_DBG_SIG("FS_GAME_MISSLE_MOVE\n");
-            fs_game_missle_move();
-            break;
-        } 
-
         case FS_GAME_MISSLE_RESET_SIG: {
             APP_DBG_SIG("FS_GAME_MISSLE_RESET\n");
             fs_game_missle_reset();
@@ -150,7 +144,7 @@ void task_fs_missle_handle(ak_msg_t *msg) {
         } 
 
         case FS_GAME_MISSLE_ON_TICK_SIG: {
-            task_post_pure_msg(FS_GAME_TASK_MISSLE_ID, FS_GAME_MISSLE_MOVE_SIG);
+            fs_game_missle_move();
             break;
         }
 

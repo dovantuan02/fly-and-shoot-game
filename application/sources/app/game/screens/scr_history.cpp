@@ -11,7 +11,7 @@ typedef struct {
     int8_t page_history;
 } fs_table_setting_info_t;
 
-fs_table_setting_info_t table_setting_infor;
+fs_table_setting_info_t fs_table_setting_infor;
 
 /***********************************************************
 * VIEW - HISTORY
@@ -43,7 +43,7 @@ void view_scr_fs_history() {
         view_render.setCursor(TEXT_X, TEXT_Y + (i * FS_CELL_Y));
         char temp[18];
 
-        if (i != table_setting_infor.pointer) {
+        if (i != fs_table_setting_infor.pointer) {
             view_render.fillRoundRect(FS_ROUND_RECT_X,\
                                         FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
                                         FS_SLIDER_WIDTH,\
@@ -57,9 +57,9 @@ void view_scr_fs_history() {
                                         FS_SLIDER_WIDTH,\
                                         FS_SLIDER_HEIGHT, 1, WHITE);
         }
-        sprintf(temp, "   SCORE %d : ", (table_setting_infor.page_history * 3) + i + 1);
+        sprintf(temp, "   SCORE %d : ", (fs_table_setting_infor.page_history * 3) + i + 1);
         view_render.print(temp);
-        view_render.print(fs_game_score_history[(table_setting_infor.page_history * 3) + i]);
+        view_render.print(fs_game_score_history[(fs_table_setting_infor.page_history * 3) + i]);
     }
 }
 
@@ -92,12 +92,12 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
                         AC_DISPLAY_SHOW_IDLE,\
                         AC_DISPLAY_IDLE_INTERVAL,\
                         TIMER_ONE_SHOT);
-            table_setting_infor.pointer--;
-            if (table_setting_infor.pointer < 0) {
-                table_setting_infor.pointer = 2;
-                table_setting_infor.page_history--;
-                if (table_setting_infor.page_history < 0) {
-                    table_setting_infor.page_history = (FS_MAX_HISTORY / 3) - 1;
+            fs_table_setting_infor.pointer--;
+            if (fs_table_setting_infor.pointer < 0) {
+                fs_table_setting_infor.pointer = 2;
+                fs_table_setting_infor.page_history--;
+                if (fs_table_setting_infor.page_history < 0) {
+                    fs_table_setting_infor.page_history = (FS_MAX_HISTORY / 3) - 1;
                 }
             }
             break;
@@ -109,12 +109,12 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
                         AC_DISPLAY_SHOW_IDLE,\
                         AC_DISPLAY_IDLE_INTERVAL,\
                         TIMER_ONE_SHOT);
-            table_setting_infor.pointer++;
-            if (table_setting_infor.pointer > 2) {
-                table_setting_infor.pointer = 0;
-                table_setting_infor.page_history++;
-                if (table_setting_infor.page_history > (FS_MAX_HISTORY / 3) - 1) {
-                    table_setting_infor.page_history = 0;
+            fs_table_setting_infor.pointer++;
+            if (fs_table_setting_infor.pointer > 2) {
+                fs_table_setting_infor.pointer = 0;
+                fs_table_setting_infor.page_history++;
+                if (fs_table_setting_infor.page_history > (FS_MAX_HISTORY / 3) - 1) {
+                    fs_table_setting_infor.page_history = 0;
                 }
             }
             break;

@@ -160,12 +160,6 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
             break;
         }
 
-        case FS_GAME_PLANE_DOWN_SIG: {  
-            // APP_DBG_SIG("FS_GAME_PLANE_DOWN\n");
-            fs_game_plane_down();
-            break;
-        }
-
         case FS_GAME_PLANE_UP_SIG: {  
             // APP_DBG_SIG("FS_GAME_PLANE_UP\n");
             fs_game_plane_up();
@@ -179,7 +173,7 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
         }
         
         case FS_GAME_PLANE_ON_TICK_SIG: {
-            task_post_pure_msg(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_DOWN_SIG);
+            fs_game_plane_down();
             break;
         }
         

@@ -77,14 +77,8 @@ void task_fs_bom_handle(ak_msg_t *msg) {
             break;
         }
         
-        case FS_GAME_BOM_MOVE_SIG: {
-            // APP_DBG_SIG("FS_GAME_BOM_MOVE\n");
-            fs_game_bom_move();
-            break;
-        }
-
         case FS_GAME_BOM_ON_TICK_SIG: {
-            task_post_pure_msg(FS_GAME_TASK_BOM_ID, FS_GAME_BOM_MOVE_SIG);
+            fs_game_bom_move();
             break;
         }
         

@@ -119,7 +119,7 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
             }
 
             timer_set(AC_TASK_DISPLAY_ID,\
-                        AC_DISPLAY_SHOW_LOGO,\
+                        AC_DISPLAY_SHOW_MENU,\
                         AC_DISPLAY_STARTUP_INTERVAL,\
                         TIMER_ONE_SHOT);
             break;
@@ -132,8 +132,8 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
             break;
         }
 
-        case AC_DISPLAY_SHOW_LOGO: {
-            APP_DBG_SIG("AC_DISPLAY_SHOW_LOGO\n");
+        case AC_DISPLAY_SHOW_MENU: {
+            APP_DBG_SIG("AC_DISPLAY_SHOW_MENU\n");
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
