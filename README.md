@@ -1,8 +1,12 @@
 # FLY - AND - SHOOT GAME trên AK - Embedded Base Kit
 
+![BANNER GAME](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/banner_game.png)
+
 **I. Giới thiệu**
 
 **1.1. Giới thiệu sơ lược về phần cứng.**
+
+![HARDWARE LAYOUT](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/hardware_layout.png)
 
 - AK-Embedded Base Kit [AK Embedded Base Kit - STM32L151 - Lập trình nhúng vi điều khiển (epcb.vn)](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) là  evaluation kit dành cho các bạn học phần mềm nhúng nâng cao và muốn thực hành với Event - Driven.
 - Các ngoại vi và MCU được tính hợp vào trong Kit:
@@ -19,6 +23,8 @@
 
 **1.2. Màn hình Menu**
 
+![SCREEN MENU](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/screen_menu.png)
+
 - PLAY: Bắt đầu trò chơi.
 - SETTING: Cài đặt cái thông số cho trò chơi mode(chế độ), missile(đạn), âm thanh(bật/tắt).
 - TUTORIAL: QR hướng dẫn trò chơi.
@@ -27,6 +33,8 @@
 
 **1.3. Các đối tương hoạt động trong game.**
 
+![INTRO OBJECT IN GAME](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_object_game.png)
+
 | Đối tượng | Ý nghĩa | Người chơi tác động | Tự động tác động |
 | --- | --- | --- | --- |
 | PLANE | Tàu bay | Di chuyển tàu bay đi lên  | Di chuyển tàu bay đi xuống, chạm quặng, bom sẽ tạo ra vụ nổ và kết thúc game |
@@ -34,11 +42,11 @@
 | MINE | Quặng | Không | Di chuyển, tự động tạo ra |
 | BOM | Bom | Không | Di chuyển, tự động tạo ra |
 | EXPLOSION | Vụ Nổ | Không | Vụ nổ xảy ra khi đạn chạm quặng hoặc bom |
-| MAP | bản đồ | Không | Di chuyển bản đồ |
+| TUNNEL WALL | Đường hầm | Không | Di chuyển bản đồ |
 
 **1.4. Cách chơi của game.**
 
-Người chơi có thể điều khiển tàu đi lên (UP) hoặc để tàu bay tự động rơi xuống để né các quặng và bom không chạm vào máy bay. Đồng thời cũng không được để tàu bày chạm vào đường hầm (MAP). 
+Người chơi có thể điều khiển tàu đi lên (UP) hoặc để tàu bay tự động rơi xuống để né các quặng và bom không chạm vào máy bay. Đồng thời cũng không được để tàu bày chạm vào đường hầm (TUNNEL WALL). 
 
 Tăng độ khó bằng cách vào cài đặt và chỉnh mode (EASY, NORMAL, HARD).
 
@@ -56,7 +64,7 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 
 **2.1. Event - Driven hoạt động như thế nào ?**
 
-![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled.png)
+![INTRO EVENT DRIVEN](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_event_driven.png)
 
                                              *Nguồn: Automatic Control Programming*
 
@@ -71,71 +79,235 @@ Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embed
 
 *Các Task và Priority trong game:*
 
-| TASK | PRIORITY | HANDLER |
+| TASK ID | PRIORITY | HANDLER |
 | --- | --- | --- |
-| AC_TASK_DISPLAY_GAME_ON_ID | TASK_PRI_LEVEL_4	 | task_scr_game_on_handle |
-| AC_TASK_PLANE_ID | TASK_PRI_LEVEL_4	 | task_prc_plane_hanle		 |
-| AC_TASK_MISSILE_ID			 | TASK_PRI_LEVEL_4	 | task_prc_missile_handle		 |
-| AC_TASK_WALL_ID			 | TASK_PRI_LEVEL_3 | task_prc_wall_handle		 |
-| AC_TASK_EXPLOSION_ID | TASK_PRI_LEVEL_4	 | task_prc_explosion_handle	 |
-| AC_TASK_BOM_ID				 | TASK_PRI_LEVEL_3 | task_prc_bom_handle			 |
-| AC_TASK_MINE_ID			 | TASK_PRI_LEVEL_3 | task_prc_mine_handle		 |
-| AC_TASK_DISPLAY_GAME_OVER_ID | TASK_PRI_LEVEL_4	 | task_scr_game_over_handle	 |
+| FS_GAME_TASK_DISPLAY_GAME_ON_ID | TASK_PRI_LEVEL_4	 | task_scr_fs_game_on_handle |
+| FS_GAME_TASK_PLANE_ID				 | TASK_PRI_LEVEL_4	 | task_fs_plane_hanle		 |
+| FS_GAME_TASK_MISSLE_ID				 | TASK_PRI_LEVEL_4	 | task_fs_missile_handle		 |
+| FS_GAME_TASK_WALL_ID				 | TASK_PRI_LEVEL_4 | task_fs_wall_handle		 |
+| FS_GAME_TASK_EXPLOSION_ID			 | TASK_PRI_LEVEL_4	 | task_fs_explosion_handle	 |
+| FS_GAME_TASK_BOM_ID				 | TASK_PRI_LEVEL_4 | task_fs_bom_handle			 |
+| FS_GAME_TASK_MINE_ID				 | TASK_PRI_LEVEL_4 | task_fs_mine_handle		 |
+| FS_GAME_TASK_DISPLAY_GAME_OVER_ID	 | TASK_PRI_LEVEL_4	 | task_scr_fs_game_over_handle	 |
 
-                            **
+    **
 
-*Sơ đồ quá trình trước khi và sau khi vào game:*
+![Intro Object Game](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_object_game.png)
 
-![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%201.png)
+         *Chi tiết các signal trong các Task:*
 
-                           *Hình 1 : Sơ đồ quá trình trước khi bắt đầu vào game*
+*Task ID*:  Mỗi task được tạo ra cho một đối tượng khác nhau trong hệ thống và có nhiệm vụ nhận các công việc khác nhau. Các task hoàn toàn tác biệt luồng logic với nhau.
 
-Giải thích :
+*Priority*: Mức độ ưu tiên của các task. Như trong ảnh bên trên ta có thể thấy độ ưu tiên của các task là bằng nhau. Tức là khi các task có priority bằng nhau đều có sự kiện thì hệ thống sẽ sử lí task nào vào trước.
+
+*Handler*: Là nơi sử lí các tín hiệu của sự kiện khi xảy ra tác động.
+
+Signal: Mỗi task sẽ có nhiều signal khác nhau nhằm mục đích xử lí các nhiệm vụ khác nhau của các đối tượng.                              
+
+Ví dụ: Ở task missile sẽ có signal (FS_GAME_MISSILE_PUSH_SIG) sẽ có nhiệm vụ tạo ra đạn, còn (FS_GAME_MISSLE_MOVE_SIG) sẽ có nhiệm vụ di chuyển nếu có đạn.
+
+Các task có thể đồng bộ hóa và trao đổi dữ liệu bằng cách bắn message qua các task đi kèm với signal.
+
+Có 2 loại message khác nhau:
+
+- Messge chỉ mang theo Signal, không chứa data
+- Message chứa Signal và mang theo cả data.
+
+**2.3. Sơ đồ quá trình của game**
+
+![Sequence After Game On](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_after_game_on.png)
+
+                                                   *Hình 2.3.1: Sequence after game on*
+
+![Sequence Game Active](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_game_active.png)
+
+                                                  *Hình 2.3.2: Sequence when game run*
+
+![Sequence Game Over](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_game_over.png)
+
+                                                  *Hình 2.3.3: Sequence game over*
+
+*Action after run game*
 
 | SCREEN_ENTRY | Khi người dùng bắt đầu chơi game |
 | --- | --- |
-| SIG_DISPLAY_GAME_ON_TICK | Signal do timer gửi đến với chu kì 100ms cập nhật lại màn hình |
-| SIG_PLANE_SETUP | Cài đặt thông số mặc định cho tàu bay |
-| SIG_PLANE_ON_TICK | Signal do timer gửi đến với chu kì 100ms giúp tàu bay đi xuống |
-| SIG_MINE_RESET | Cài đặt thông số mặc định cho quặng |
-| SIG_MINE_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển quặng |
-| SIG_MINE_PUSH | Signal do timer gửi đến với chu kì 1500ms dùng để tạo thêm quặng |
-| SIG_BOM_RESET | Cài đặt lại tất cả các thông số bom |
-| SIG_BOM_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển bom |
-| SIG_BOM_PUSH | Signal do timer gửi đến với chu kì 1800ms dùng để tạo thêm bom |
-| SIG_MISSILE_RESET | Cài đặt lại tất cả các thông số cho đạn |
-| SIG_WALL_RESET | Cài đặt lại tất cả các thông số cho hầm |
-| SIG_WALL_ON_TICK | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển hầm |
-| SIG_EXPLOSION_RESET | Cài đặt lại tất cả các thông số cho vụ nổ |
-| SIG_EXPLOSION_ON_TICK | Signal do timer gửi đến với chu kì 150ms dùng để tạo hoạt ảnh cho vụ nổ |
+| FS_GAME_DISPLAY_ON_TICK | Signal do timer gửi đến với chu kì 100ms cập nhật lại màn hình |
+| FS_GAME_PLANE_UP_SIG | Cài đặt thông số mặc định cho tàu bay |
+| FS_GAME_PLANE_ON_TICK_SIG | Signal do timer gửi đến với chu kì 100ms giúp tàu bay đi xuống |
+| FS_GAME_MINE_RESET_SIG | Cài đặt thông số mặc định cho quặng |
+| FS_GAME_MINE_ON_TICK_SIG | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển quặng |
+| FS_GAME_MINE_PUSH_SIG | Signal do timer gửi đến với chu kì 1500ms dùng để tạo thêm quặng |
+| FS_GAME_BOM_RESET_SIG | Cài đặt lại tất cả các thông số bom |
+| FS_GAME_BOM_ON_TICK_SIG | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển bom |
+| FS_GAME_BOM_PUSH_SIG | Signal do timer gửi đến với chu kì 1800ms dùng để tạo thêm bom |
+| FS_GAME_MISSLE_RESET_SIG | Cài đặt lại tất cả các thông số cho đạn |
+| FS_GAME_WALL_RESET_SIG | Cài đặt lại tất cả các thông số cho hầm |
+| FS_GAME_WALL_ON_TICK_SIG | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển hầm |
+| FS_GAME_EXPLOSION_RESET_SIG | Cài đặt lại tất cả các thông số cho vụ nổ |
+| FS_GAME_EXPLOSION_ON_TICK_SIG | Signal do timer gửi đến với chu kì 150ms dùng để tạo hoạt ảnh cho vụ nổ |
 | fs_state_game | Biến lưu trạng thái của game |
 
-![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%202.png)
+*Action normal*
 
-                              *Hình 2 : Sơ đồ quá trình khi game đang chạy*
-
-Giải thích :
-
-| SIG_DISPLAY_GAME_ON_TICK | Signal do timer gửi đến với chu kì 100ms  |
+| FS_GAME_DISPLAY_ON_TICK | Signal do timer gửi đến với chu kì 100ms |
 | --- | --- |
-| SIG_PLANE_CRASH | Signal kiểm tra tàu bay có chạm vào bom, quặng hay tường  |
-| SIG_DISPLAY_GAME_OVER_ON_TICK | Signal tạo ra khoảng chờ để chuyển đến màn hình game over |
-| SIG_MISSILE_ON_TICK | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển bom |
-| SIG_MISSILE_CRASH | Signal kiểm tra đạn có chạm vào bom hay quặng  |
+| FS_GAME_PLANE_CRASH_SIG | Signal kiểm tra tàu bay có chạm vào bom, quặng hay tường  |
+| FS_GAME_DISPLAY_OVER_ON_TICK | Signal tạo ra khoảng chờ để chuyển đến màn hình game over |
+| FS_GAME_MISSLE_ON_TICK_SIG | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển bom |
+| FS_GAME_MISSLE_RESET_SIG | Signal kiểm tra đạn có chạm vào bom hay quặng  |
 | RELOAD SCREEN | Giúp cập nhật lại toàn bộ màn hình |
 
-![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%203.png)
+*Action player*
 
-                         *Hình 3 : Sơ đồ người dùng tác động vào khi game đang chạy*
-
-Giải thích :
-
-| SIG_PLANE_UP | Player nhấn [Up] tạo ra signal giúp tàu bay đi lên |
+| FS_GAME_PLANE_UP_SIG | Player nhấn [Up] tạo ra signal giúp tàu bay đi lên |
 | --- | --- |
-| SIG_MISSILE_PUSH | Player nhấn [Mode] tạo ra signal giúp bắn ra đạn |
+| FS_GAME_MISSLE_PUSH_SIG | Player nhấn [Mode] tạo ra signal giúp bắn ra đạn |
 
-                                                      **
+*Action game over*                          
 
-![Untitled](FLY%20-%20AND%20-%20SHOOT%20GAME%20tre%CC%82n%20AK%20-%20Embedded%20Base%20Ki%202c299bf52b084d58b18f0795a20bb07c/Untitled%204.png)
+| timer_remove | Xóa các timer chạy cho các đối tượng trong game |
+| --- | --- |
+| Write score to eeprom and read history | Lưu lại điểm đạt được trong game vào trong bộ nhớ eeprom |
 
-                                                      *Hình 4: Sơ đồ khi game over*
+                                                     **
+
+**III. Chi tiết code các đối tượng trong game**
+
+ **3.1 Tàu bay (Plane)**
+
+Mỗi đối tượng sẽ có những thông số để điều khiển những đối tượng đó.
+
+```cpp
+typedef struct
+{
+    int8_t x;
+    int8_t y;
+}fs_game_coordinate_t;
+
+typedef struct {
+    bool visible;
+    fs_game_coordinate_t coordinate;
+} fs_plane_info_t;
+
+fs_plane_infor_t fs_plane;
+```
+
+Ở đoạn code trên thông số của tàu bay sẽ được lược vào kiểu dữ liệu struct mục đích nhằm để dễ quản lí. Ở trong struct trên có lồng thêm struct “fs_game_coordinate_t” nhằm để quản lí dễ dàng về tạo độ cho tàu bay. Biến “visble“là nhằm quản lí trạng thái ẩn hiện của tàu bay.  
+
+![Sequence Plane](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_plane.png)
+
+                                                       *Hình 3.1.1: Plane sequence*
+
+Tóm tắt cách giải quyết vấn đề:
+
+Khi người dùng bắt đầu trò chơi sẽ cài đặt timer với chu kì 100ms và bắn message FS_GAME_PLANE_SETUP_SIG nhằm để cài đặt thông số mặc định cho tàu bay
+
+Timer được cài đặt cứ mỗi 100ms sẽ bắn message đến FS_GAME_PLANE_ON_TICK_SIG và cũng bắn đến FS_GAME_PLANE_CRASH_SIG.
+
+- Tiếp đó FS_GAME_PLANE_ON_TICK_SIG sẽ tính toán tọa độ “y” giúp tàu bay đi xuống. 
+
+- Đồng thời cũng bắn message đến FS_GAME_PLANE_CRASH_SIG để kiểm tra tàu bay có chạm vào tường hầm, quặng hay bom, nếu chạm một trong những vật cản sẽ cài đặt timer để bắn message đến FS_GAME_DISPLAY_OVER_ON_TICK nhằm tạo khoảng chờ trước khi game over, sau đó sẽ gửi tọa độ đến FS_GAME_EXPLOSION_PUSH_SIG để tạo hiệu ứng vụ nổ.
+
+Khi người chơi nhấn nút [UP] sẽ bắn message đến FS_GAME_PLANE_UP_SIG giúp giảm tọa độ “y” của tàu bay. 
+
+Đoạn code trong source:
+
+Tín hiệu FS_GAME_PLANE_SETUP_SIG:
+
+```cpp
+static inline void fs_game_plane_setup() {
+    fs_plane.coordinate.x = 5;
+    fs_plane.coordinate.y = 15;
+    fs_plane.visible = true;
+}
+```
+
+Tín hiệu FS_GAME_PLANE_DOWN_SIG :
+
+```cpp
+static inline void fs_game_plane_down() {
+    fs_plane.coordinate.y += FS_PLANE_Y_DOWN;
+    if (fs_plane.coordinate.y > MAP_HEIGHT) {
+        fs_plane.visible = false;
+        fs_plane.coordinate.y = MAX_LCD_HEIGHT;
+    }
+}
+```
+
+Tín hiệu FS_GAME_PLANE_UP_SIG :
+
+```cpp
+static inline void fs_game_plane_up() {
+    fs_plane.coordinate.y -= FS_PLANE_Y_UP;
+}
+```
+
+Tín hiệu FS_GAME_PLANE_CRASH_SIG :
+
+```cpp
+static inline void fs_game_wall_crash() {
+	// code
+}
+static inline void fs_game_mine_crash() {
+	// code
+}
+static inline void fs_game_bom_crash() {
+	// code
+}
+static inline void fs_game_plane_crash() {
+    if(fs_state_game == FS_GAME_ON){
+        fs_game_mine_crash();
+        fs_game_bom_crash();
+        fs_game_wall_crash();
+    }
+}
+```
+
+Cài timer khi tàu bay va chạm :
+
+```cpp
+timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+```
+
+Lấy tọa độ khi tàu bay va chạm :
+
+```cpp
+fs_explosion.coordinate.x = fs_plane.coordinate.x;
+fs_explosion.coordinate.y = fs_plane.coordinate.y;
+fs_explosion.ver = VER_I;
+task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+```
+
+**3.2. Đạn (Missile)**
+
+![Sequence Missile](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_missile.png)
+
+                                                      *Hình 3.2.1 Missile sequence*
+
+Tương tự như tàu bay, đạn cũng có những biến quản lí các thông số:
+
+```cpp
+class fs_missile_info_t {
+   private:
+   public:
+    bool visible;
+    fs_game_coordinate_t coordinate;
+    fs_missile_info_t(uint8_t x, uint8_t y, bool visible) {
+        this->coordinate.x = x;
+        this->coordinate.y = y;
+        this->visible = visible;
+    }
+};
+
+vector<fs_missile_info_t> fs_vec_missile;
+```
+
+Chức năng biến của missile cũng tương tự như “Plane”. Xem lại 3.1 để hiểu rõ hơn.
+
+Giải thích missile sequence:
+
+Khi bắt đầu vào game sẽ có signal “SCREEN_ENTRY” và sẽ đặt lại các thông số cho missile, và xóa missile trước đó nếu có. Và sẽ cài đặt timer cho mỗi 100ms sẽ bắn message đến FS_GAME_MISSILE_ON_TICK, FS_GAME_MISSILE_CRASH_SIG. 
+
+- FS_GAME_MISSILE_ON_TICK sẽ di chuyển đạn (nếu có).
+
+- FS_GAME_MISSILE_CRASH_SIG sẽ kiểm tra missile có va chạm vào bom hay quặng không? Nếu có sẽ bắn tạo ra vụ nổi bằng cách bắn message đến FS_GAME_EXPLOSION_PUSH_SIG kèm theo data là tạo độ vụ nổ.
