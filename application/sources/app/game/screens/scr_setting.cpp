@@ -77,7 +77,7 @@ static inline fs_option_setting_t fs_switch_option_setting(fs_option_setting_t c
 }
 
 // switch setting game mode (easy, normal , hard)
-static inline fs_game_mode_t fs_switch_game_mode( fs_game_mode_t curr_setting_game_mode) {
+static inline fs_game_mode_t fs_setting_switch_game_mode( fs_game_mode_t curr_setting_game_mode) {
     if (static_cast<int>(curr_setting_game_mode) > FS_GAME_MODE_OPTION_MAX) {
         return static_cast<fs_game_mode_t>(2);
     } else {
@@ -85,6 +85,14 @@ static inline fs_game_mode_t fs_switch_game_mode( fs_game_mode_t curr_setting_ga
     }
 }
 
+static inline void fs_setting_change_missile() {
+    fs_game_setting.fs_setting_missle++;
+    fs_game_setting.fs_setting_missle = fs_game_setting.fs_setting_missle > 5 ? 1 : fs_game_setting.fs_setting_missle;
+}
+
+static inline void fs_setting_change_state_sound() {
+    fs_game_setting.fs_setting_sound = fs_game_setting.fs_setting_sound ^ 1;
+}
 // show view setting
 static void fs_view_setting() {
     view_render.setTextColor(WHITE);
@@ -200,15 +208,13 @@ void task_scr_fs_setting_handle(ak_msg_t *msg) {
                         TIMER_ONE_SHOT);
             // APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED - SETTING\n");
             if (fs_option_setting == FS_SETTING_GAME_MODE) {
-                fs_game_setting.fs_setting_game_mode = fs_switch_game_mode(fs_game_setting.fs_setting_game_mode);
+                fs_game_setting.fs_setting_game_mode = fs_setting_switch_game_mode(fs_game_setting.fs_setting_game_mode);
             } 
             else if (fs_option_setting == FS_SETTING_MAX_MISSLE) {
-                fs_game_setting.fs_setting_missle++;
-                fs_game_setting.fs_setting_missle = fs_game_setting.fs_setting_missle > 5 ? 1 : fs_game_setting.fs_setting_missle;
+                fs_setting_change_missile();
             } 
             else if (fs_option_setting == FS_SETTING_STATE_SOUND) {
-                fs_game_setting.fs_setting_sound =
-                    fs_game_setting.fs_setting_sound ^ 1;
+                fs_setting_change_state_sound();
             } 
             else {
                 SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
