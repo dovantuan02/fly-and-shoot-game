@@ -33,7 +33,7 @@
 
 **1.3. Các đối tương hoạt động trong game.**
 
-![INTRO OBJECT IN GAME](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_object_game.png)
+![INTRO OBJECT IN GAME](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/game_object.png)
 
 | Đối tượng | Ý nghĩa | Người chơi tác động | Tự động tác động |
 | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 
 ![INTRO EVENT DRIVEN](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_event_driven.png)
 
-                                             *Nguồn: Automatic Control Programming*
+                                 *Nguồn: Automatic Control Programming*
 
 - Event Driven nói một cách dễ hiểu là một hệ thống gửi thư (gửi message) để thực thi các công việc. Trong đó, Task đóng vai trò là người nhận thư, Signal đại diện cho nội dung công việc. Task & Signal nền tảng của một hệ Event Driven.
 - Thông thường mỗi Task sẽ nhận một nhóm công công việc nào nào đó, ví dụ: quản lý state-machine, quản lý hiển thị của màn hình, quản lý việc cập nhật phần mềm, quản lý hệ thống watchdog ...
@@ -110,22 +110,22 @@ Các task có thể đồng bộ hóa và trao đổi dữ liệu bằng cách b
 
 Có 2 loại message khác nhau:
 
-- Messge chỉ mang theo Signal, không chứa data
+- Message chỉ mang theo Signal, không chứa data.
 - Message chứa Signal và mang theo cả data.
 
 **2.3. Sơ đồ quá trình của game**
 
 ![Sequence After Game On](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_after_game_on.png)
 
-                                                   *Hình 2.3.1: Sequence after game on*
+                                        Hình 2.3.1: Sequence after game on
 
 ![Sequence Game Active](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_game_active.png)
 
-                                                  *Hình 2.3.2: Sequence when game run*
+                                        Hình 2.3.2: Sequence when game run
 
 ![Sequence Game Over](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_game_over.png)
 
-                                                  *Hình 2.3.3: Sequence game over*
+                                        Hình 2.3.3: Sequence game over
 
 *Action after run game*
 
@@ -167,9 +167,22 @@ Có 2 loại message khác nhau:
 
 | timer_remove | Xóa các timer chạy cho các đối tượng trong game |
 | --- | --- |
-| Write score to eeprom and read history | Lưu lại điểm đạt được trong game vào trong bộ nhớ eeprom |
+| Write score to eeprom and read history. | Lưu lại điểm đạt được trong game vào trong bộ nhớ eeprom |
 
-                                                     **
+Như ở hình trên:
+
+Game sẽ được chia làm 3 phần chính:
+
+**Phần 1:** Quá trình cài đặt thông số cho các đối tượng trong game, và timer cho cho đối tượng trong game
+
+**Phần 2:** Quá trình bắt đầu game chạy.
+
+- Khi không có tác động của người dùng
+- Khi có tác động của người dùng
+
+**Phần 3:** Quá trình game kết thúc. 
+
+*Vì vậy các đối tượng của game cũng chia làm 3 phần chính.*
 
 **III. Chi tiết code các đối tượng trong game**
 
@@ -192,23 +205,34 @@ typedef struct {
 fs_plane_infor_t fs_plane;
 ```
 
-Ở đoạn code trên thông số của tàu bay sẽ được lược vào kiểu dữ liệu struct mục đích nhằm để dễ quản lí. Ở trong struct trên có lồng thêm struct “fs_game_coordinate_t” nhằm để quản lí dễ dàng về tạo độ cho tàu bay. Biến “visble“là nhằm quản lí trạng thái ẩn hiện của tàu bay.  
+       Ở đoạn code trên thông số của tàu bay sẽ được lược vào kiểu dữ liệu struct mục đích nhằm để dễ quản lí. Ở trong struct trên có lồng thêm struct “fs_game_coordinate_t” nhằm để quản lí dễ dàng về tạo độ cho tàu bay. Biến “visible“ là nhằm quản lí trạng thái ẩn hiện của tàu bay.  
 
 ![Sequence Plane](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_plane.png)
 
-                                                       *Hình 3.1.1: Plane sequence*
+                                         *Hình 3.1.1: Plane sequence*
 
-Tóm tắt cách giải quyết vấn đề:
+Giải thích plane sequence:
 
-Khi người dùng bắt đầu trò chơi sẽ cài đặt timer với chu kì 100ms và bắn message FS_GAME_PLANE_SETUP_SIG nhằm để cài đặt thông số mặc định cho tàu bay
+*Như ở cuối mục 2.3 ta được biết sẽ có phần chính. Thì ở phần đối tượng tàu bay cũng sẽ được chia ra làm 3 phần:*
 
-Timer được cài đặt cứ mỗi 100ms sẽ bắn message đến FS_GAME_PLANE_ON_TICK_SIG và cũng bắn đến FS_GAME_PLANE_CRASH_SIG.
+**Phần 1:** Trước khi vào game sẽ có signal SCREEN_ENTRY khi đó sẽ cài đặt timer 100ms sẽ bắn message đến FS_GAME_PLANE_ON_TICK_SIG và FS_GAME_PLANE_CRASH_SIG.
 
-- Tiếp đó FS_GAME_PLANE_ON_TICK_SIG sẽ tính toán tọa độ “y” giúp tàu bay đi xuống. 
+**Phần 2:** 
 
-- Đồng thời cũng bắn message đến FS_GAME_PLANE_CRASH_SIG để kiểm tra tàu bay có chạm vào tường hầm, quặng hay bom, nếu chạm một trong những vật cản sẽ cài đặt timer để bắn message đến FS_GAME_DISPLAY_OVER_ON_TICK nhằm tạo khoảng chờ trước khi game over, sau đó sẽ gửi tọa độ đến FS_GAME_EXPLOSION_PUSH_SIG để tạo hiệu ứng vụ nổ.
+*Khi không có tác động của người chơi:*
 
-Khi người chơi nhấn nút [UP] sẽ bắn message đến FS_GAME_PLANE_UP_SIG giúp giảm tọa độ “y” của tàu bay. 
+Tàu bay mỗi 100ms sẽ di chuyển xuống và đồng thời cũng kiểm tra tàu bay có va chạm không?
+
+- Có: Sẽ bắn message đến FS_GAME_EXPLOSION_PUSH_SIG kèm theo tạo độ vụ nổ, đồng thời cũng cài đặt thời gian delay 2000ms để bắn message đến FS_GAME_DISPLAY_ON_TICK nhằm tạo ra hiệu ứng thời gian chờ trước khi game over.
+- Không: Thì sẽ không làm gì.
+
+*Khi có tác động của người chơi:*
+
+Khi người chơi nhấn nút [UP] sẽ bắn message đến FS_GAME_PLANE_UP_SIG giúp cho tàu bay đi lên.
+
+ 
+
+**Phần 3:** Khi có tín hiệu FS_GAME_DISPLAY_OVER_ON_TICK sẽ cài đặt lại thông số cho tàu bay.
 
 Đoạn code trong source:
 
@@ -280,10 +304,6 @@ task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (ui
 
 **3.2. Đạn (Missile)**
 
-![Sequence Missile](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_missile.png)
-
-                                                      *Hình 3.2.1 Missile sequence*
-
 Tương tự như tàu bay, đạn cũng có những biến quản lí các thông số:
 
 ```cpp
@@ -302,12 +322,307 @@ class fs_missile_info_t {
 vector<fs_missile_info_t> fs_vec_missile;
 ```
 
-Chức năng biến của missile cũng tương tự như “Plane”. Xem lại 3.1 để hiểu rõ hơn.
+Chức năng biến của missile cũng tương tự như “Plane”. Xem lại hình 3.1.1 để hiểu rõ hơn.
+
+![Sequence Missile](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_missile.png)
+
+                                      *Hình 3.2.1 Missile sequence*
 
 Giải thích missile sequence:
 
-Khi bắt đầu vào game sẽ có signal “SCREEN_ENTRY” và sẽ đặt lại các thông số cho missile, và xóa missile trước đó nếu có. Và sẽ cài đặt timer cho mỗi 100ms sẽ bắn message đến FS_GAME_MISSILE_ON_TICK, FS_GAME_MISSILE_CRASH_SIG. 
+**Phần 1:** Trước khi bắt đầu vào game sẽ có signal “SCREEN_ENTRY” và sẽ đặt lại các thông số cho missile, và xóa missile trước đó nếu có. Và sẽ cài đặt timer cho mỗi 100ms sẽ bắn message đến FS_GAME_MISSILE_ON_TICK, FS_GAME_MISSILE_CRASH_SIG. 
 
-- FS_GAME_MISSILE_ON_TICK sẽ di chuyển đạn (nếu có).
+**Phần 2:** 
 
-- FS_GAME_MISSILE_CRASH_SIG sẽ kiểm tra missile có va chạm vào bom hay quặng không? Nếu có sẽ bắn tạo ra vụ nổi bằng cách bắn message đến FS_GAME_EXPLOSION_PUSH_SIG kèm theo data là tạo độ vụ nổ.
+*Khi không có tác động của người chơi:*
+
+- Đạn (nếu có) sẽ di chuyển từ trái sang phải mỗi 100ms.
+- Kiểm tra đạn (nếu có) có va chạm với bom, quặng hay không?
+    - Có: Sẽ bắn message đến FS_GAME_EXPLOSION_PUSH_SIG kèm theo tạo độ vụ nổ và cộng điểm cho người chơi.
+        - Quặng 1: sẽ được cộng 1 điểm.
+        - Quặng 2: sẽ được cộng 2 điểm.
+        - Bom: sẽ không có điểm.
+    - Không: Thì sẽ không làm gì.
+
+*Khi có tác động của người chơi:*
+
+- Khi người chơi nhấn nút [MODE] sẽ bắn message đến FS_GAME_MISSILE_PUSH_SIG giúp tạo ra đạn với số lượng tùy vào trong cài đặt. Tối đa sẽ 5 viên
+
+ **Phần 3:** Khi có tín hiệu FS_GAME_DISPLAY_OVER_ON_TICK sẽ xóa hết đạn (nếu có) và cài đặt lại thông số cho đạn.
+
+Đoạn code trong source:
+
+Tín hiệu FS_GAME_MISSILE_RESET_SIG:
+
+```cpp
+// clear all missile available
+static inline void fs_game_missle_reset() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_MISSILE_PUSH_SIG:
+
+```cpp
+// add missile to missile managerment
+static inline void fs_game_missle_push() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_MISSILE_ON_TICK_SIG:
+
+```cpp
+// move all missile to right screen
+static inline void fs_game_missle_move() {
+		// code
+}
+```
+
+Tín hiệu FS_GAME_MISSILE_CRASH_SIG:
+
+```cpp
+// missile hits mine or bom
+static inline void fs_game_missle_crash() {
+		// code
+}
+```
+
+*****  Do đoạn code khá dài ae cần có thể vào source xem nhé..*
+
+Code bắn message đến FS_GAME_EXPLOSION_PUSH_SIG kèm tạo độ để tạo vụ nổ :
+
+```cpp
+fs_explosion.coordinate.x = fs_vec_bom[k].coordinate.x;     
+fs_explosion.coordinate.y = fs_vec_bom[k].coordinate.y;
+fs_explosion.ver = FS_EXPLOSION_VER_I;
+
+task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+```
+
+**3.3 Quặng (Mine)**
+
+Cũng giống như cái đối tượng khác quặng cũng cần một struct để quản lí đối tượng đó.
+
+```cpp
+typedef struct {
+    bool visible;
+    fs_game_coordinate_t coordinate;
+    uint8_t ver;
+} fs_mine_info_t;
+
+vector<fs_mine_info_t> fs_vec_mine;
+```
+
+*Các bạn có thể xem giải thích kĩ hơn ở 3.1.1*
+
+![Sequence Mine](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_mine.png)
+
+                                      *Hình 3.3.1 Mine sequence*
+
+Giải thích mine sequence:
+
+**Phần 1:** Trước khi bắt đầu chuyển vào màn hình game sẽ có tín hiệu SCREEN_ENTRY khi đó sẽ xóa tất cả các quặng (nếu có). Cùng lúc đó sẽ cài đặt timer:
+
+- Mỗi 150ms bắn message đến FS_GAME_MINE_ON_TICK_SIG
+- Mỗi 1500ms bắn message đến FS_GAME_MINE_PUSH_SIG.
+
+**Phần 2:** 
+
+- Mỗi 150ms quặng sẽ di chuyển sang phải thông qua signal FS_GAME_MINE_ON_TICK_SIG.
+- Mỗi 1500ms quặng 1 hoặc quặng 2 sẽ được tạo ra ở vị trí ngẫu nhiên ở cuối hầm nhờ vào signal FS_GAME_MINE_PUSH_SIG.
+
+ **Phần 3:** Khi có tín hiệu FS_GAME_DISPLAY_OVER_ON_TICK sẽ xóa hết quặng (nếu có) và cài đặt lại thông số cho quặng.
+
+Tín hiệu FS_GAME_MINE_RESET_SIG:
+
+```cpp
+// clear all mine
+static inline void fs_game_mine_reset() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_MINE_ON_TICK:
+
+```cpp
+//  move all mine
+static inline void fs_game_mine_move() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_MINE_PUSH_SIG:
+
+```cpp
+// add mine to mine managerment
+static inline void fs_game_mine_push() {
+		//code
+}
+```
+
+**3.4. Bom**
+
+![Sequence Bom](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_bom.png)
+
+                                                             *Hình 3.4.1 Bom Sequence*
+
+Tương tự thì bom cũng có các tín hiệu và các chức năng giống như quặng. Khác một chút là thời gian tạo ra bom sẽ là 1800ms và chỉ có 1 kiểu bom, không như quặng sẽ có 2 kiểu.
+
+Tín hiệu FS_GAME_BOM_RESET_SIG:
+
+```cpp
+// clear all bom available
+static inline void fs_game_bom_reset() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_BOM_PUSH_SIG:
+
+```cpp
+// add bom with top and bot limmit
+static inline void fs_game_bom_push() {
+		// code
+}
+```
+
+Tín hiệu FS_GAME_BOM_ON_TICK_SIG:
+
+```cpp
+// move all bom to left screen
+static inline void fs_game_bom_move() {
+		// code
+}
+```
+
+**3.5. Vụ nổ (Explosion)**
+
+Tương như các đối tượng khác trong game vụ nổ cũng có khối quản lí vụ nổ riêng
+
+```cpp
+typedef enum  {
+    FS_EXPLOSION_VER_I = 0,
+    FS_EXPLOSION_VER_II
+} fs_ver_info_t;
+
+typedef struct {
+    fs_game_coordinate_t coordinate;
+    fs_ver_info_t ver;
+} fs_explosion_info_t;
+
+vector<fs_explosion_info_t> fs_vec_explosion;
+fs_explosion_info_t fs_explosion;
+```
+
+****Chi tiết hơn ae có thể xem ở mục 3.1 nhé !!!*
+
+![Sequence Explosion](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_explosion.png)
+
+                                     *Hình 3.5.1 Explosion Sequence*
+
+Giải thích explosion sequence:
+
+**Phần 1:** Trước khi bắt đầu chuyển vào màn hình game sẽ có tín hiệu SCREEN_ENTRY khi đó sẽ xóa tất cả các vụ nổ (nếu có). Cùng lúc đó sẽ cài đặt timer mỗi 100ms bắn message đến FS_GAME_EXPLOSION_ON_TICK_SIG.
+
+**Phần 2:**
+
+- Khi có tín hiệu va chạm từ tàu bay hay của đạn thì tín hiệu FS_GAME_EXPLOSION_PUSH_SIG lập tức sẽ tạo ra vụ nổ 1 ở ngay tọa độ ở đó.
+- Mỗi 100ms signal FS_GAME_EXPLOSION_ON_TICK_SIG khi đó nếu có vụ nổ thì sẽ chuyển đổi từ vụ nổ 1 sang vụ nổ 2. Khi vụ nổ 2 xảy ra thì xóa vụ nổ.
+
+**Phần 3:** Khi có tín hiệu FS_GAME_DISPLAY_OVER_ON_TICK sẽ xóa tất cả các vụ nổ (nếu có) và đặt lại các thông số cho vụ nổ.
+
+Tín hiệu FS_GAME_EXPLOSION_RESET_SIG:
+
+```cpp
+// clear all explosion
+void fs_game_explosion_reset() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_EXPLOSION_ON_TICK_SIG:
+
+```cpp
+// add explsion to explosion managerment
+void fs_game_explosion_push() {
+		// code
+}
+```
+
+Tín hiệu FS_GAME_EXPLOSION_PUSH_SIG:
+
+```cpp
+// animate explsion and erase when complete
+void fs_game_explosion_update() {
+		//code
+}
+```
+
+**3.6. Đường hầm (Tunnel Wall)**
+
+Tương tự như các đối tượng khác thì đường hầm cũng có biến để quản lí đường hầm.
+
+```cpp
+typedef enum { 
+    FS_WALL_I = 0, 
+    FS_WALL_II 
+} fs_ver_wall_t;
+
+typedef struct {
+    int16_t x;
+    int8_t y;
+    fs_ver_wall_t ver;
+} fs_wall_info_t;
+
+/*
+* fs_vec_limit_wall_y : VECTOR WALL TOP AND BOT LIMMIT MANAGERMENT
+*/
+vector<vector<uint8_t>> fs_vec_limit_wall_y;
+
+/*
+* fs_vec_wall : VECTOR WALL MANAGERMENT
+*/
+vector<fs_wall_info_t> fs_vec_wall;
+```
+
+![Sequence Tunnel Wall](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_tunnel_wall.png)
+
+                                        *Hình 3.6.1 Tunnel Wall Sequence*
+
+Giải thích Tunnel Wall Sequence:
+
+**Phần 1:** Trước khi bắt đầu chuyển vào màn hình game sẽ có tín hiệu SCREEN_ENTRY khi đó sẽ tạo ra 2 đường hầm liên tiếp. Cùng lúc đó sẽ cài đặt timer mỗi 150ms bắn message đến FS_GAME_WALL_ON_TICK_SIG.
+
+**Phần 2:**
+
+- Mỗi 150ms signal FS_GAME_WALL_ON_TICK_SIG khi đó tường sẽ di chuyển từ phải sang thái, và làm mới lại giới hạn cho đường hầm do đường hầm không bằng phẳng sẽ có những đoạn nhấp nhô.
+
+**Phần 3:** Khi có tín hiệu FS_GAME_DISPLAY_OVER_ON_TICK sẽ xóa đường hầm nhằm giải phóng bộ nhớ.
+
+Tín hiệu FS_GAME_WALL_SETUP_SIG:
+
+```cpp
+// set default for all wall
+static inline void fs_game_wall_setup() {
+		//code
+}
+```
+
+Tín hiệu FS_GAME_WALL_ON_TICK_SIG:
+
+```cpp
+// move wall to left
+static inline void fs_game_wall_update() {
+		// code
+}
+```
+
+Tín hiệu FS_GAME_WALL_RESET_SIG:
+
+```cpp
+// clear all wall
+static inline void fs_game_wall_reset() {
+		// code
+}
+```
