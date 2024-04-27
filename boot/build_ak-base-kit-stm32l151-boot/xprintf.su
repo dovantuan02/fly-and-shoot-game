@@ -1,2 +1,0 @@
-sources/common/xprintf.c:16:6:xputc	16	static
-sources/common/xprintf.c:25:6:xprintf	48	static
