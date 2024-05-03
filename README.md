@@ -626,3 +626,119 @@ static inline void fs_game_wall_reset() {
 		// code
 }
 ```
+
+**IV. Các hình ảnh trong game.**
+
+Để tạo hình ảnh sinh động cho game mình sử dụng web để thiết kế các đối tượng [Photopea | Online Photo Editor](https://www.photopea.com/)  và ta cần trang web để chuyển đổi hình ảnh sang mã hex để có thể đưa vào code [image2cpp (javl.github.io)](https://javl.github.io/image2cpp/), mỗi hình ảnh được được tạo ra thành các tên biến như ở cột 4.
+
+![IMAGE OBJECT GAME](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/image_object.png)
+
+**Animation**:
+
+- Vụ nổ sẽ sử dụng 2 hình ảnh một cách tuần tự để có thể tạo ra hình ảnh mang tính linh động cho game.
+- Đường hầm sẽ được nối liên tiếp với nhau : Đầu bản đồ 2 sẽ được nối vào cuối bản đồ 1, khi bản đồ 1 chạy hết sẽ nối vào cuối bản đồ 2. Cứ như thế sẽ tạo ra vòng lặp vô hạn của 2 bản đồ tạo ra cảm giác cho người dùng thấy không có điểm dừng.
+
+**V. Âm thanh của game.**
+
+Để tạo sự sinh động cho game khi chơi. Mình có làm thêm phần âm thanh tuy không được hay nhưng cũng có thể nghe tạm được. Trang web [Online Tone Generator - generate pure tones of any frequency (szynalski.com)](https://www.szynalski.com/tone-generator/) để tạo ra code của những âm thanh. 
+
+File code âm thanh sẽ được lưu trong *fs_buzzer_def.h*
+
+```cpp
+#include "buzzer.h"
+
+static const Tone_TypeDef tones_explosion[] =
+{
+    {2000, 9},
+    {0	 , 9},
+    {2000, 9}
+};
+
+static const Tone_TypeDef tones_missle_push[] =
+{
+    {7500 , 8}
+};
+
+static const Tone_TypeDef tones_game_over[] = {
+    {2000, 5},
+    {0, 5},
+    {3000, 5},
+    {0, 5},
+    {4000, 5},
+    {0, 5},
+    {1200, 6},
+    {0, 8},
+    {4500, 8},
+    {2000, 3},
+    {0, 3},
+    {3000, 3},
+    {0, 3},
+    {4000, 3},
+    {0, 3},
+    {1200, 4},
+    {0, 6},
+    {4500, 6}
+};
+static const Tone_TypeDef tones_choose_menu[] =
+{
+    {2000, 5}
+};
+
+```
+
+**Giải thích:** 
+
+- Ví dụ: ở  “tones_missle_push” ta sẽ thấy 7500 và 8.
+    - 7500 sẽ là tần số phát xung cho buzzer
+    - 8(ms) sẽ là thời gian phát xung cho buzzer
+
+*(*) Phần tạo ra âm thanh này khá lằng nhằng ae nào có khả năng cảm âm được thì mới sâu được mình xin kiếu.* 
+
+**VI. Sate-machines của màn hình.**
+
+Như những phần ở trên mình có giới thiệu và giải thích từng đối tượng cho các bạn về code, các xử lí khi có event. Thì hình dưới đây sẽ xử lí event chuyển đổi các màn hình.
+
+![STATE MACHINE SCREENS](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/state_machine_screen.png)
+
+Ở trong game sẽ có những màn hình cụ thể như sau:
+
+- SCREEN START-UP: Khi mới khởi động sẽ có logo.
+    - Khi vào sẽ khởi tạo màn hình.
+    - Đọc dữ liệu cài đặt và lịch sử của game.
+    - Đặt time-out 2000ms để chuyển SCREEN MENU
+- SCREEN MENU: Ở trong màn hình menu sẽ có 3 event (AC_DISPLAY_BUTTON_DOWN_PRESSED, AC_DISPLAY_BUTTON_UP_PRESSED, AC_DISPLAY_BUTTON_MODE_PRESSED)
+    - Khi nhấn nút [DOWN, UP] sẽ gọi hàm *fs_switch_option_menu* để chuyển đổi các chế độ trong menu.
+    - Khi nhấn nút [MODE] sẽ chuyển sang chế độ tương ứng.
+    - Khi thoát khỏi màn hình menu đặt time-out 15000ms chuyển sang màn hình SCREEN IDLE.
+- SCREEN GAME ON: Ở trong màn hình này. Khi vào sẽ cài đặt timer cho các đối tượng.
+    - Khi nhấn nút [MODE] sẽ tạo ra event FS_GAME_MISSILE_PUSH_SIG để gọi tới hàm *fs_missile_push* có tác dụng tạo ra đạn
+    - Khi nhấn nút [UP] sẽ tạo ra event FS_GAME_PLANE_UP_SIG gọi tới hàm *fs_plane_up* giúp tàu bay đi lên.
+    - Khi mới vào ta có cài timer cho từng đối tượng. Thì ở phần TIME_TICK cứ mỗi 100ms sẽ tạo event FS_GAME_CRASH_SIG gọi đến hàm *fs_plane_crash* giúp kiểm tra máy bay có va chạm.
+    - Khi va chạm sẽ cài time-out 2000ms bắn đến FS_GAME_DISPLAY_OVER_ON_TICK và chuyển sang màn hình SCREEN GAME OVER.
+- SCREEN GAME OVER: Khi chuyển sang màn hình game over sẽ xóa tất cả các timer của đối tượn đi.
+    - Khi nhấn nút [MODE] sẽ tạo ra event FS_GAME_DISPLAY_OVER_MODE_PRESSED sẽ quay lại SCREEN GAME ON và chơi tiếp.
+    - Khi nhấn nút [DOWN] sẽ quay trở về SCREEN MENU.
+    - Đặt time-out 15000ms nếu không có tác động gì sẽ chuyển sang SCREEN IDLE.
+- SCREEN SETTING:
+    - Khi nhấn nút [UP, DOWN] sẽ gọi hàm *fs_switch_option_setting* giúp chuyển đổi các chế độ của cài đặt.
+    - Khi nhấn nút [MODE] sẽ cài đặt theo từng chế độ (GAME MODE, MISSILE, SOUND, EXIT)
+        - GAME MODE: cài đặt độ khó cho game (EASY, NORMAL, HARD).
+        - MISSILE: cài đặt số đạn tối đa cho game.
+        - SOUND: bật/tắt âm thanh trong quá trình thao tác.
+        - EXIT: sẽ gọi hàm *task_scr_fs_menu_handler* sẽ chuyển về SCREEN MENU.
+    - Đặt time-out 15000ms nếu không thao tác sẽ chuyển sang SCREEN IDLE
+- SCREEN TUTORIAL:
+    - Khi nhấn [DOWN, UP, MODE] sẽ chuyển về SCREEN MENU.
+    - Đặt time-out 15000ms nếu không thao tác sẽ chuyển sang SCREEN IDLE
+- SCREEN EXIT:
+    - Khi nhấn [MODE] sẽ chuyển sang SCREEN IDLE.
+- SCREEN IDLE:
+    - Khi nhấn [UP] sẽ tạo thêm bong bóng. Nếu đạt tối đa bong bóng sẽ có tiếng âm thanh.
+    - Khi nhấn [DOWN] sẽ xóa bớt bong bóng. Nếu không có bong bóng sẽ có tiếng âm thanh.
+    - Khi nhấn [MODE] sẽ chuyển sang SCREEN MENU.
+
+(*) Code của các màn hình các ae có thể vào folder:  *.../game/screens.*
+
+**VII. Done.**
+
+Ae nào có nhu cầu về IOT thì liên hệ [EPCB - Điện tử và IoT | Cảm biến công nghiệp](https://epcb.vn/) nhé 🤗🤗. 
