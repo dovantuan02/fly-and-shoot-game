@@ -691,7 +691,7 @@ static const Tone_TypeDef tones_choose_menu[] =
     - 7500 sẽ là tần số phát xung cho buzzer
     - 8(ms) sẽ là thời gian phát xung cho buzzer
 
-*(*) Phần tạo ra âm thanh này khá lằng nhằng ae nào có khả năng cảm âm được thì mới sâu được mình xin kiếu.* 
+(*) Phần tạo ra âm thanh này khá lằng nhằng ae nào có khả năng cảm âm được thì mới sâu được mình xin kiếu.
 
 **VI. Sate-machines của màn hình.**
 
