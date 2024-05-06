@@ -66,7 +66,7 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 
 ![INTRO EVENT DRIVEN](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_event_driven.png)
 
-                                 *Nguồn: Automatic Control Programming*
+                                 Nguồn: Automatic Control Programming
 
 - Event Driven nói một cách dễ hiểu là một hệ thống gửi thư (gửi message) để thực thi các công việc. Trong đó, Task đóng vai trò là người nhận thư, Signal đại diện cho nội dung công việc. Task & Signal nền tảng của một hệ Event Driven.
 - Thông thường mỗi Task sẽ nhận một nhóm công công việc nào nào đó, ví dụ: quản lý state-machine, quản lý hiển thị của màn hình, quản lý việc cập nhật phần mềm, quản lý hệ thống watchdog ...
@@ -90,11 +90,10 @@ Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embed
 | FS_GAME_TASK_MINE_ID				 | TASK_PRI_LEVEL_4 | task_fs_mine_handle		 |
 | FS_GAME_TASK_DISPLAY_GAME_OVER_ID	 | TASK_PRI_LEVEL_4	 | task_scr_fs_game_over_handle	 |
 
-    **
 
 ![Intro Object Game](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_object_game.png)
 
-         *Chi tiết các signal trong các Task:*
+        			Chi tiết các signal trong các Task:
 
 *Task ID*:  Mỗi task được tạo ra cho một đối tượng khác nhau trong hệ thống và có nhiệm vụ nhận các công việc khác nhau. Các task hoàn toàn tác biệt luồng logic với nhau.
 
@@ -205,11 +204,11 @@ typedef struct {
 fs_plane_infor_t fs_plane;
 ```
 
-       Ở đoạn code trên thông số của tàu bay sẽ được lược vào kiểu dữ liệu struct mục đích nhằm để dễ quản lí. Ở trong struct trên có lồng thêm struct “fs_game_coordinate_t” nhằm để quản lí dễ dàng về tạo độ cho tàu bay. Biến “visible“ là nhằm quản lí trạng thái ẩn hiện của tàu bay.  
+Ở đoạn code trên thông số của tàu bay sẽ được lược vào kiểu dữ liệu struct mục đích nhằm để dễ quản lí. Ở trong struct trên có lồng thêm struct “fs_game_coordinate_t” nhằm để quản lí dễ dàng về tạo độ cho tàu bay. Biến “visible“ là nhằm quản lí trạng thái ẩn hiện của tàu bay.  
 
 ![Sequence Plane](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_plane.png)
 
-                                         *Hình 3.1.1: Plane sequence*
+                                         Hình 3.1.1: Plane sequence
 
 Giải thích plane sequence:
 
@@ -326,7 +325,7 @@ Chức năng biến của missile cũng tương tự như “Plane”. Xem lại
 
 ![Sequence Missile](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_missile.png)
 
-                                      *Hình 3.2.1 Missile sequence*
+                                      Hình 3.2.1 Missile sequence
 
 Giải thích missile sequence:
 
@@ -418,7 +417,7 @@ vector<fs_mine_info_t> fs_vec_mine;
 
 ![Sequence Mine](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_mine.png)
 
-                                      *Hình 3.3.1 Mine sequence*
+                                      Hình 3.3.1 Mine sequence
 
 Giải thích mine sequence:
 
@@ -465,7 +464,7 @@ static inline void fs_game_mine_push() {
 
 ![Sequence Bom](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_bom.png)
 
-                                                             *Hình 3.4.1 Bom Sequence*
+                                        Hình 3.4.1 Bom Sequence
 
 Tương tự thì bom cũng có các tín hiệu và các chức năng giống như quặng. Khác một chút là thời gian tạo ra bom sẽ là 1800ms và chỉ có 1 kiểu bom, không như quặng sẽ có 2 kiểu.
 
@@ -519,7 +518,7 @@ fs_explosion_info_t fs_explosion;
 
 ![Sequence Explosion](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_explosion.png)
 
-                                     *Hình 3.5.1 Explosion Sequence*
+                                     Hình 3.5.1 Explosion Sequence
 
 Giải thích explosion sequence:
 
@@ -588,7 +587,7 @@ vector<fs_wall_info_t> fs_vec_wall;
 
 ![Sequence Tunnel Wall](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_tunnel_wall.png)
 
-                                        *Hình 3.6.1 Tunnel Wall Sequence*
+                                        Hình 3.6.1 Tunnel Wall Sequence
 
 Giải thích Tunnel Wall Sequence:
 
@@ -692,7 +691,7 @@ static const Tone_TypeDef tones_choose_menu[] =
     - 7500 sẽ là tần số phát xung cho buzzer
     - 8(ms) sẽ là thời gian phát xung cho buzzer
 
-*(*) Phần tạo ra âm thanh này khá lằng nhằng ae nào có khả năng cảm âm được thì mới sâu được mình xin kiếu.* 
+(*) Phần tạo ra âm thanh này khá lằng nhằng ae nào có khả năng cảm âm được thì mới sâu được mình xin kiếu.
 
 **VI. Sate-machines của màn hình.**
 
