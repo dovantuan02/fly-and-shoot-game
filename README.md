@@ -613,7 +613,7 @@ Tín hiệu FS_GAME_WALL_ON_TICK_SIG:
 
 ```cpp
 // move wall to left
-static inline void fs_game_wall_update() {
+static inline void fs_game_wall_move() {
 		// code
 }
 ```
