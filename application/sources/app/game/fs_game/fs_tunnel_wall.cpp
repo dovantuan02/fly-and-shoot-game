@@ -58,7 +58,7 @@ static inline void fs_game_wall_setup() {
 }
 
 // move wall to left
-static inline void fs_game_wall_update() {
+static inline void fs_game_wall_move() {
     if (!fs_vec_wall.empty()) {
         // move "x" map
         for (uint8_t i = 0; i < NUM_WALL; i++) {                         // scan all wall
@@ -96,7 +96,7 @@ void task_fs_wall_handle(ak_msg_t *msg) {
         }
 
         case FS_GAME_WALL_ON_TICK_SIG: {
-            fs_game_wall_update();
+            fs_game_wall_move();
             break;
         }
         default:
