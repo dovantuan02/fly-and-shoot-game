@@ -298,7 +298,7 @@ Lấy tọa độ khi tàu bay va chạm :
 fs_explosion.coordinate.x = fs_plane.coordinate.x;
 fs_explosion.coordinate.y = fs_plane.coordinate.y;
 fs_explosion.ver = VER_I;
-task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
 ```
 
 **3.2. Đạn (Missile)**
@@ -396,7 +396,7 @@ fs_explosion.coordinate.x = fs_vec_bom[k].coordinate.x;
 fs_explosion.coordinate.y = fs_vec_bom[k].coordinate.y;
 fs_explosion.ver = FS_EXPLOSION_VER_I;
 
-task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
 ```
 
 **3.3 Quặng (Mine)**
