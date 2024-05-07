@@ -74,8 +74,8 @@ static inline void fs_game_missle_move() {
 
 // missile hits mine or bom
 static inline void fs_game_missle_crash() {
-    for (size_t i = 0; i < fs_vec_missile.size(); i++) {            // scan all missile 
-        for (size_t j = 0; j < fs_vec_mine.size(); j++) {                // scan all mine
+    for (size_t i = 0; i < fs_vec_missile.size(); i++) { // scan all missile 
+        for (size_t j = 0; j < fs_vec_mine.size(); j++) { // scan all mine
             if ((fs_vec_mine[j].coordinate.x - fs_vec_missile[i].coordinate.x <= (MISSLE_ICON_WIDTH))) { // check missile(x) with mine(x)
                 // check missile(y) with mine(y)
                 if ((fs_vec_missile[i].coordinate.y) >= (fs_vec_mine[j].coordinate.y ) 
@@ -118,7 +118,7 @@ static inline void fs_game_missle_crash() {
                     fs_vec_bom.erase(fs_vec_bom.begin() + k); // erase bom
 
                     // post to "sig_explosion_push" with data(fs_explosion)
-                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
+                    task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
                 }
             }
         }

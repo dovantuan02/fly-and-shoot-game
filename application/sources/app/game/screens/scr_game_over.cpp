@@ -120,7 +120,7 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
             }
             break;
         }
-        
+
         default:
             break;
     }

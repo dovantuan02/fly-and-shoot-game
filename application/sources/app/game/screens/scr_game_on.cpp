@@ -223,7 +223,7 @@ void task_scr_fs_game_on_handle(ak_msg_t *msg) {
             task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_ON_TICK_SIG);
             break;
         }
-        
+
         default:
             break;
     }

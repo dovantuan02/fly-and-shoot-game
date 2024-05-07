@@ -35,6 +35,7 @@ static const Tone_TypeDef tones_game_over[] = {
     {0, 6},
     {4500, 6}
 };
+
 static const Tone_TypeDef tones_choose_menu[] =
 {
     {2000, 5}
