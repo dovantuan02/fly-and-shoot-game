@@ -16,6 +16,7 @@
 
 #include "scr_game_on.h"
 #include "fs_bitmap.h"
+
 /***********************************************************
 * VARIABLE AND ARRAY BITMAP VIEW GAME ON
 ***********************************************************/

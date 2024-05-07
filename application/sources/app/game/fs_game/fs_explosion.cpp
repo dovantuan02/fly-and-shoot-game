@@ -13,7 +13,7 @@
 */
 vector<fs_explosion_info_t> fs_vec_explosion;
 
-fs_explosion_info_t fs_explosion;            // set default for explosion
+fs_explosion_info_t fs_explosion; // set default for explosion
 
 // clear all explosion
 void fs_game_explosion_reset() {
@@ -32,12 +32,12 @@ void fs_game_explosion_push() {
 void fs_game_explosion_update()
 {
     if (!fs_vec_explosion.empty()) {
-        for (size_t i = 0; i < fs_vec_explosion.size();i++) {        // scan all explosion
-            if (fs_vec_explosion[i].ver == FS_EXPLOSION_VER_I) {                  
-                fs_vec_explosion[i].ver = FS_EXPLOSION_VER_II;                    // animate explosion
+        for (size_t i = 0; i < fs_vec_explosion.size();i++) { // scan all explosion
+            if (fs_vec_explosion[i].ver == FS_EXPLOSION_VER_I) {
+                fs_vec_explosion[i].ver = FS_EXPLOSION_VER_II; // animate explosion
             } 
             else if (fs_vec_explosion[i].ver == FS_EXPLOSION_VER_II) {
-                fs_vec_explosion.erase(fs_vec_explosion.begin() + i);     // erase explosion
+                fs_vec_explosion.erase(fs_vec_explosion.begin() + i); // erase explosion
             }
         }
     }
@@ -53,9 +53,8 @@ void task_fs_explosion_handle(ak_msg_t *msg) {
             fs_game_explosion_reset();
             break;
         }
-        
+
         case FS_GAME_EXPLOSION_PUSH_SIG: {  
-            // APP_DBG("EXPLOSION : X : %d , Y : %d\n", fs_explosion.x, fs_explosion.y );
             fs_game_explosion_push();
             break;
         }

@@ -6,6 +6,7 @@
 /***********************************************************
 * VARIABLE AND STRUCT VIEW HISTORY
 ***********************************************************/
+
 typedef struct {
     int8_t pointer;
     int8_t page_history;
@@ -48,7 +49,6 @@ void view_scr_fs_history() {
                                         FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
                                         FS_SLIDER_WIDTH,\
                                         FS_SLIDER_HEIGHT, 1, BLACK);
-            
         } 
         else {
             // view_render.setTextColor(BLACK);
@@ -92,6 +92,7 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
                         AC_DISPLAY_SHOW_IDLE,\
                         AC_DISPLAY_IDLE_INTERVAL,\
                         TIMER_ONE_SHOT);
+
             fs_table_setting_infor.pointer--;
             if (fs_table_setting_infor.pointer < 0) {
                 fs_table_setting_infor.pointer = 2;
@@ -109,6 +110,7 @@ void task_scr_fs_history_handle(ak_msg_t *msg) {
                         AC_DISPLAY_SHOW_IDLE,\
                         AC_DISPLAY_IDLE_INTERVAL,\
                         TIMER_ONE_SHOT);
+
             fs_table_setting_infor.pointer++;
             if (fs_table_setting_infor.pointer > 2) {
                 fs_table_setting_infor.pointer = 0;

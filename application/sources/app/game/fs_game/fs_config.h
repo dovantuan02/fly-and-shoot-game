@@ -8,18 +8,18 @@
 
 using namespace std;
 
-#define FS_NUM_CELL            (3)
-#define FS_CELL_Y              (17)
+#define FS_NUM_CELL         (3)
+#define FS_CELL_Y           (17)
 
-#define FS_SLIDER_WIDTH    (5)
-#define FS_SLIDER_HEIGHT   (15)
-#define FS_ROUND_RECT_X        (5)
-#define FS_ROUND_RECT_Y        (6)
+#define FS_SLIDER_WIDTH     (5)
+#define FS_SLIDER_HEIGHT    (15)
+#define FS_ROUND_RECT_X     (5)
+#define FS_ROUND_RECT_Y     (6)
 
-#define MAX_LCD_WDITH   (128)
-#define MAX_LCD_HEIGHT  (64)
+#define MAX_LCD_WDITH       (128)
+#define MAX_LCD_HEIGHT      (64)
 
-#define FS_MAX_HISTORY     (12)
+#define FS_MAX_HISTORY      (12)
 
 typedef enum 
 {
@@ -53,6 +53,5 @@ extern fs_game_state_t fs_state_game;
 extern fs_game_setting_t fs_game_setting;
 extern uint8_t fs_game_score;
 extern uint16_t fs_game_score_history[FS_MAX_HISTORY];
-
 
 #endif  //FS_CONFIG_H

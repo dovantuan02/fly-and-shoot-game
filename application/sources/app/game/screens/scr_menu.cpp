@@ -21,6 +21,7 @@
 /***********************************************************
 * VARIABLE AND ENUM VIEW MENU
 ***********************************************************/
+
 #define FS_MAX_TITLE_MENU      (5)
 
 static const char* fs_arr_title_menu[FS_MAX_TITLE_MENU] =  {"PLAY  ", "SETTING", "TUTORIAL", "HISTORY", "EXIT  "};
@@ -37,7 +38,7 @@ typedef enum {
 
 #define FS_OPTION_MENU_MAX       (FS_MENU_END - FS_MENU_FISRT - 1)
 
-fs_option_menu_t fs_option_menu = FS_MENU_START;      // SET DEFAULT OPTION : FS_MENU_START
+fs_option_menu_t fs_option_menu = FS_MENU_START; // set default option : fs_menu_start
 
 /***********************************************************
 * VIEW - MENU
@@ -70,6 +71,7 @@ static inline fs_option_menu_t fs_switch_option_menu (fs_option_menu_t fs_curr_o
             }
             break;
         }
+
         case AC_DISPLAY_BUTON_UP_PRESSED: {
             if (static_cast<int>(fs_curr_option_menu) <= 1) {
                 return static_cast<fs_option_menu_t>(FS_OPTION_MENU_MAX);
@@ -78,6 +80,7 @@ static inline fs_option_menu_t fs_switch_option_menu (fs_option_menu_t fs_curr_o
             }
             break;
         }
+
         default: {
             return fs_curr_option_menu;
             break;
@@ -110,28 +113,28 @@ void fs_view_menu() {
             
             view_render.print(fs_arr_title_menu[static_cast<int>(fs_option_menu) - 1]);
         }
-            else {
-                view_render.fillRoundRect(FS_ROUND_RECT_X,\
-                                            FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                            FS_SLIDER_WIDTH,\
-                                            FS_SLIDER_HEIGHT,\
-                                            1, BLACK);
-                if (static_cast<int>(fs_option_menu) <= 3) {
-                    view_render.print(fs_arr_title_menu[i]);
+        else {
+            view_render.fillRoundRect(FS_ROUND_RECT_X,\
+                                        FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
+                                        FS_SLIDER_WIDTH,\
+                                        FS_SLIDER_HEIGHT,\
+                                        1, BLACK);
+            if (static_cast<int>(fs_option_menu) <= 3) {
+                view_render.print(fs_arr_title_menu[i]);
+            }
+            else 
+            {
+                if (FS_MAX_TITLE_MENU > (FS_NUM_CELL + i)) {
+                    view_render.print(fs_arr_title_menu[FS_NUM_CELL + i]);
                 }
-                else 
-                {
-                    if (FS_MAX_TITLE_MENU > (FS_NUM_CELL + i)) {
-                        view_render.print(fs_arr_title_menu[FS_NUM_CELL + i]);
-                    }
-                    else {
-                        view_render.fillRoundRect(FS_ROUND_RECT_X,\
-                                            FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
-                                            FS_SLIDER_WIDTH,\
-                                            FS_SLIDER_HEIGHT,\
-                                            1, BLACK);
-                    }
+                else {
+                    view_render.fillRoundRect(FS_ROUND_RECT_X,\
+                                        FS_ROUND_RECT_Y + (i * FS_CELL_Y),\
+                                        FS_SLIDER_WIDTH,\
+                                        FS_SLIDER_HEIGHT,\
+                                        1, BLACK);
                 }
+            }
         } 
     }
 }
@@ -148,22 +151,27 @@ void fs_view_scr_menu_switch(fs_option_menu_t mode)
             SCREEN_TRAN(task_scr_fs_game_on_handle, &scr_game_on);
             break;
         }
+
         case FS_MENU_SETTING: {
             SCREEN_TRAN(task_scr_fs_setting_handle, &scr_setting);
             break;
         }
+
         case FS_MENU_TUTORIAL: {
             SCREEN_TRAN(task_scr_fs_tutorial_handle, &scr_tutorial);
             break;
         }
+
         case FS_MENU_HISTORY: {
             SCREEN_TRAN(task_scr_fs_history_handle, &scr_history);
             break;
         }
+
         case FS_MENU_EXIT: {
             SCREEN_TRAN(scr_idle_handle, &scr_idle);
             break;
         }
+
         default:
             break;
     }
@@ -188,6 +196,7 @@ void task_scr_fs_menu_handler(ak_msg_t* msg) {
                         TIMER_ONE_SHOT);
             break;
         }
+
         case AC_DISPLAY_BUTON_DOWN_PRESSED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_DOWN_PRESSED\n");
             fs_option_menu = fs_switch_option_menu(fs_option_menu,  msg);
@@ -198,7 +207,7 @@ void task_scr_fs_menu_handler(ak_msg_t* msg) {
                         TIMER_ONE_SHOT);
             break;
         }
-        
+
         case AC_DISPLAY_BUTON_UP_PRESSED: {
             APP_DBG_SIG("AC_DISPLAY_BUTON_UP_PRESSED\n");
             fs_option_menu = fs_switch_option_menu(fs_option_menu, msg);

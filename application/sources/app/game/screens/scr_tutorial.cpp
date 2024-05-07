@@ -57,6 +57,7 @@ void task_scr_fs_tutorial_handle(ak_msg_t *msg) {
                         TIMER_ONE_SHOT);
             break;
         }
+
         case AC_DISPLAY_BUTON_MODE_PRESSED: {
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
@@ -71,13 +72,13 @@ void task_scr_fs_tutorial_handle(ak_msg_t *msg) {
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
-        
+
         case AC_DISPLAY_SHOW_IDLE: {
             APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE");
             SCREEN_TRAN(scr_idle_handle, &scr_idle);
             break;
         }
-        
+
         default:
             break;
     }

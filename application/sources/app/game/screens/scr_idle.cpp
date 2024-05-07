@@ -34,7 +34,8 @@ class ball {
     bool is_hit_to_other(ball& __ball) {
         if ((radius + __ball.radius) <= distance(__ball)) {
             return true;
-        } else {
+        } 
+        else {
             return false;
         }
     }
@@ -42,13 +43,15 @@ class ball {
     void moving() {
         if (axis_x > 0) {
             x = x + 2;
-        } else {
+        } 
+        else {
             x = x - 2;
         }
 
         if (axis_y > 0) {
             y += 2 * atan(slope);
-        } else {
+        } 
+        else {
             y -= 2 * atan(slope);
         }
 

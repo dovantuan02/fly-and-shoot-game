@@ -18,7 +18,7 @@
 
 #define FS_BOM_MOVE_X        (4)
 
-vector<fs_bom_info_t> fs_vec_bom;        // variable bom managerment
+vector<fs_bom_info_t> fs_vec_bom; // variable bom managerment
 
 // clear all bom available
 static inline void fs_game_bom_reset() {
@@ -33,8 +33,8 @@ static inline void fs_game_bom_reset() {
 static inline void fs_game_bom_push() {
     if (fs_vec_bom.size() < FS_MAX_BOM) {
         if (!fs_vec_limit_wall_y.empty()) {
-            uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10);  // get bot limmit
-            uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10);  // get top limmit
+            uint8_t bot_limmit = MAP_HEIGHT - fs_vec_limit_wall_y[1][fs_vec_limit_wall_y[1].size() - 1] - (10); // get bot limmit
+            uint8_t top_limmit =              fs_vec_limit_wall_y[0][fs_vec_limit_wall_y[0].size() - 1] + (10); // get top limmit
 
             fs_bom_info_t temp_bom;
 
@@ -50,10 +50,10 @@ static inline void fs_game_bom_push() {
 // move all bom to left screen
 static inline void fs_game_bom_move() {
     if (!fs_vec_bom.empty()) {
-        for (size_t i = 0; i < fs_vec_bom.size(); i++) {    // scan all bom
-            fs_vec_bom[i].coordinate.x -= FS_BOM_MOVE_X;       // move coordinate x bom
-            if (fs_vec_bom[i].coordinate.x < 0) {           // check bom x < 0 ?
-                fs_vec_bom.erase(fs_vec_bom.begin() - i);   // erase bom
+        for (size_t i = 0; i < fs_vec_bom.size(); i++) { // scan all bom
+            fs_vec_bom[i].coordinate.x -= FS_BOM_MOVE_X; // move coordinate x bom
+            if (fs_vec_bom[i].coordinate.x < 0) { // check bom x < 0 ?
+                fs_vec_bom.erase(fs_vec_bom.begin() - i); // erase bom
             }
         }
     }
@@ -76,12 +76,12 @@ void task_fs_bom_handle(ak_msg_t *msg) {
             fs_game_bom_push();
             break;
         }
-        
+
         case FS_GAME_BOM_ON_TICK_SIG: {
             fs_game_bom_move();
             break;
         }
-        
+
         default:
             break;
     }

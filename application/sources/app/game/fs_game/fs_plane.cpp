@@ -17,6 +17,7 @@
 /***********************************************************
 * VARIABLE PROCESS PLANE
 ***********************************************************/
+
 #define FS_PLANE_Y_DOWN (1)
 #define FS_PLANE_Y_UP   (6)
 
@@ -27,8 +28,8 @@ fs_plane_info_t fs_plane;
 
 // play sound when plane crash
 #define FS_SOUND_GAME_OVER()               \
-    if (fs_game_setting.fs_setting_sound) {        \
-        BUZZER_PlayTones(tones_game_over); \
+    if (fs_game_setting.fs_setting_sound) { \
+        BUZZER_PlayTones(tones_game_over);   \
     }
 
 // plane set coordinates default when game on
@@ -70,7 +71,7 @@ static inline void fs_game_wall_crash() {
             // turn off timer move plane down
             timer_remove_attr(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_ON_TICK_SIG);         
             // POST TO "FS_GAME_EXPLOSION_PUSH" WITH DATA(fs_explosion)
-            task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
             // set timer tran to screen game over
             timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
         }
@@ -96,8 +97,9 @@ static inline void fs_game_mine_crash() {
                         // sound buzzer
                         FS_SOUND_GAME_OVER();
                         fs_plane.visible = false;
+
                         // post to "sig_explosion_push" with data(fs_explosion)
-                        task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+                        task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
                         // set timer tran to screen game over
                         timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
                         break;
@@ -114,7 +116,7 @@ static inline void fs_game_bom_crash() {
     if (!fs_vec_bom.empty()) {
         // scan all bom
         for (auto _bom : fs_vec_bom) {
-            if ((abs(_bom.coordinate.x - fs_plane.coordinate.x )<= (PLANE_ICON_WIDTH )) &&                 // check all bom(x,y) with plane(x,y)
+            if ((abs(_bom.coordinate.x - fs_plane.coordinate.x )<= (PLANE_ICON_WIDTH )) && // check all bom(x,y) with plane(x,y)
                 (fs_plane.coordinate.y >= (_bom.coordinate.y + 1)) && fs_plane.coordinate.y <= (_bom.coordinate.y + BOM_ICON_HEIGHT- 1)) {
                 if (fs_plane.visible == true) {
                     fs_plane.visible = false;
@@ -122,14 +124,12 @@ static inline void fs_game_bom_crash() {
                     fs_explosion.coordinate.x = fs_plane.coordinate.x;
                     fs_explosion.coordinate.y = fs_plane.coordinate.y;
                     fs_explosion.ver = FS_EXPLOSION_VER_I;
-                    // APP_DBG("PLANE : X: %d - Y: %d\n", fs_plane.x, fs_plane.y);
-                    // APP_DBG("MINE  : X: %d - Y: %d\n", _mine.x, _mine.y);
 
                     // sound buzzer
                     FS_SOUND_GAME_OVER();
 
                     // post to "sig_explosion_push" with data(fs_explosion)
-                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+                    task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
                     // set timer tran to screen game over
                     timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
                     break;
@@ -161,22 +161,20 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
         }
 
         case FS_GAME_PLANE_UP_SIG: {  
-            // APP_DBG_SIG("FS_GAME_PLANE_UP\n");
             fs_game_plane_up();
             break;
         }
 
         case FS_GAME_PLANE_CRASH_SIG: {  
-            // APP_DBG_SIG("FS_GAME_PLANE_CRASH\n");
             fs_game_plane_crash();
             break;
         }
-        
+
         case FS_GAME_PLANE_ON_TICK_SIG: {
             fs_game_plane_down();
             break;
         }
-        
+
         default:
             break;
     }

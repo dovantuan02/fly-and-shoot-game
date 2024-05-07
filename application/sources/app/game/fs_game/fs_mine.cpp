@@ -12,9 +12,11 @@
 #include "fs_config.h"
 
 #include "fs_bitmap.h"
+
 /***********************************************************
 * VARIABLE PROCESS EXPLOSION
 ***********************************************************/
+
 #define FS_MINE_MOVE_X  (4)
 
 /*
@@ -49,11 +51,11 @@ static inline void fs_game_mine_push() {
         // set mine y range (top y limmit - bot y limmit)
         temp_mine.coordinate.y = rand() % (bot_limmit - top_limmit + 1) + top_limmit; 
         temp_mine.visible = true;
-        temp_mine.ver = rand() % 2;                   // random mine 
-        fs_vec_mine.push_back(temp_mine);             // add mine to mine managerment
+        temp_mine.ver = rand() % 2; // random mine 
+        fs_vec_mine.push_back(temp_mine); // add mine to mine managerment
 
         if (!fs_vec_bom.empty()) {             
-            for (size_t i = 0; i < fs_vec_bom.size(); i++) {           // scan all bom
+            for (size_t i = 0; i < fs_vec_bom.size(); i++) { // scan all bom
                 /* 
                 *   check all bom with mine
                 *   if bom(x,y) equal mine(x,y) ->? erase 
@@ -69,12 +71,12 @@ static inline void fs_game_mine_push() {
 //  move all mine
 static inline void fs_game_mine_move() {
     if (!fs_vec_mine.empty()) {
-        for (size_t i = 0; i < fs_vec_mine.size(); i++) {            // scan all mine
-            if (fs_vec_mine[i].coordinate.x > 0) {                              // mine(x)  bigger min lcd(x) 
-                fs_vec_mine[i].coordinate.x -= FS_MINE_MOVE_X;                     // move mine x
+        for (size_t i = 0; i < fs_vec_mine.size(); i++) { // scan all mine
+            if (fs_vec_mine[i].coordinate.x > 0) { // mine(x) bigger min lcd(x) 
+                fs_vec_mine[i].coordinate.x -= FS_MINE_MOVE_X; // move mine x
                 continue;
             }
-            fs_vec_mine.erase(fs_vec_mine.begin() + i);             // erase mine
+            fs_vec_mine.erase(fs_vec_mine.begin() + i); // erase mine
         }
     }
 }

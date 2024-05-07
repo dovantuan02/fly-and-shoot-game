@@ -81,7 +81,6 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 
         case FS_GAME_DISPLAY_OVER_DOWN_PRESSED: {
             fs_state_game = FS_GAME_OFF;
-            
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
@@ -108,6 +107,7 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
             task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_RESET_SIG);
             task_post_pure_msg(FS_GAME_TASK_BOM_ID           , FS_GAME_BOM_RESET_SIG);
             task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET_SIG);
+            
             SCREEN_TRAN(task_scr_fs_game_over_handle, &scr_game_over);
             break;
         }

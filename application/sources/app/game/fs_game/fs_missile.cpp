@@ -29,8 +29,8 @@
 vector<fs_missile_info_t> fs_vec_missile;
 
 #define FS_SOUND_EXPLOSION()               \
-    if (fs_game_setting.fs_setting_sound) {        \
-        BUZZER_PlayTones(tones_explosion); \
+    if (fs_game_setting.fs_setting_sound) { \
+        BUZZER_PlayTones(tones_explosion);   \
     }
 
 // clear all missile available
@@ -52,9 +52,9 @@ static inline void fs_game_missle_push() {
                                                 true);
             // check setting sound
             if (fs_game_setting.fs_setting_sound) {
-                BUZZER_PlayTones(tones_missle_push);
-            }                                               // sound buzzer
-            fs_vec_missile.push_back(new_missle);           // add missile to missile managerment
+                BUZZER_PlayTones(tones_missle_push); // sound buzzer
+            }
+            fs_vec_missile.push_back(new_missle); // add missile to missile managerment
         }
     }
 }
@@ -62,11 +62,11 @@ static inline void fs_game_missle_push() {
 // move all missile to right screen
 static inline void fs_game_missle_move() {
     if (!fs_vec_missile.empty()) {
-        for (size_t i = 0; i < fs_vec_missile.size(); i++) {          // SCAN ALL MISSILE
-            fs_vec_missile[i].coordinate.x += FS_MISSLE_MOVE_X;                     // MOVE MISSILE WITH +(X)
+        for (size_t i = 0; i < fs_vec_missile.size(); i++) { // scan all missile
+            fs_vec_missile[i].coordinate.x += FS_MISSLE_MOVE_X; // move missile with + (x)
 
-            if (fs_vec_missile[i].coordinate.x >= LCD_WIDTH) {                   // CHECK MISSILE(X) WITH LCD_WIDTH(124)
-                fs_vec_missile.erase(fs_vec_missile.begin() + i);           // ERASE MISSILE
+            if (fs_vec_missile[i].coordinate.x >= LCD_WIDTH) { // check missile(x) with lcd_width(124)
+                fs_vec_missile.erase(fs_vec_missile.begin() + i); // erase missile
             }
         }
     }
@@ -76,7 +76,7 @@ static inline void fs_game_missle_move() {
 static inline void fs_game_missle_crash() {
     for (size_t i = 0; i < fs_vec_missile.size(); i++) {            // scan all missile 
         for (size_t j = 0; j < fs_vec_mine.size(); j++) {                // scan all mine
-            if ((fs_vec_mine[j].coordinate.x - fs_vec_missile[i].coordinate.x <= (MISSLE_ICON_WIDTH))) {             // check missile(x) with mine(x)
+            if ((fs_vec_mine[j].coordinate.x - fs_vec_missile[i].coordinate.x <= (MISSLE_ICON_WIDTH))) { // check missile(x) with mine(x)
                 // check missile(y) with mine(y)
                 if ((fs_vec_missile[i].coordinate.y) >= (fs_vec_mine[j].coordinate.y ) 
                     && (fs_vec_missile[i].coordinate.y) <= (fs_vec_mine[j].coordinate.y + MINE_ICON_HEIGHT - 1) ) {
@@ -87,11 +87,11 @@ static inline void fs_game_missle_crash() {
 
                     FS_SOUND_EXPLOSION();
 
-                    fs_vec_missile.erase(fs_vec_missile.begin() + i);       // erase missile
-                    fs_vec_mine.erase(fs_vec_mine.begin() + j);                       // erase mine
+                    fs_vec_missile.erase(fs_vec_missile.begin() + i); // erase missile
+                    fs_vec_mine.erase(fs_vec_mine.begin() + j); // erase mine
 
                     // post to "sig_explosion_push" with data(fs_explosion)
-                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+                    task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
                     
                     // check mine ver : 0 -> fs_game_score + 1    ||   1 -> fs_game_score + 2
                     if (fs_vec_mine[i].ver == 0) {       
@@ -104,8 +104,8 @@ static inline void fs_game_missle_crash() {
             }
         }
         for (size_t k = 0; k < fs_vec_bom.size(); k++) {
-            if ((fs_vec_bom[k].coordinate.x - fs_vec_missile[i].coordinate.x <= (MISSLE_ICON_WIDTH))) {            // check missile(x) with bom(x)
-                if ((fs_vec_missile[i].coordinate.y >= (fs_vec_bom[k].coordinate.y)                                // check missile(y) with bom(y)
+            if ((fs_vec_bom[k].coordinate.x - fs_vec_missile[i].coordinate.x <= (MISSLE_ICON_WIDTH))) { // check missile(x) with bom(x)
+                if ((fs_vec_missile[i].coordinate.y >= (fs_vec_bom[k].coordinate.y) // check missile(y) with bom(y)
                     && (fs_vec_missile[i].coordinate.y <= (fs_vec_bom[k].coordinate.y + BOM_ICON_HEIGHT - 1)))) {
                     // set fs_explosion coordinate
                     fs_explosion.coordinate.x = fs_vec_bom[k].coordinate.x;     
@@ -114,11 +114,11 @@ static inline void fs_game_missle_crash() {
 
                     FS_SOUND_EXPLOSION();
 
-                    fs_vec_missile.erase(fs_vec_missile.begin() + i);       // erase missile
-                    fs_vec_bom.erase(fs_vec_bom.begin() + k);               // erase bom
+                    fs_vec_missile.erase(fs_vec_missile.begin() + i); // erase missile
+                    fs_vec_bom.erase(fs_vec_bom.begin() + k); // erase bom
 
                     // post to "sig_explosion_push" with data(fs_explosion)
-                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG, (uint8_t *)&fs_explosion, sizeof(fs_explosion));
+                    task_post_dynamic_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
                 }
             }
         }
@@ -148,7 +148,7 @@ void task_fs_missle_handle(ak_msg_t *msg) {
             break;
         }
 
-        case FS_GAME_MISSLE_CRASH_SIG: {  // APP_DBG_SIG("FS_GAME_MISSLE_CRASH\n");
+        case FS_GAME_MISSLE_CRASH_SIG: {
             fs_game_missle_crash();
             break;
         }

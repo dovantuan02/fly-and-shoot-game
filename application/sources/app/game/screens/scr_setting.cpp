@@ -61,6 +61,7 @@ static inline fs_option_setting_t fs_switch_option_setting(fs_option_setting_t c
             }
             break;
         }
+
         case AC_DISPLAY_BUTON_UP_PRESSED: {
             if (static_cast<int>(curr_option) <= 1) {
                 return static_cast<fs_option_setting_t>(FS_OPTION_SETTING_MAX);
@@ -69,6 +70,7 @@ static inline fs_option_setting_t fs_switch_option_setting(fs_option_setting_t c
             }
             break;
         }
+
         default: {
             return curr_option;
             break;
@@ -80,7 +82,8 @@ static inline fs_option_setting_t fs_switch_option_setting(fs_option_setting_t c
 static inline fs_game_mode_t fs_setting_switch_game_mode( fs_game_mode_t curr_setting_game_mode) {
     if (static_cast<int>(curr_setting_game_mode) > FS_GAME_MODE_OPTION_MAX) {
         return static_cast<fs_game_mode_t>(2);
-    } else {
+    }
+    else {
         return static_cast<fs_game_mode_t>(curr_setting_game_mode + 1);
     }
 }
@@ -206,7 +209,7 @@ void task_scr_fs_setting_handle(ak_msg_t *msg) {
                         AC_DISPLAY_SHOW_IDLE,\
                         AC_DISPLAY_IDLE_INTERVAL,\
                         TIMER_ONE_SHOT);
-            // APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED - SETTING\n");
+
             if (fs_option_setting == FS_SETTING_GAME_MODE) {
                 fs_game_setting.fs_setting_game_mode = fs_setting_switch_game_mode(fs_game_setting.fs_setting_game_mode);
             } 

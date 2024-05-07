@@ -1,3 +1,6 @@
+#ifndef FS_BUZZER_DEF_H
+#define FS_BUZZER_DEF_H
+
 #include "buzzer.h"
 
 static const Tone_TypeDef tones_explosion[] =
@@ -36,3 +39,5 @@ static const Tone_TypeDef tones_choose_menu[] =
 {
     {2000, 5}
 };
+
+#endif
