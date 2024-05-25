@@ -28,8 +28,7 @@ const task_t app_task_table[] = {
 	{FS_GAME_TASK_MISSLE_ID				, 	TASK_PRI_LEVEL_4	, 	task_fs_missle_handle		},
 	{FS_GAME_TASK_WALL_ID				,	TASK_PRI_LEVEL_4	, 	task_fs_wall_handle		},
 	{FS_GAME_TASK_EXPLOSION_ID			,	TASK_PRI_LEVEL_4	,	task_fs_explosion_handle	},
-	{FS_GAME_TASK_BOM_ID				,	TASK_PRI_LEVEL_4	,	task_fs_bom_handle			},
-	{FS_GAME_TASK_MINE_ID				, 	TASK_PRI_LEVEL_4	, 	task_fs_mine_handle		},
+	{FS_GAME_TASK_OBSTACLE_ID			,	TASK_PRI_LEVEL_4	,	task_fs_obstacle_handle},
 	{FS_GAME_TASK_DISPLAY_GAME_OVER_ID	, 	TASK_PRI_LEVEL_4	, 	task_scr_fs_game_over_handle	},
 	
 	#if defined(TASK_ZIGBEE_EN)

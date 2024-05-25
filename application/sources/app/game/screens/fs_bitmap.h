@@ -11,8 +11,8 @@ extern const unsigned char plane_icon [] PROGMEM;
 #define MISSLE_ICON_WIDTH    5
 extern const unsigned char missle_icon [] PROGMEM;
 
-#define BOM_ICON_HEIGHT   7
-#define BOM_ICON_WIDTH    7
+#define BOM_ICON_HEIGHT   5
+#define BOM_ICON_WIDTH    5
 extern const unsigned char bom_icon [] PROGMEM;
 
 #define EXPLOSION_ICON_HEIGHT   7
@@ -29,9 +29,5 @@ extern const unsigned char mine_II_icon [] PROGMEM;
 #define MAP_WIDTH   128
 extern const unsigned char map_I [] PROGMEM;
 extern const unsigned char map_II [] PROGMEM;
-
-#define QR_TUTORIAL_HEIGHT      60
-#define QR_TUTORIAL_WIDTH       60
-extern const unsigned char QR_tutorial[] PROGMEM;
 
 #endif  //FS_BITMAP_H

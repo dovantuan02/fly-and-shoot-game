@@ -6,12 +6,11 @@
 #include "task_list.h"
 #include "timer.h"
 
-#include "fs_bom.h"
 #include "fs_explosion.h"
-#include "fs_mine.h"
 #include "fs_missile.h"
 #include "fs_plane.h"
 #include "fs_tunnel_wall.h"
+#include "fs_obstacle.h"
 #include "fs_config.h"
 
 #include "scr_game_on.h"
@@ -24,10 +23,6 @@
 #define FS_NUM_MINE_ICON        (2)
 #define FS_NUM_WALL_ICON        (2)
 #define FS_NUM_EXPLOSION_ICON   (2)
-
-static const unsigned char *fs_arr_mine_icon[FS_NUM_MINE_ICON] = {
-    mine_I_icon, mine_II_icon
-};
 
 static const unsigned char *fs_arr_wall_icon[FS_NUM_WALL_ICON] = {
     map_I, map_II
@@ -91,7 +86,6 @@ void fs_game_view_wall() {
                                     WHITE);
         }
     }
-    // APP_DBG("WALL : fs_vec_wall[0].x : %d - fs_vec_wall[0].y : %d\n", fs_vec_wall[0].x, fs_vec_wall[0].y);
 }
 
 // show all explosion available
@@ -99,35 +93,22 @@ void fs_game_view_explosion() {
     for (auto _explosion : fs_vec_explosion) {
         view_render.drawBitmap(_explosion.coordinate.x, _explosion.coordinate.y,\
                                fs_arr_explosion_icon[_explosion.ver],\
-                               BOM_ICON_WIDTH, BOM_ICON_HEIGHT,\
+                               EXPLOSION_ICON_WIDTH, EXPLOSION_ICON_HEIGHT,\
                                WHITE);
     }
 }
 
-// show all bom available
-void fs_game_view_bom() {
-    if (!fs_vec_bom.empty()) {
-        for(auto _bom : fs_vec_bom) {
-            view_render.drawBitmap(_bom.coordinate.x, _bom.coordinate.y,\
-                                   bom_icon,\
-                                   BOM_ICON_WIDTH, BOM_ICON_HEIGHT,\
-                                   WHITE);
-        }
-    }
-}
-
-// show all mine available
-void fs_game_view_mine() {
-    if (!fs_vec_mine.empty()) {
-        for (size_t i = 0; i < fs_vec_mine.size(); i++) {
-            if (fs_vec_mine[i].visible == true) {
-                view_render.drawBitmap(fs_vec_mine[i].coordinate.x, fs_vec_mine[i].coordinate.y,\
-                                       fs_arr_mine_icon[fs_vec_mine[i].ver],\
-                                       MINE_ICON_WIDTH, MINE_ICON_HEIGHT,\
-                                       WHITE);
-            }
-        }
-    }
+// show all obstacle
+void fs_game_view_obstacle() {
+	if (!fs_vec_obstacle.empty()) {
+		for(size_t i = 0; i < fs_vec_obstacle.size(); i++) {
+			view_render.drawBitmap(fs_vec_obstacle[i].coordinate.x, fs_vec_obstacle[i].coordinate.y,\
+									fs_vec_obstacle[i].bitmap,\
+									FS_OBSTACLE_WIDTH, FS_OBSTACLE_HEIGHT,
+									WHITE
+									);
+		}
+	}
 }
 
 // show infor (score and missle available)
@@ -143,9 +124,9 @@ void fs_game_view_infor_fly() {
 
 void view_scr_fs_game_on() {
     fs_game_view_wall();
-    fs_game_view_mine();
+	fs_game_view_obstacle();
     fs_game_view_explosion();
-    fs_game_view_bom();
+    
     fs_game_view_plane();
     fs_game_view_missle();
     fs_game_view_infor_fly();
@@ -163,25 +144,12 @@ void task_scr_fs_game_on_handle(ak_msg_t *msg) {
             task_post_pure_msg(FS_GAME_TASK_PLANE_ID         , FS_GAME_PLANE_SETUP_SIG);
             task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_SETUP_SIG);
             task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET_SIG);
-            task_post_pure_msg(FS_GAME_TASK_BOM_ID           , FS_GAME_BOM_RESET_SIG);
-            task_post_pure_msg(FS_GAME_TASK_MINE_ID          , FS_GAME_MINE_RESET_SIG);
-
+			task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID		 , FS_GAME_OBSTACLE_RESET_SIG);
+			
             // set timer for display 
             timer_set(AC_TASK_DISPLAY_ID,\
                       FS_GAME_DISPLAY_ON_TICK,\
                       AC_DISPLAY_GAME_ON_INTERVAL,\
-                      TIMER_PERIODIC);
-
-            // set timer for bom 150ms 
-            timer_set(FS_GAME_TASK_BOM_ID,\
-                      FS_GAME_BOM_ON_TICK_SIG,\
-                      AC_BOM_INTERVAL,\
-                      TIMER_PERIODIC);
-
-            // set timer for move mine 150ms 
-            timer_set(FS_GAME_TASK_MINE_ID,\
-                      FS_GAME_MINE_ON_TICK_SIG,\
-                      AC_MINE_INTERVAL,\
                       TIMER_PERIODIC);
 
             // set timer for move wall 150ms 
@@ -201,17 +169,17 @@ void task_scr_fs_game_on_handle(ak_msg_t *msg) {
                       FS_GAME_PLANE_ON_TICK_SIG,\
                       AC_PLANE_INTERVAL,\
                       TIMER_PERIODIC);
-
-            // set timer for add mine 1500ms 
-            timer_set(FS_GAME_TASK_MINE_ID,\
-                      FS_GAME_MINE_PUSH_SIG,\
-                      AC_MINE_PUSH_INTERNAL,\
+			
+			// set timer add obstacle
+			timer_set(FS_GAME_TASK_OBSTACLE_ID,\
+                      FS_GAME_OBSTACLE_PUSH_SIG,\
+                      AC_OBSTACLE_ADD_INTERNAL,\
                       TIMER_PERIODIC);
-
-            // set timer for add bom 1800m
-            timer_set(FS_GAME_TASK_BOM_ID,\
-                      FS_GAME_BOM_PUSH_SIG,\
-                      AC_BOM_PUSH_INTERNAL,\
+			
+			// set timer move obstacle
+			timer_set(FS_GAME_TASK_OBSTACLE_ID,\
+                      FS_GAME_OBSTACLE_ON_TICK_SIG,\
+                      AC_OBSTACLE_INTERVAL,\
                       TIMER_PERIODIC);
             break;
         }

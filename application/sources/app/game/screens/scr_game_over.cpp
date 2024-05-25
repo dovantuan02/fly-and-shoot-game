@@ -81,6 +81,10 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 
         case FS_GAME_DISPLAY_OVER_DOWN_PRESSED: {
             fs_state_game = FS_GAME_OFF;
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
             break;
         }
@@ -90,8 +94,8 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
             fs_state_game = FS_GAME_OVER;
 
             // remove timer active objects
-            timer_remove_attr(FS_GAME_TASK_MINE_ID           , FS_GAME_MINE_ON_TICK_SIG);
-            timer_remove_attr(FS_GAME_TASK_MINE_ID           , FS_GAME_MINE_PUSH_SIG);
+            timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID       , FS_GAME_OBSTACLE_PUSH_SIG);
+            timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID       , FS_GAME_OBSTACLE_ON_TICK_SIG);
 
             timer_remove_attr(FS_GAME_TASK_WALL_ID           , FS_GAME_WALL_ON_TICK_SIG);
             timer_remove_attr(FS_GAME_TASK_PLANE_ID          , FS_GAME_PLANE_ON_TICK_SIG);
@@ -100,15 +104,18 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
             timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_PUSH_SIG);
 
             timer_remove_attr(AC_TASK_DISPLAY_ID             , FS_GAME_DISPLAY_ON_TICK);
-            timer_remove_attr(FS_GAME_TASK_BOM_ID            , FS_GAME_BOM_PUSH_SIG);
 
-            task_post_pure_msg(FS_GAME_TASK_MINE_ID          , FS_GAME_MINE_RESET_SIG);
             task_post_pure_msg(FS_GAME_TASK_MISSLE_ID        , FS_GAME_MISSLE_RESET_SIG);
             task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_RESET_SIG);
-            task_post_pure_msg(FS_GAME_TASK_BOM_ID           , FS_GAME_BOM_RESET_SIG);
             task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET_SIG);
+            task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID      , FS_GAME_OBSTACLE_RESET_SIG);
             
+            timer_set(AC_TASK_DISPLAY_ID,\
+                        AC_DISPLAY_SHOW_IDLE,\
+                        AC_DISPLAY_IDLE_INTERVAL,\
+                        TIMER_ONE_SHOT);
             SCREEN_TRAN(task_scr_fs_game_over_handle, &scr_game_over);
+            
             break;
         }
 

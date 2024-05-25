@@ -37,6 +37,9 @@ void fs_game_explosion_update()
                 fs_vec_explosion[i].ver = FS_EXPLOSION_VER_II; // animate explosion
             } 
             else if (fs_vec_explosion[i].ver == FS_EXPLOSION_VER_II) {
+                fs_vec_explosion[i].ver = FS_EXPLOSION_VER_III; 
+            }
+            else if (fs_vec_explosion[i].ver == FS_EXPLOSION_VER_III) {
                 fs_vec_explosion.erase(fs_vec_explosion.begin() + i); // erase explosion
             }
         }

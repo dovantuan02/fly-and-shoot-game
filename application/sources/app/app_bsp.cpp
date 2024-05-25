@@ -24,8 +24,6 @@ void btn_mode_callback(void* b) {
     button_t* me_b = (button_t*)b;
     switch (me_b->state) {
         case BUTTON_SW_STATE_PRESSED: {
-            // APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_PRESSED\n");
-            // APP_DBG("SCREEN NOW : %d\n", fs_state_game);
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,\
                                    AC_DISPLAY_BUTON_MODE_PRESSED);
@@ -42,7 +40,6 @@ void btn_mode_callback(void* b) {
         }
 
         case BUTTON_SW_STATE_LONG_PRESSED: {
-            // APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,
                                    AC_DISPLAY_BUTON_MODE_LONG_PRESSED);
@@ -51,7 +48,6 @@ void btn_mode_callback(void* b) {
         }
 
         case BUTTON_SW_STATE_RELEASED: {
-            // APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_RELEASED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,
                                    AC_DISPLAY_BUTON_MODE_RELEASED);
@@ -67,7 +63,6 @@ void btn_up_callback(void* b) {
     button_t* me_b = (button_t*)b;
     switch (me_b->state) {
         case BUTTON_SW_STATE_PRESSED: {
-            // APP_DBG("[btn_up_callback] BUTTON_SW_STATE_PRESSED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,\
                                    AC_DISPLAY_BUTON_UP_PRESSED);
@@ -80,12 +75,10 @@ void btn_up_callback(void* b) {
         }
 
         case BUTTON_SW_STATE_LONG_PRESSED: {
-            // APP_DBG("[btn_up_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
             break;
         }
 
         case BUTTON_SW_STATE_RELEASED: {
-            // APP_DBG("[btn_up_callback] BUTTON_SW_STATE_RELEASED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,\
                                    AC_DISPLAY_BUTON_UP_RELEASED);
@@ -102,7 +95,6 @@ void btn_down_callback(void* b) {
     button_t* me_b = (button_t*)b;
     switch (me_b->state) {
         case BUTTON_SW_STATE_PRESSED: {
-            // APP_DBG("[btn_down_callback] BUTTON_SW_STATE_PRESSED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,\
                                    AC_DISPLAY_BUTON_DOWN_PRESSED);
@@ -115,12 +107,10 @@ void btn_down_callback(void* b) {
         }
 
         case BUTTON_SW_STATE_LONG_PRESSED: {
-            // APP_DBG("[btn_down_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
             break;
         }
 
         case BUTTON_SW_STATE_RELEASED: {
-            // APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,
                                    AC_DISPLAY_BUTON_DOWN_RELEASED);

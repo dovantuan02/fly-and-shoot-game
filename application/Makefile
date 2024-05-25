@@ -10,10 +10,10 @@
 Print = @echo "~"
 
 # Name of build target ex: ak-base-kit-stm32l151-application.bin
-NAME_MODULE = ak-base-kit-stm32l151-application
+NAME_MODULE = ak-kit-fly-and-shoot-application
 PROJECT = $(NAME_MODULE)
 
-GCC_PATH		= /home/tuan/Embedded/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
+GCC_PATH		= /home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
 PROGRAMER_PATH		= /home/tuan/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 OPENOCD_CFG_PATH	= /usr/local/share/openocd/scripts/board/stm32ldiscovery.cfg
 
