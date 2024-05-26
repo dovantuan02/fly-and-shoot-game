@@ -92,7 +92,7 @@ Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embed
 
 ![Intro Object Game](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/intro_object_game.png)
 
-        			Chi tiết các signal trong các Task:
+        			    Chi tiết các signal trong các Task:
 
 *Task ID*:  Mỗi task được tạo ra cho một đối tượng khác nhau trong hệ thống và có nhiệm vụ nhận các công việc khác nhau. Các task hoàn toàn tác biệt luồng logic với nhau.
 
