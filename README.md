@@ -86,8 +86,7 @@ Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embed
 | FS_GAME_TASK_MISSLE_ID				 | TASK_PRI_LEVEL_4	 | task_fs_missile_handle		 |
 | FS_GAME_TASK_WALL_ID				 | TASK_PRI_LEVEL_4 | task_fs_wall_handle		 |
 | FS_GAME_TASK_EXPLOSION_ID			 | TASK_PRI_LEVEL_4	 | task_fs_explosion_handle	 |
-| FS_GAME_TASK_BOM_ID				 | TASK_PRI_LEVEL_4 | task_fs_bom_handle			 |
-| FS_GAME_TASK_MINE_ID				 | TASK_PRI_LEVEL_4 | task_fs_mine_handle		 |
+| FS_GAME_TASK_OBSTACLE_ID				 | TASK_PRI_LEVEL_4 | task_fs_obstacle_handle			 |
 | FS_GAME_TASK_DISPLAY_GAME_OVER_ID	 | TASK_PRI_LEVEL_4	 | task_scr_fs_game_over_handle	 |
 
 
@@ -133,12 +132,9 @@ Có 2 loại message khác nhau:
 | FS_GAME_DISPLAY_ON_TICK | Signal do timer gửi đến với chu kì 100ms cập nhật lại màn hình |
 | FS_GAME_PLANE_UP_SIG | Cài đặt thông số mặc định cho tàu bay |
 | FS_GAME_PLANE_ON_TICK_SIG | Signal do timer gửi đến với chu kì 100ms giúp tàu bay đi xuống |
-| FS_GAME_MINE_RESET_SIG | Cài đặt thông số mặc định cho quặng |
-| FS_GAME_MINE_ON_TICK_SIG | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển quặng |
-| FS_GAME_MINE_PUSH_SIG | Signal do timer gửi đến với chu kì 1500ms dùng để tạo thêm quặng |
-| FS_GAME_BOM_RESET_SIG | Cài đặt lại tất cả các thông số bom |
-| FS_GAME_BOM_ON_TICK_SIG | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển bom |
-| FS_GAME_BOM_PUSH_SIG | Signal do timer gửi đến với chu kì 1800ms dùng để tạo thêm bom |
+| FS_GAME_OBSTACLE_RESET_SIG | Cài đặt thông số mặc định cho các vật cản |
+| FS_GAME_OBSTACLE_ON_TICK_SIG | Signal do timer gửi đến với chu kì 150ms dùng để di chuyển các quặng, bom |
+| FS_GAME_OBSTACLE_PUSH_SIG | Signal do timer gửi đến với chu kì 800ms dùng để tạo thêm quặng hoặc bom |
 | FS_GAME_MISSLE_RESET_SIG | Cài đặt lại tất cả các thông số cho đạn |
 | FS_GAME_WALL_RESET_SIG | Cài đặt lại tất cả các thông số cho hầm |
 | FS_GAME_WALL_ON_TICK_SIG | Signal do timer gửi đến với chu kì 100ms dùng để di chuyển hầm |
@@ -271,16 +267,12 @@ Tín hiệu FS_GAME_PLANE_CRASH_SIG :
 static inline void fs_game_wall_crash() {
 	// code
 }
-static inline void fs_game_mine_crash() {
-	// code
-}
-static inline void fs_game_bom_crash() {
+static inline void fs_game_obstacle_crash() {
 	// code
 }
 static inline void fs_game_plane_crash() {
     if(fs_state_game == FS_GAME_ON){
-        fs_game_mine_crash();
-        fs_game_bom_crash();
+        fs_game_obstacle_crash();
         fs_game_wall_crash();
     }
 }
@@ -392,110 +384,86 @@ static inline void fs_game_missle_crash() {
 Code bắn message đến FS_GAME_EXPLOSION_PUSH_SIG kèm tạo độ để tạo vụ nổ :
 
 ```cpp
-fs_explosion.coordinate.x = fs_vec_bom[k].coordinate.x;     
-fs_explosion.coordinate.y = fs_vec_bom[k].coordinate.y;
+fs_explosion.coordinate.x = fs_vec_obstacle[k].coordinate.x;     
+fs_explosion.coordinate.y = fs_vec_obstacle[k].coordinate.y;
 fs_explosion.ver = FS_EXPLOSION_VER_I;
 
 task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
 ```
 
-**3.3 Quặng (Mine)**
+**3.3 Vật cản (Obstacle)**
 
-Cũng giống như cái đối tượng khác quặng cũng cần một struct để quản lí đối tượng đó.
+Các Ae thắc mắc các quặng hay bom từ ở đâu ra thì có đọc đoạn này nhé.
+
+Biến quản lí các obstacle:
 
 ```cpp
-typedef struct {
-    bool visible;
-    fs_game_coordinate_t coordinate;
-    uint8_t ver;
-} fs_mine_info_t;
-
-vector<fs_mine_info_t> fs_vec_mine;
+/*
+*	TABLE MANAGER OBSTACLE (ID, COORDINATE, BITMAP, SCORE)
+*	obstacle_tbl:
+*		Size Bitmap MUST 5x5 pixel
+*/
+#define FS_OBSTACLE_TBL		(3)
+const fs_obstacle_info_t obstacle_tbl[FS_OBSTACLE_TBL] = {
+	{FS_BOM_ID		,	{0,0},	bom_icon	,	0},
+	{FS_MINE_I_ID	,	{0,0},	mine_I_icon	,	1},
+	{FS_MINE_II_ID	,	{0,0},	mine_II_icon,	2},
+};
+/*
+*   fs_vec_obstacle : VARIABLE CONTROL OBSTACLE
+*/
+vector<fs_obstacle_info_t> fs_vec_obstacle;
 ```
+
+*Ae có thể thêm các vật cản vào trong game. Ở đây mình có 3 vật cản là bom, quặng 1, quặng 2, bom, với các thông số như ID, tạo độ điểm gốc, bitmap (5x5) số điểm khi đạn bắn trúng.*
 
 *Các bạn có thể xem giải thích kĩ hơn ở 3.1.1*
 
-![Sequence Mine](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_mine.png)
+![Sequence Obstacle](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_obstacle.png)
 
-                                      Hình 3.3.1 Mine sequence
+                                      Hình 3.3.1 Obstacle sequence
 
-Giải thích mine sequence:
+Giải thích Obstacle sequence:
 
 **Phần 1:** Trước khi bắt đầu chuyển vào màn hình game sẽ có tín hiệu SCREEN_ENTRY khi đó sẽ xóa tất cả các quặng (nếu có). Cùng lúc đó sẽ cài đặt timer:
 
-- Mỗi 150ms bắn message đến FS_GAME_MINE_ON_TICK_SIG
-- Mỗi 1500ms bắn message đến FS_GAME_MINE_PUSH_SIG.
+- Mỗi 150ms bắn message đến FS_GAME_OBSTACLE_ON_TICK_SIG
+- Mỗi 800ms bắn message đến FS_GAME_OBSTACLE_PUSH_SIG.
 
 **Phần 2:** 
 
-- Mỗi 150ms quặng sẽ di chuyển sang phải thông qua signal FS_GAME_MINE_ON_TICK_SIG.
-- Mỗi 1500ms quặng 1 hoặc quặng 2 sẽ được tạo ra ở vị trí ngẫu nhiên ở cuối hầm nhờ vào signal FS_GAME_MINE_PUSH_SIG.
+- Mỗi 150ms quặng sẽ di chuyển sang phải thông qua signal FS_GAME_OBSTACLE_ON_TICK_SIG.
+- Mỗi 800ms quặng 1, quặng 2, bom sẽ được tạo ra ở vị trí ngẫu nhiên ở cuối hầm nhờ vào signal FS_GAME_OBSTACLE_PUSH_SIG.
 
  **Phần 3:** Khi có tín hiệu FS_GAME_DISPLAY_OVER_ON_TICK sẽ xóa hết quặng (nếu có) và cài đặt lại thông số cho quặng.
 
-Tín hiệu FS_GAME_MINE_RESET_SIG:
+Tín hiệu FS_GAME_OBSTACLE_RESET_SIG:
 
 ```cpp
-// clear all mine
-static inline void fs_game_mine_reset() {
+// clear all obstacle
+static inline void fs_game_obstacle_reset() {
 		//code
 }
 ```
 
-Tín hiệu FS_GAME_MINE_ON_TICK:
+Tín hiệu FS_GAME_OBSTACLE_ON_TICK:
 
 ```cpp
-//  move all mine
-static inline void fs_game_mine_move() {
+//  move all obstacle
+static inline void fs_game_obstacle_move() {
 		//code
 }
 ```
 
-Tín hiệu FS_GAME_MINE_PUSH_SIG:
+Tín hiệu FS_GAME_OBSTACLE_PUSH_SIG:
 
 ```cpp
-// add mine to mine managerment
-static inline void fs_game_mine_push() {
+// add obstacle to obstacle managerment
+static inline void fs_game_obstacle_push() {
 		//code
 }
 ```
-
-**3.4. Bom**
-
-![Sequence Bom](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/Sequence/sequence_bom.png)
-
-                                        Hình 3.4.1 Bom Sequence
-
-Tương tự thì bom cũng có các tín hiệu và các chức năng giống như quặng. Khác một chút là thời gian tạo ra bom sẽ là 1800ms và chỉ có 1 kiểu bom, không như quặng sẽ có 2 kiểu.
-
-Tín hiệu FS_GAME_BOM_RESET_SIG:
-
-```cpp
-// clear all bom available
-static inline void fs_game_bom_reset() {
-		//code
-}
-```
-
-Tín hiệu FS_GAME_BOM_PUSH_SIG:
-
-```cpp
-// add bom with top and bot limmit
-static inline void fs_game_bom_push() {
-		// code
-}
-```
-
-Tín hiệu FS_GAME_BOM_ON_TICK_SIG:
-
-```cpp
-// move all bom to left screen
-static inline void fs_game_bom_move() {
-		// code
-}
-```
-
-**3.5. Vụ nổ (Explosion)**
+**3.4. Vụ nổ (Explosion)**
 
 Tương như các đối tượng khác trong game vụ nổ cũng có khối quản lí vụ nổ riêng
 
@@ -558,7 +526,7 @@ void fs_game_explosion_update() {
 }
 ```
 
-**3.6. Đường hầm (Tunnel Wall)**
+**3.5. Đường hầm (Tunnel Wall)**
 
 Tương tự như các đối tượng khác thì đường hầm cũng có biến để quản lí đường hầm.
 
