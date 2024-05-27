@@ -16,7 +16,7 @@ vector<fs_explosion_info_t> fs_vec_explosion;
 fs_explosion_info_t fs_explosion; // set default for explosion
 
 // clear all explosion
-void fs_game_explosion_reset() {
+static inline void fs_game_explosion_reset() {
 	if (!fs_vec_explosion.empty()) {
 		fs_vec_explosion.clear();
 		fs_vec_explosion.shrink_to_fit();
@@ -24,12 +24,12 @@ void fs_game_explosion_reset() {
 }
 
 // add explsion to explosion managerment
-void fs_game_explosion_push() {
+static inline void fs_game_explosion_push() {
 	fs_vec_explosion.push_back(fs_explosion);
 }
 
 // animate explsion and erase when complete
-void fs_game_explosion_update()
+static void fs_game_explosion_update()
 {
 	if (!fs_vec_explosion.empty()) {
 		for (size_t i = 0; i < fs_vec_explosion.size();i++) { // scan all explosion

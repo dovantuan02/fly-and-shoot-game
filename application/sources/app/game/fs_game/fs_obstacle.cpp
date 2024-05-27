@@ -17,9 +17,11 @@
 #define FS_OBSTACLE_MOVE_X	(4)
 
 /*
-*	TABLE MANAGER OBSTACLE (ID, COORDINATE, BITMAP, SCORE)
-*	obstacle_tbl:
-*		Size Bitmap MUST 5x5 pixel
+*	TABLE MANAGER OBSTACLE 
+*	User can add to obstacle_tbl:
+*		- Size Bitmap MUST 5x5 pixel
+*		- Increase or decrease FS_OBSTACLE_TBL
+*		- Add info to obstacle_tbl with (ID, COORDINATE, BITMAP, SCORE)
 */
 #define FS_OBSTACLE_TBL		(3)
 const fs_obstacle_info_t obstacle_tbl[FS_OBSTACLE_TBL] = {

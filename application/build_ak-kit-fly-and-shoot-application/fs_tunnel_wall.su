@@ -1,0 +1,8 @@
+/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/stl_vector.h:343:7:std::_Vector_base<_Tp, _Alloc>::pointer std::_Vector_base<_Tp, _Alloc>::_M_allocate(std::size_t) [with _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]	8	static
+/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/stl_vector.h:625:7:std::vector<_Tp, _Alloc>::vector(std::initializer_list<_Tp>, const allocator_type&) [with _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]	32	static
+/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/stl_vector.h:1187:7:void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]	32	static
+/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc:426:7:) [with _Args = {const fs_wall_info_t&}; _Tp = fs_wall_info_t; _Alloc = std::allocator<fs_wall_info_t>]	40	static
+/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc:171:5:std::vector<_Tp, _Alloc>::iterator std::vector<_Tp, _Alloc>::_M_erase(std::vector<_Tp, _Alloc>::iterator) [with _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]	8	static
+sources/app/game/fs_game/fs_tunnel_wall.cpp:85:6:void task_fs_wall_handle(ak_msg_t*)	16	static
+sources/app/game/fs_game/fs_tunnel_wall.cpp:107:1:cpp)	224	static
+sources/app/game/fs_game/fs_tunnel_wall.cpp:107:1:cpp)	16	static

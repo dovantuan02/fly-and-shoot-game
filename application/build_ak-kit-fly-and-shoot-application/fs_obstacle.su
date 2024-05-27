@@ -1,0 +1,4 @@
+/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc:426:7:) [with _Args = {const fs_obstacle_info_t&}; _Tp = fs_obstacle_info_t; _Alloc = std::allocator<fs_obstacle_info_t>]	40	static
+sources/app/game/fs_game/fs_obstacle.cpp:75:6:void task_fs_obstacle_handle(ak_msg_t*)	40	static
+sources/app/game/fs_game/fs_obstacle.cpp:98:1:cpp)	0	static
+sources/app/game/fs_game/fs_obstacle.cpp:98:1:cpp)	0	static

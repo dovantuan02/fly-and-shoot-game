@@ -47,7 +47,7 @@ static inline void fs_game_wall_reset() {
 }
 
 // set default for all wall
-static inline void fs_game_wall_setup() {
+static void fs_game_wall_setup() {
 	for (uint8_t i = 0; i < NUM_WALL; i++) {
 		fs_wall_info_t temp_wall;
 
@@ -59,7 +59,7 @@ static inline void fs_game_wall_setup() {
 }
 
 // move wall to left
-static inline void fs_game_wall_move() {
+static void fs_game_wall_move() {
 	if (!fs_vec_wall.empty()) {
 		// move "x" map
 		for (uint8_t i = 0; i < NUM_WALL; i++) { // scan all wall

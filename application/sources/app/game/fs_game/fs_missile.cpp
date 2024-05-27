@@ -59,7 +59,7 @@ static inline void fs_game_missle_push() {
 }
 
 // move all missile to right screen
-static inline void fs_game_missle_move() {
+static void fs_game_missle_move() {
 	if (!fs_vec_missile.empty()) {
 		for (size_t i = 0; i < fs_vec_missile.size(); i++) { // scan all missile
 			fs_vec_missile[i].coordinate.x += FS_MISSLE_MOVE_X; // move missile with + (x)
@@ -71,14 +71,22 @@ static inline void fs_game_missle_move() {
 	}
 }
 
-// missile hits mine or bom
-static inline void fs_game_missle_crash() {
+static inline bool fs_check_coordinate_missle(fs_obstacle_info_t _obstacle, fs_missile_info_t _missle) {
+	if ((_obstacle.coordinate.x - _missle.coordinate.x <= (MISSLE_ICON_WIDTH))) {
+		if ((_missle.coordinate.y) >= (_obstacle.coordinate.y ) && \ 
+			(_missle.coordinate.y) <= (_obstacle.coordinate.y + FS_OBSTACLE_HEIGHT - 1) ) {
+				return true;
+			}
+	}
+	return false;
+}
+
+
+// missile hits obstacle
+static void fs_game_missle_crash() {
 	for (size_t i = 0; i < fs_vec_missile.size(); i++) { // scan all missile 
-		for (size_t j = 0; j < fs_vec_obstacle.size(); j++) { // scan all mine
-			if ((fs_vec_obstacle[j].coordinate.x - fs_vec_missile[i].coordinate.x <= (MISSLE_ICON_WIDTH))) { // check missile(x) with mine(x)
-				// check missile(y) with mine(y)
-				if ((fs_vec_missile[i].coordinate.y) >= (fs_vec_obstacle[j].coordinate.y ) 
-					&& (fs_vec_missile[i].coordinate.y) <= (fs_vec_obstacle[j].coordinate.y + FS_OBSTACLE_HEIGHT - 1) ) {
+		for (size_t j = 0; j < fs_vec_obstacle.size(); j++) { // scan all obstacle
+			if (fs_check_coordinate_missle(fs_vec_obstacle[j], fs_vec_missile[i])) {
 					// set coordinate for fs_explosion
 					fs_explosion.coordinate.x = fs_vec_obstacle[j].coordinate.x;
 					fs_explosion.coordinate.y = fs_vec_obstacle[j].coordinate.y;
@@ -87,21 +95,19 @@ static inline void fs_game_missle_crash() {
 					FS_SOUND_EXPLOSION();
 
 					fs_vec_missile.erase(fs_vec_missile.begin() + i); // erase missile
-					fs_vec_obstacle.erase(fs_vec_obstacle.begin() + j); // erase mine
+					fs_vec_obstacle.erase(fs_vec_obstacle.begin() + j); // erase obstacle
 
 					// post to "sig_explosion_push" with data(fs_explosion)
 					task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
 					
-					// check mine ver : 0 -> fs_game_score + 1    ||   1 -> fs_game_score + 2     
-					fs_game_score += fs_vec_obstacle[i].score;
-				}
+					fs_game_score += fs_vec_obstacle[i].score;	// get score obstacle
 			}
 		}
 	}
 }
 
 /***********************************************************
-* PROCESS MINE HANDLE
+* PROCESS MISSLE HANDLE
 ***********************************************************/
 
 void task_fs_missle_handle(ak_msg_t *msg) {

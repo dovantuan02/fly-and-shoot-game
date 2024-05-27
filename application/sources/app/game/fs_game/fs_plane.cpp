@@ -77,31 +77,38 @@ static inline void fs_game_wall_crash() {
 	}
 }
 
+static inline bool fs_check_coordinate_plane(fs_obstacle_info_t _obstacle, fs_plane_info_t _plane) {
+	if ((PLANE_ICON_WIDTH > abs(_obstacle.coordinate.x - _plane.coordinate.x))) {
+		if ((_plane.coordinate.y >= (_obstacle.coordinate.y + 1)) &&
+			(_plane.coordinate.y <= _obstacle.coordinate.y + FS_OBSTACLE_HEIGHT - 1)) {
+			if (_plane.visible == true) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 // plane touch mine
-static inline void fs_game_obstacle_crash() {
+static void fs_game_obstacle_crash() {
 	if (!fs_vec_obstacle.empty()) {
 		for (auto _obstacle : fs_vec_obstacle) {
 			// check all mine(x,y) with plane(x,y)
-			if ((PLANE_ICON_WIDTH > abs(_obstacle.coordinate.x - fs_plane.coordinate.x) )) { 
-				if ((fs_plane.coordinate.y >= (_obstacle.coordinate.y + 1)) && fs_plane.coordinate.y <= (_obstacle.coordinate.y + FS_OBSTACLE_HEIGHT - 1)) {
-					if (fs_plane.visible == true) {
-						// set coordinate explosion
-						fs_explosion.coordinate.x = fs_plane.coordinate.x;
-						fs_explosion.coordinate.y = fs_plane.coordinate.y;
-						fs_explosion.ver = FS_EXPLOSION_VER_I;
-						
-						// sound buzzer
-						FS_SOUND_GAME_OVER();
-						fs_plane.visible = false;
+			if (fs_check_coordinate_plane(_obstacle, fs_plane)) {
+				// set coordinate explosion
+				fs_explosion.coordinate.x = fs_plane.coordinate.x;
+				fs_explosion.coordinate.y = fs_plane.coordinate.y;
+				fs_explosion.ver = FS_EXPLOSION_VER_I;
+				
+				// sound buzzer
+				FS_SOUND_GAME_OVER();
+				fs_plane.visible = false;
 
-						// post to "sig_explosion_push" with data(fs_explosion)
-						task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
-						// set timer tran to screen game over
-						timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
-						break;
-					}
-					break;
-				}
+				// post to "sig_explosion_push" with data(fs_explosion)
+				task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_PUSH_SIG);
+				// set timer tran to screen game over
+				timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+				break;
 			}
 		}
 	}
