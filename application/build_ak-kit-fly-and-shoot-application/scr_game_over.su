@@ -1,3 +1,0 @@
-sources/app/game/screens/scr_game_over.cpp:59:6:void view_scr_fs_game_over()	24	static
-sources/app/game/screens/scr_game_over.cpp:46:6:void fs_write_history_epprom()	16	static
-sources/app/game/screens/scr_game_over.cpp:74:6:void task_scr_fs_game_over_handle(ak_msg_t*)	8	static

@@ -1,4 +1,0 @@
-/home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc:426:7:) [with _Args = {const fs_explosion_info_t&}; _Tp = fs_explosion_info_t; _Alloc = std::allocator<fs_explosion_info_t>]	40	static
-sources/app/game/fs_game/fs_explosion.cpp:53:6:void task_fs_explosion_handle(ak_msg_t*)	24	static
-sources/app/game/fs_game/fs_explosion.cpp:73:1:cpp)	0	static
-sources/app/game/fs_game/fs_explosion.cpp:73:1:cpp)	0	static

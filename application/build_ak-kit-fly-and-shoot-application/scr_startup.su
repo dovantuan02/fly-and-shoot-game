@@ -1,3 +1,0 @@
-sources/app/game/screens/scr_startup.cpp:66:6:void view_scr_fs_startup()	8	static
-sources/app/game/screens/scr_startup.cpp:59:6:void fs_init_setting()	0	static
-sources/app/game/screens/scr_startup.cpp:89:6:void task_scr_fs_startup_handle(ak_msg_t*)	8	static
