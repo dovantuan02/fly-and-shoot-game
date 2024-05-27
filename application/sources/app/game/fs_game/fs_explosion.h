@@ -7,14 +7,14 @@
 using namespace std;
 
 typedef enum  {
-    FS_EXPLOSION_VER_I = -1,
-    FS_EXPLOSION_VER_II,
-    FS_EXPLOSION_VER_III
+	FS_EXPLOSION_VER_I = -1,
+	FS_EXPLOSION_VER_II,
+	FS_EXPLOSION_VER_III
 } fs_ver_info_t;
 
 typedef struct {
-    fs_game_coordinate_t coordinate;
-    fs_ver_info_t ver;
+	fs_game_coordinate_t coordinate;
+	fs_ver_info_t ver;
 } fs_explosion_info_t;
 
 extern vector<fs_explosion_info_t> fs_vec_explosion;

@@ -6,13 +6,14 @@
 
 #include "fs_obstacle.h"
 #include "fs_tunnel_wall.h"
+#include "fs_config.h"
 
 #include "fs_bitmap.h"
 
 /***********************************************************
 * VARIABLE PROCESS PLANE
 ***********************************************************/
-#define FS_OBSTACLE_MAX		(10)
+#define FS_OBSTACLE_MAX		(4 * fs_game_setting.fs_setting_game_mode)
 #define FS_OBSTACLE_MOVE_X	(4)
 
 /*

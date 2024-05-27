@@ -16,18 +16,18 @@
 static void view_scr_fs_tutorial();
 
 view_dynamic_t dyn_view_tutorial = {
-    {
-        .item_type = ITEM_TYPE_DYNAMIC,
-    },
-    view_scr_fs_tutorial
+	{
+		.item_type = ITEM_TYPE_DYNAMIC,
+	},
+	view_scr_fs_tutorial
 };
 
 view_screen_t scr_tutorial = {
-    &dyn_view_tutorial,
-    ITEM_NULL,
-    ITEM_NULL,
+	&dyn_view_tutorial,
+	ITEM_NULL,
+	ITEM_NULL,
 
-    .focus_item = 0,
+	.focus_item = 0,
 };
 
 // view tutorial 
@@ -39,9 +39,11 @@ void view_scr_fs_tutorial()
 
 	for (uint8_t y = 0; y < qrcode.size; y++) {
 		for (uint8_t x = 0; x < qrcode.size; x++) {
-			view_render.drawPixel(x+40, y+2, qrcode_getModule(&qrcode, x, y) ? 1 : 0);
+			view_render.drawPixel(x+20, y+2, qrcode_getModule(&qrcode, x, y) ? 1 : 0);
 		}
 	}
+	view_render.setCursor(75, (LCD_HEIGHT / 2 - 5));
+	view_render.print("Scan me");
 }
 
 /***********************************************************
@@ -49,37 +51,37 @@ void view_scr_fs_tutorial()
 ***********************************************************/
 
 void task_scr_fs_tutorial_handle(ak_msg_t *msg) {
-    switch (msg->sig) {
-        case SCREEN_ENTRY: {
-            timer_set(AC_TASK_DISPLAY_ID,\
-                        AC_DISPLAY_SHOW_IDLE,\
-                        AC_DISPLAY_IDLE_INTERVAL,\
-                        TIMER_ONE_SHOT);
-            break;
-        }
+	switch (msg->sig) {
+		case SCREEN_ENTRY: {
+			timer_set(AC_TASK_DISPLAY_ID,\
+						AC_DISPLAY_SHOW_IDLE,\
+						AC_DISPLAY_IDLE_INTERVAL,\
+						TIMER_ONE_SHOT);
+			break;
+		}
 
-        case AC_DISPLAY_BUTON_MODE_PRESSED: {
-            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
-            break;
-        }
+		case AC_DISPLAY_BUTON_MODE_PRESSED: {
+			SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
+			break;
+		}
 
-        case AC_DISPLAY_BUTON_UP_RELEASED: {
-            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
-            break;
-        }
+		case AC_DISPLAY_BUTON_UP_RELEASED: {
+			SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
+			break;
+		}
 
-        case AC_DISPLAY_BUTON_DOWN_RELEASED: {
-            SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
-            break;
-        }
+		case AC_DISPLAY_BUTON_DOWN_RELEASED: {
+			SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
+			break;
+		}
 
-        case AC_DISPLAY_SHOW_IDLE: {
-            APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE");
-            SCREEN_TRAN(scr_idle_handle, &scr_idle);
-            break;
-        }
+		case AC_DISPLAY_SHOW_IDLE: {
+			APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE");
+			SCREEN_TRAN(scr_idle_handle, &scr_idle);
+			break;
+		}
 
-        default:
-            break;
-    }
+		default:
+			break;
+	}
 }
