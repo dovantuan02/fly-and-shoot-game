@@ -8,7 +8,7 @@
 
 ![HARDWARE LAYOUT](https://github.com/DoVanTuan2805/_fly-and-shoot-game/blob/main/resource/images/hardware_layout.png)
 
-- AK-Embedded Base Kit [AK Embedded Base Kit - STM32L151 - Lập trình nhúng vi điều khiển (epcb.vn)](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) là  evaluation kit dành cho các bạn học phần mềm nhúng nâng cao và muốn thực hành với Event - Driven.
+- AK-Embedded Base Kit là  evaluation kit dành cho các bạn học phần mềm nhúng nâng cao và muốn thực hành với Event - Driven.
 - Các ngoại vi và MCU được tính hợp vào trong Kit:
     - Vi điều khiển chính STM32 ARM-based 32-bit MCU: [STM32L151C8T6](https://www.st.com/en/microcontrollers-microprocessors/stm32l151c8.html)
     - Truyền nhận không dây 2.4Ghz RF Transceiver ICs: [NRF24L01P-R](https://www.nordicsemi.com/products/nrf24-series)
@@ -17,7 +17,7 @@
     - Tích hợp NOR FLASH (32MB): [W25Q256JVEIQTR](https://www.winbond.com/hq/product/code-storage-flash-memory/serial-nor-flash/index.html?__locale=en&partNo=W25Q256JV)
     - Kết nối với các mạch ứng dụng chuẩn [Seeedstudio Grove Header HY-4AW](https://wiki.seeedstudio.com/Grove_System/)
     - Tích hợp console qua USB type C sử dụng chip USB UART Converter: [CH340E](http://www.wch-ic.com/products/CH340.html)
-    - Nguyên lí của phần cứng: AK-Embedded Base Kit([schematic_ak_base_kit_2.1_60965dd0f11648eab5b41cee534e0c36.pdf (hstatic.net)](https://file.hstatic.net/1000362368/file/schematic_ak_base_kit_2.1_60965dd0f11648eab5b41cee534e0c36.pdf)
+    - Nguyên lí của phần cứng: AK-Embedded Base Kit([schematic_ak_base_kit_2.1_60965dd0f11648eab5b41cee534e0c36.pdf (hstatic.net).
 - Trò chơi "Fly and Shoot" là một tựa game kinh điển đã xuất hiện từ lâu trong làng game. Đặc biệt, hiện nay trò chơi này đã được tái tạo trên nền tảng AK-Embedded Base Kit, với việc tích hợp một hệ thống quản lý nhiệm vụ, tín hiệu, bộ đếm thời gian, và tin nhắn kết hợp với một cơ chế Event-Driven.
 - Bằng cách sử dụng cơ chế Event-Driven, trò chơi có thể phản ứng linh hoạt theo sự kiện diễn ra trong trò chơi một cách tự nhiên, tạo ra trải nghiệm chơi game mượt mà và hấp dẫn hơn cho người chơi. Điều này giúp tăng cường sự tương tác và động lực cho người chơi trong quá trình tham gia vào trò chơi "Fly and Shoot".
 
@@ -73,7 +73,7 @@ Số điểm sẽ được lưu khi trò chơi kết thúc. Khi trò chơi kết
 - Message được chia làm 2 loại chính, Message chỉ chứa Signal, hoặc vừa chứa Signal và Data. Message tương đương với Signal.
 - Chỗ thực thi một công việc nào đó thì mình gọi là Handler.
 
-Chi tiết các khái niệm các bạn tham khảo tại bài viết: [AK Embedded Base Kit - STM32L151 - Event Driven: Task & Signal](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-event-driven-task-signal)  
+Chi tiết các khái niệm các bạn tham khảo tại bài viết: AK Embedded Base Kit - STM32L151 - Event Driven: Task & Signal
 
 **2.2. Task và Signal trong Fly - And - Shoot.**
 
@@ -705,7 +705,3 @@ Như những phần ở trên mình có giới thiệu và giải thích từng 
     - Khi nhấn [MODE] sẽ chuyển sang SCREEN MENU.
 
 (*) Code của các màn hình các ae có thể vào folder:  *.../game/screens.*
-
-**VII. Done.**
-
-Ae nào có nhu cầu về IOT thì liên hệ [EPCB - Điện tử và IoT | Cảm biến công nghiệp](https://epcb.vn/) nhé 🤗🤗. 
