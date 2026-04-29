@@ -142,8 +142,7 @@ static void fs_view_setting() {
 				if (fs_game_setting.fs_setting_game_mode == FS_GAME_MODE_EASY) {
 					view_render.print("EASY");
 				} 
-				else if (fs_game_setting.fs_setting_game_mode ==
-						FS_GAME_MODE_NORMAL) {
+				else if (fs_game_setting.fs_setting_game_mode == FS_GAME_MODE_NORMAL) {
 					view_render.print("NORMAL");
 				} 
 				else {
@@ -154,8 +153,7 @@ static void fs_view_setting() {
 				view_render.print(fs_game_setting.fs_setting_missle);
 			} 
 			else if (i == 2) {
-				view_render.print(
-					fs_game_setting.fs_setting_sound == false ? "OFF" : "ON");
+				view_render.print(fs_game_setting.fs_setting_sound == false ? "OFF" : "ON");
 			}
 		}
 	}

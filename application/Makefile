@@ -13,7 +13,7 @@ Print = @echo "~"
 NAME_MODULE = ak-kit-fly-and-shoot-application
 PROJECT = $(NAME_MODULE)
 
-GCC_PATH		= /home/tuan/toolchain_AK/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
+GCC_PATH		= /opt/gcc-arm-none-eabi-10.3-2021.10
 PROGRAMER_PATH		= /home/tuan/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 OPENOCD_CFG_PATH	= /usr/local/share/openocd/scripts/board/stm32ldiscovery.cfg
 
@@ -37,7 +37,7 @@ CONSOLE_BAUDRATE_DEF = -DSYS_CONSOLE_BAUDRATE=$(SYS_CONSOLE_BAUDRATE)
 #|   -Os      | code size                        |              |   (--)  |            |    (++)     |
 #|  -Ofast    | O3 with none math cals           |     (---)    |         |     (+)    |    (+++)    |
 #|------------|----------------------------------|--------------|---------|------------|-------------|
-OPTIMIZE_OPTION = -g -Os
+OPTIMIZE_OPTION = -g -Os 
 
 # RTOS development option.
 RTOS_DEV_OPTION = -URTOS_DEV_EN

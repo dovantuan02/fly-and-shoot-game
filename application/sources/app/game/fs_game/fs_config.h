@@ -16,7 +16,7 @@ using namespace std;
 #define FS_ROUND_RECT_X     (5)
 #define FS_ROUND_RECT_Y     (6)
 
-#define MAX_LCD_WDITH       (128)
+#define MAX_LCD_WIDTH       (128)
 #define MAX_LCD_HEIGHT      (64)
 
 #define FS_MAX_HISTORY      (12)
