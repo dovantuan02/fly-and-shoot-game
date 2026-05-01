@@ -32,7 +32,7 @@ void task_fs_missle_handle(ak_msg_t *msg) {
 			FsGame::ObjectEntry objEntry;
 			objEntry.type =	FsGame::ObjectType::Missile;
 			objEntry.obj =	missle;
-			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ADD_OBJECT, (uint8_t*)&objEntry, sizeof(FsGame::ObjectEntry));
+			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ACTIVE_OBJECT, (uint8_t*)&objEntry, sizeof(FsGame::ObjectEntry));
 			break;
 		} 
 

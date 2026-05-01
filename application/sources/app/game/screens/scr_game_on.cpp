@@ -88,8 +88,8 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             // set up and reset active object
             task_post_pure_msg(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_SETUP_SIG);
             task_post_pure_msg(FS_GAME_TASK_WALL_ID, FS_GAME_WALL_SETUP_SIG);
-            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_RESET_SIG);
-            task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_RESET_SIG);
+            task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID, FS_GAME_EXPLOSION_SETUP_SIG);
+            task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_SETUP_SIG);
 
             // set timer for display
             timer_set(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK, AC_DISPLAY_GAME_ON_INTERVAL, TIMER_PERIODIC);
@@ -102,17 +102,10 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             task_post_pure_msg(FS_GAME_TASK_MISSLE_ID, FS_GAME_MISSLE_ON_TICK_SIG);
             break;
         }
-        case FS_GAME_DISPLAY_ON_ADD_OBJECT: {
-            // FsGame::ObjectEntry *obj = (FsGame::ObjectEntry *) get_data_common_msg(msg);
+        case FS_GAME_DISPLAY_ON_ACTIVE_OBJECT: {
             FsGame::ObjectEntry obj;
             memcpy(&obj, get_data_common_msg(msg), sizeof(FsGame::ObjectEntry));
             g_fs_screen->addObject(obj);
-            break;
-        }
-        case FS_GAME_DISPLAY_ON_REMOVE_OBJECT: {
-            // memcpy(&obj, get_data_common_msg(msg), sizeof(FsGame::ObjectEntry));
-            FsGame::ObjectEntry *obj = (FsGame::ObjectEntry *) get_data_common_msg(msg);
-            // g_fs_screen->removeObject(obj->obj);
             break;
         }
         case FS_GAME_DISPLAY_ON_CLEAR_OBJECT: {

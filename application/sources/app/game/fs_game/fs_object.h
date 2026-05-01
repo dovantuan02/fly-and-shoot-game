@@ -6,22 +6,23 @@
 
 namespace FsGame {
 
-struct Coordinate {
-    int8_t x;
-    int8_t y;
-};
-
-struct ObstacleInfo {
-    uint8_t type;
-    uint8_t score;
-    Coordinate coordinate;
-};
-
 enum Visibility { Visible, Invisible };
 enum Direction { LeftToRight, RightToLeft, UpToDown, DownToUp };
 enum MissileType { Normal, Split };
-enum ObjectType { Plane, Missile, Explosion, Obstacle, Boss };
+enum ObjectType { Plane, Missile, Explosion, Obstacle, Boss, TunnelWall };
 enum Speed { Slow = 3, Medium, Fast };
+enum ObstacleType {Boom, MineI, MineII};
+
+struct Coordinate {
+    int16_t x;
+    int16_t y;
+};
+
+struct ObstacleInfo {
+    ObstacleType type;
+    uint8_t score;
+    Coordinate coordinate;
+};
 
 struct ObjectInfo {
     const unsigned char* bitmap;
@@ -34,6 +35,9 @@ class FsObject {
    private:
     struct ObjectInfo mInfo;
     Speed mSpeed;
+
+   protected:
+    void setCoordinate(Coordinate coordinate);
 
    public:
     FsObject(ObjectInfo);
@@ -51,6 +55,7 @@ class FsObject {
     Direction getDir() const;
     int changeCharacter(const unsigned char* newBitmap);
     const unsigned char* getBitmap() const { return this->mInfo.bitmap; }
+    virtual int updateWall();
     virtual int render();
 };
 
@@ -64,8 +69,6 @@ class FsMissile : public FsObject {
    private:
     MissileType mType = MissileType::Normal;
     Direction mDir = Direction::LeftToRight;
-    uint8_t mSpeed = 1;
-    uint8_t mDamage = 1;
 
    public:
     FsMissile(const unsigned char* bitmap, Coordinate firstCoordinate)
@@ -84,24 +87,23 @@ class FsMissile : public FsObject {
 
 class FsExplosion : public FsObject {
    private:
-    uint8_t version;
+    uint8_t mFrame;
+    uint8_t mLifeTime;
 
    public:
     FsExplosion(Coordinate firstCoordinate);
     ~FsExplosion() override;
+    int render() override;
 };
 
 class FsObstacle : public FsObject {
    private:
-    uint8_t type;
-    uint8_t score;
+    ObstacleType mType;
+    uint8_t mScore;
 
    public:
-    FsObstacle(const ObstacleInfo newObstacle[]);
-    ~FsObstacle() override;
-
-    int add(ObstacleInfo newObstacle);
-    int remove();
+    FsObstacle(const unsigned char* bitmap,  ObstacleInfo newObstacle);
+    ~FsObstacle() override = default;
 };
 
 class FsBoss : public FsExplosion, public FsMissile {
@@ -112,6 +114,13 @@ class FsBoss : public FsExplosion, public FsMissile {
    public:
     FsBoss(Coordinate firstCoordinate);
     ~FsBoss() override;
+};
+
+class FsTunnelWall  : public FsObject {
+public:
+    FsTunnelWall(int16_t xTop, int16_t xBot);
+    ~FsTunnelWall() override = default;
+    int updateWall() override;
 };
 
 typedef struct {
@@ -126,7 +135,11 @@ class FsScreen {
    private:
     RenderFunc renderFunc;
     std::vector<ObjectEntry> listObject;
-
+    int computePlaneCrash(FsObject* plane, FsObject* wall);
+    int computeMissileCrash(FsObject* missile, FsObject* obstacle);
+    int setupMissile(FsObject* missile);
+    int calculateCrash();
+    const char *getType(ObjectType);
    public:
     FsScreen(RenderFunc renderFunc);
     ~FsScreen();

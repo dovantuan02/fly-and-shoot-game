@@ -114,8 +114,8 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 
 			task_post_pure_msg(FS_GAME_TASK_MISSLE_ID        , FS_GAME_MISSLE_RESET_SIG);
 			task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_RESET_SIG);
-			task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET_SIG);
-			task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID      , FS_GAME_OBSTACLE_RESET_SIG);
+			task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_SETUP_SIG);
+			task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID      , FS_GAME_OBSTACLE_SETUP_SIG);
 			
 			SCREEN_TRAN(task_scr_fs_game_over_handle, &scr_game_over);
 			

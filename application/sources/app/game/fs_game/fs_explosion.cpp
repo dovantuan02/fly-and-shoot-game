@@ -10,7 +10,7 @@
 
 void task_fs_explosion_handle(ak_msg_t *msg) {
 	switch (msg->sig) {
-		case FS_GAME_EXPLOSION_RESET_SIG: {
+		case FS_GAME_EXPLOSION_SETUP_SIG: {
 			break;
 		}
 

@@ -37,22 +37,18 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
     		objEntry.type =	FsGame::ObjectType::Plane;
     		objEntry.obj = plane;
 			
-			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ADD_OBJECT, (uint8_t*)&objEntry, sizeof(FsGame::ObjectEntry));
+			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ACTIVE_OBJECT, (uint8_t*)&objEntry, sizeof(FsGame::ObjectEntry));
 			break;
 		}
 
 		case FS_GAME_PLANE_UP_SIG: {  
-			// fs_game_plane_up();
-			break;
-		}
-
-		case FS_GAME_PLANE_CRASH_SIG: {  
-			// fs_game_plane_crash();
-			break;
-		}
-
-		case FS_GAME_PLANE_ON_TICK_SIG: {
-			// fs_game_plane_down();
+			extern FsGame::FsScreen* g_fs_screen;
+			std::vector<FsGame::FsObject*> planes;
+			if (g_fs_screen->getObject(planes, FsGame::ObjectType::Plane) == 0) {
+				FsGame::Coordinate coor = planes[0]->getCoordinate();
+				coor.y = coor.y - FS_PLANE_Y_UP - 10;
+				planes[0]->move(coor);
+			}
 			break;
 		}
 
