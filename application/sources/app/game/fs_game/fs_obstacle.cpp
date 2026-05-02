@@ -49,7 +49,7 @@ void task_fs_obstacle_handle(ak_msg_t *msg) {
 		 * |_____________________|
 		 */
 		obj.info.coordinate.x = MAX_LCD_WIDTH;
-		obj.info.coordinate.y = rand() % MAX_LCD_HEIGHT;
+		obj.info.coordinate.y = rand() % MAX_LCD_HEIGHT ;
 		FsObstacle *obstacle = new FsObstacle(obj.bitmap, obj.info);
 		ObjectEntry objEntry;
 		objEntry.type =	ObjectType::Obstacle;

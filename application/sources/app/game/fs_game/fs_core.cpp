@@ -1,8 +1,9 @@
+#include "fs_config.h"
+
 #include "fs_core.h"
 
 #include "app_dbg.h"
 #include "fs_bitmap.h"
-#include "fs_config.h"
 
 using namespace FsGame;
 
@@ -52,6 +53,10 @@ static bool _get_object_size(ObjectType type, uint8_t* width, uint8_t* height) {
             *width = MINE_ICON_WIDTH;
             *height = MINE_ICON_HEIGHT;
             return true;
+        case ObjectType::Boss:
+            *width = BOSS_WIDTH;
+            *height = BOSS_HEIGHT;
+            return true;
         case ObjectType::TunnelWall:
             *width = MAP_WIDTH;
             *height = MAP_HEIGHT;
@@ -68,7 +73,9 @@ static bool _get_object_size(ObjectType type, uint8_t* width, uint8_t* height) {
  *******************************/
 FsObject::FsObject(ObjectInfo objInfo) : mInfo(objInfo) { mSpeed = Slow; }
 
-FsObject::~FsObject() {}
+FsObject::~FsObject() {
+    mInfo.visible = Invisible;
+}
 
 Coordinate FsObject::getCoordinate() const { return this->mInfo.coordinate; }
 
@@ -79,7 +86,7 @@ void FsObject::setVisible(Visibility visible) { this->mInfo.visible = visible; }
 Visibility FsObject::isVisible() const { return this->mInfo.visible; }
 
 int FsObject::setDir(Direction dir) {
-    if (dir < LeftToRight || dir > DownToUp) {
+    if (dir < 0 || dir > Direction::DirectionMax) {
         return -1;
     }
     mInfo.dir = dir;
@@ -126,6 +133,13 @@ int FsObject::move() {
         case DownToUp:
             mInfo.coordinate.y -= mSpeed;
             break;
+        case RandomY:
+            if (rand() % 2 == 0) {
+                mInfo.coordinate.y += mSpeed;
+            } else {
+                mInfo.coordinate.y -= mSpeed;
+            }
+            break;
         default:
             return -3;
     }
@@ -151,41 +165,48 @@ int FsObject::setSpeed(Speed speed) {
 Speed FsObject::getSpeed() const { return mSpeed; }
 
 /*******************************
- * Obstacle class implementation
+ * Plane class implementation
  *******************************/
+FsPlane::FsPlane(const unsigned char* bitmap, Coordinate firstCoordinate, GameLevel level)
+    : FsObject({bitmap, firstCoordinate, Visibility::Visible, Direction::UpToDown}) {
+    mLevel = level;
+    mFrame = 0;
+};
 
-FsObstacle::FsObstacle(const unsigned char* bitmap, ObstacleInfo newObstacle) 
-    : FsObject ({bitmap, newObstacle.coordinate, Visibility::Visible, Direction::RightToLeft}) {
-    mType = newObstacle.type;
-    mScore = newObstacle.score;
-}
-
-ObstacleType FsObstacle::getType() const {
-    return mType;
-}
-
-uint8_t FsObstacle::getScore() const {
-    return mScore;
+int FsPlane::render() {
+    if (isVisible() != Visibility::Visible) {
+        return -1;
+    }
+    if (mFrame > 2) { // TODO:
+        mFrame = 0;
+    }
+    if (mLevel == GameLevel::Easy) {
+        if (mFrame == 2) {
+            move();
+        }
+    }
+    ++mFrame;
+    return 0;
 }
 
 /*******************************
- * TunnelWall class implementation
+ * Missle class implementation
  *******************************/
-FsTunnelWall::FsTunnelWall(const unsigned char* bitmap, int16_t xTop, int16_t xBot)
-    : FsObject ({bitmap, Coordinate{xTop, 0}, Visibility::Visible, Direction::RightToLeft}) {
-    setSpeed(Slow);
+FsMissile::FsMissile(const unsigned char* bitmap, Coordinate firstCoordinate, MissileOwner owner, Direction dir)
+    : FsObject({bitmap, firstCoordinate, Visibility::Visible, dir}) {
+    mOwner = owner;
+};
+
+int FsMissile::setMode(MissileType newType) {
+    this->mType = newType;
+    return 0;
+}
+int FsMissile::getMode() const {
+    return mType;
 }
 
-int FsTunnelWall::updateWall() {
-    Coordinate coordinate = getCoordinate();
-    coordinate.x -= getSpeed();
-
-    if (coordinate.x <= -MAP_WIDTH) {
-        coordinate.x += MAP_WIDTH * 2;
-    }
-
-    setCoordinate(coordinate);
-    return 0;
+MissileOwner FsMissile::getOwner() const {
+    return mOwner;
 }
 
 /*******************************
@@ -222,26 +243,170 @@ int FsExplosion::render() {
 }
 
 /*******************************
- * Screen class implementation
+ * Obstacle class implementation
  *******************************/
 
-FsCore::FsCore(RenderFunc renderFunc)
-    : renderFunc(renderFunc),
+FsObstacle::FsObstacle(const unsigned char* bitmap, ObstacleInfo newObstacle) 
+    : FsObject ({bitmap, newObstacle.coordinate, Visibility::Visible, Direction::RightToLeft}) {
+    mType = newObstacle.type;
+    mScore = newObstacle.score;
+}
+
+ObstacleType FsObstacle::getType() const {
+    return mType;
+}
+
+uint8_t FsObstacle::getScore() const {
+    return mScore;
+}
+
+/*******************************
+ * Boss class implementation
+ *******************************/
+FsBoss::FsBoss(BossInfo bossInfo)
+    : FsObject({bossInfo.bossBitmap[0], bossInfo.coordinate, Visibility::Visible, Direction::RightToLeft}),
+      mScore(bossInfo.score),
+      mHp(bossInfo.hp),
+      mFrame(0),
+      mMissileBitmap(bossInfo.missileBitmap) {
+    if (bossInfo.bossBitmap[0] == NULL || bossInfo.missileBitmap == NULL) {
+        APP_DBG("Invalid boss info, boss bitmap or missile bitmap is null\n");
+        mBossBitmap[0] = NULL;
+        mBossBitmap[1] = NULL;
+    } else {
+        for (int i = 0; i < FS_BOSS_MAX_BITMAP_FRAME; ++i) {
+            mBossBitmap[i] = bossInfo.bossBitmap[i];
+        }
+    }
+    
+    setSpeed(Slow);
+}
+
+FsBoss::~FsBoss() {
+    setVisible(Invisible);
+}
+
+uint8_t FsBoss::getScore() const {
+    return mScore;
+}
+
+int FsBoss::getHp() const {
+    return mHp;
+}
+
+int FsBoss::decreaseHp() {
+    if (mHp > 0) {
+        --mHp;
+    }
+    return 0;
+}
+
+bool FsBoss::needMissile(Coordinate *missle) {
+    if (missle == NULL) {
+        return false;
+    }
+
+    if (mBossAppear == false) {
+        return false;
+    }
+
+    if (mHp <= 0) {
+        return false;
+    }
+
+    if (mFrame == 1) {
+        missle->x = getCoordinate().x;
+        missle->y = getCoordinate().y + BOSS_HEIGHT / 2 - MISSLE_ICON_HEIGHT / 2;
+        return true;
+    }
+    return false;
+}
+
+const unsigned char* FsBoss::getBossBitmap() const { 
+    return mBossBitmap[mFrame]; 
+}
+
+const unsigned char* FsBoss::getMissileBitmap() const { 
+    return mMissileBitmap; 
+}
+
+int FsBoss::render() {
+    if (isVisible() != Visibility::Visible) {
+        return -1;
+    }
+    
+    // NOTE: coordidate + boss = max lcd width => Boss appear 
+    Coordinate coor = getCoordinate();
+    if (coor.x + (BOSS_WIDTH + 5) >= MAX_LCD_WIDTH) {
+        int ret = move();
+        APP_DBG("Boss is moving => ret: %d\n", ret);
+        return ret;
+    } else {
+        mBossAppear = true;
+        if (setDir(RandomY) != 0) {
+            APP_DBG("Failed to set boss direction\n");
+        }
+        move();
+    }
+    /**
+     * Animate Boss
+     */
+    if (mFrame >= FS_BOSS_MAX_BITMAP_FRAME) {
+        mFrame = 0;
+    }
+    const unsigned char* bossBitmap = mBossBitmap[mFrame];
+    if (bossBitmap == NULL) {
+        APP_DBG("Boss bitmap is null, skip render\n");
+        return -1;
+    }
+    changeCharacter(bossBitmap);
+    ++mFrame;    
+    return 0;
+}
+
+/*******************************
+ * TunnelWall class implementation
+ *******************************/
+FsTunnelWall::FsTunnelWall(const unsigned char* bitmap, int16_t xTop)
+    : FsObject ({bitmap, Coordinate{xTop, 0}, Visibility::Visible, Direction::RightToLeft}) {
+    setSpeed(Slow);
+}
+
+int FsTunnelWall::updateWall() {
+    Coordinate coordinate = getCoordinate();
+    coordinate.x -= getSpeed();
+
+    if (coordinate.x <= -MAP_WIDTH) {
+        coordinate.x += MAP_WIDTH * 2;
+    }
+
+    setCoordinate(coordinate);
+    return 0;
+}
+
+/*******************************
+ * Core class implementation
+ *******************************/
+
+FsCore::FsCore(RenderFunc render, GameLevel level)
+    : mRenderFunc(render),
       mCrashedPlane(nullptr),
       mPlaneCrashBlinkTick(0),
-      mPlaneCrashBlinking(false) {
-    listObject.clear();
+      mPlaneCrashBlinking(false),
+      mTotalScore(0),
+      mBossAppear(false) {
+    mListObject.clear();
 }
 
 FsCore::~FsCore() {
-    renderFunc = nullptr;
+    mRenderFunc = nullptr;
     mCrashedPlane = nullptr;
-    listObject.clear();
-    listObject.shrink_to_fit();
+    mListObject.clear();
+    mListObject.shrink_to_fit();
 }
 
 int FsCore::getObject(vector<FsObject*> &obj, ObjectType type) {
-    for (auto it = listObject.begin(); it != listObject.end(); ++it) {
+    for (auto it = mListObject.begin(); it != mListObject.end(); ++it) {
         ObjectEntry entry = *it;
         if (entry.type == type) {
             obj.push_back(entry.obj);
@@ -259,8 +424,9 @@ int FsCore::addObject(ObjectEntry objectInfo) {
         return -1;
     }
 
-    APP_DBG("Add object {%d, %d} - type: %d\n", objectInfo.obj->getCoordinate().x, objectInfo.obj->getCoordinate().y, objectInfo.type);
-    listObject.push_back(objectInfo);
+    Coordinate coor = objectInfo.obj->getCoordinate();
+    APP_DBG("Add object {%d, %d} - type: %s\n", coor.x, coor.y, getType(objectInfo.type));
+    mListObject.push_back(objectInfo);
     return 0;
 }
 
@@ -386,7 +552,7 @@ int FsCore::computeMissileCrash(FsObject* missile, FsObject* obstacle) {
     ObjectEntry explosionEntry;
     explosionEntry.type = ObjectType::Explosion;
     explosionEntry.obj = new FsExplosion(explosionCoor);
-    listObject.push_back(explosionEntry);
+    mListObject.push_back(explosionEntry);
 
     missile->setVisible(Visibility::Invisible);
     obstacle->setVisible(Visibility::Invisible);
@@ -499,14 +665,14 @@ void FsCore::beginPlaneCrash(FsObject* plane) {
 CrashType FsCore::renderPlaneCrashBlink() {
     bool showPlane = (mPlaneCrashBlinkTick % 2) == 0;
 
-    for (auto it = listObject.begin(); it != listObject.end(); ++it) {
+    for (auto it = mListObject.begin(); it != mListObject.end(); ++it) {
         ObjectEntry object = *it;
         uint8_t w = 0, h = 0;
 
         if (!_get_object_size(object.type, &w, &h) ||
             object.obj == NULL ||
             object.obj->getBitmap() == NULL ||
-            renderFunc == NULL) {
+            mRenderFunc == NULL) {
             continue;
         }
 
@@ -515,7 +681,7 @@ CrashType FsCore::renderPlaneCrashBlink() {
         }
 
         Coordinate coor = object.obj->getCoordinate();
-        renderFunc(coor.x, coor.y, object.obj->getBitmap(), w, h, 1);
+        mRenderFunc(coor.x, coor.y, object.obj->getBitmap(), w, h, 1);
     }
 
     ++mPlaneCrashBlinkTick;
@@ -599,7 +765,11 @@ CrashType FsCore::render() {
         return renderPlaneCrashBlink();
     }
 
-    for (auto it = listObject.begin(); it != listObject.end();) {
+    if (mBossAppear) {
+        bossBattle();
+    }
+
+    for (auto it = mListObject.begin(); it != mListObject.end();) {
         ObjectEntry object = *it;
         uint8_t w = 0, h = 0;
 
@@ -607,10 +777,12 @@ CrashType FsCore::render() {
             ++it;
             continue;
         }
-        if (object.obj->getBitmap() != NULL && renderFunc != NULL) {
+        if (object.obj->getBitmap() != NULL && mRenderFunc != NULL) {
             if (object.type == ObjectType::TunnelWall) {
                 object.obj->updateWall();
-            } else if (object.type == ObjectType::Explosion) {
+            } else if (object.type == ObjectType::Explosion 
+                || object.type == ObjectType::Boss
+                || object.type == ObjectType::Plane) {
                 object.obj->render();
             } else {
                 if (object.obj->move() != 0) {
@@ -621,7 +793,7 @@ CrashType FsCore::render() {
                     }
                     APP_DBG("Delete Object: %s\n", getType(object.type));
                     delete object.obj;
-                    it = listObject.erase(it);
+                    it = mListObject.erase(it);
                     continue;
                 }
 
@@ -633,9 +805,9 @@ CrashType FsCore::render() {
                     beginPlaneCrash(object.obj);
                     return CrashType::NoCrash;
                 }
-                APP_DBG("Delete Object: %s {%d, %d} - Remain Object: %d\n", getType(object.type), coor.x, coor.y, listObject.size() - 1);
+                APP_DBG("Delete Object: %s {%d, %d} - Remain Object: %d\n", getType(object.type), coor.x, coor.y, mListObject.size() - 1);
                 delete object.obj;
-                it = listObject.erase(it);
+                it = mListObject.erase(it);
                 continue;
             }
             if (object.type != ObjectType::TunnelWall && FS_VERIFY_COOR(coor) == FS_OBJECT_OUT_RANGE) {
@@ -644,12 +816,12 @@ CrashType FsCore::render() {
                     beginPlaneCrash(object.obj);
                     return CrashType::NoCrash;
                 }
-                APP_DBG("Delete Object: %s {%d, %d} - Remain Object: %d\n", getType(object.type), coor.x, coor.y, listObject.size() - 1);
+                APP_DBG("Delete Object: %s {%d, %d} - Remain Object: %d\n", getType(object.type), coor.x, coor.y, mListObject.size() - 1);
                 delete object.obj;
-                it = listObject.erase(it);
+                it = mListObject.erase(it);
                 continue;
             }
-            renderFunc(coor.x, coor.y, object.obj->getBitmap(), w, h, 1);
+            mRenderFunc(coor.x, coor.y, object.obj->getBitmap(), w, h, 1);
         }
         
         ++it;
@@ -659,4 +831,99 @@ CrashType FsCore::render() {
 
 int FsCore::getScore() const {
     return mTotalScore;
+}
+
+bool FsCore::needBossAppear() {
+    if (mTotalScore >= FS_BOSS_APPEAR_SCORE
+        && mBossAppear == false) {
+        mBossAppear = true;
+        clearObstacle();
+        return mBossAppear;
+    }
+    return false;
+}
+
+int FsCore::clearObstacle() {
+    for (auto it = mListObject.begin(); it != mListObject.end();) {
+        ObjectEntry object = *it;
+        if (object.type == ObjectType::Obstacle) {
+            APP_DBG("Delete Obstacle: %s\n", getType(object.type));
+            delete object.obj;
+            it = mListObject.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    return 0;
+}
+
+int FsCore::getMissle(std::vector<FsObject*>& missles, MissileOwner owner) {
+    for (auto it = mListObject.begin(); it != mListObject.end(); ++it) {
+        ObjectEntry entry = *it;
+        if (entry.type == ObjectType::Missile) {
+            FsMissile* missile = (FsMissile*)(entry.obj);
+            if (missile != NULL && missile->getOwner() == owner) {
+                missles.push_back(entry.obj);
+            }
+        }
+    }
+    if (missles.size() > 0) {
+        return 0;
+    }
+    return -1;
+}
+
+int FsCore::bossBattle() {
+    std::vector<FsObject*> misslesPlane;
+    std::vector<FsObject*> misslesBoss;
+
+    getMissle(misslesPlane, MissileOwner::PlaneOwner);
+    getMissle(misslesBoss, MissileOwner::BossOwner);
+
+    for (auto misslePlane : misslesPlane) {
+        Coordinate planeCoor = misslePlane->getCoordinate();
+        for (auto missleBoss : misslesBoss) {
+            Coordinate bossCoor = missleBoss->getCoordinate();
+            if (_rect_overlap(planeCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT,
+                                bossCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT)) {
+                APP_DBG("Missile crash missile: plane missile {%d, %d}, boss missile {%d, %d}\n", planeCoor.x, planeCoor.y, bossCoor.x, bossCoor.y);
+                
+                Coordinate explosionCoor = {
+                    static_cast<int16_t>(bossCoor.x - 1),
+                    static_cast<int16_t>(bossCoor.y - 1),
+                };
+                ObjectEntry explosionEntry;
+                explosionEntry.type = ObjectType::Explosion;
+                explosionEntry.obj = new FsExplosion(explosionCoor);
+                mListObject.push_back(explosionEntry);
+
+                misslePlane->setVisible(Visibility::Invisible);
+                missleBoss->setVisible(Visibility::Invisible);
+            }
+        }
+    }
+
+    std::vector<FsObject*> bosses;
+    if (getObject(bosses, ObjectType::Boss) == 0) {
+        for (auto boss : bosses) {
+            if (boss->isVisible() != Visibility::Visible) {
+                continue;
+            }
+
+            FsBoss* fsBoss = (FsBoss*)(boss);
+            if (fsBoss == NULL) {
+                continue;
+            }
+
+            Coordinate bossCoor = boss->getCoordinate();
+            if (fsBoss->needMissile(&bossCoor) == true) {
+                ObjectEntry missileEntry;
+                missileEntry.type = ObjectType::Missile;
+                missileEntry.obj = new FsMissile(fsBoss->getMissileBitmap(), bossCoor, MissileOwner::BossOwner, Direction::RightToLeft);
+                mListObject.push_back(missileEntry);
+                APP_DBG("Boss launch missile: boss {%d, %d}, missile {%d, %d}\n", bossCoor.x, bossCoor.y, bossCoor.x, bossCoor.y);
+            }
+        }
+    }
+    return 0;
 }

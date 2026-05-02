@@ -121,7 +121,8 @@ extern "C"
 	enum 
 	{
 		FS_GAME_DISPLAY_ON_ACTIVE_OBJECT = AK_USER_DEFINE_SIG,
-		FS_GAME_DISPLAY_ON_CLEAR_OBJECT
+		FS_GAME_DISPLAY_ON_CLEAR_OBJECT,
+		FS_GAME_DISPLAY_ON_TICK
 	};
 	enum
 	{
@@ -152,6 +153,13 @@ extern "C"
 		FS_GAME_OBSTACLE_SETUP_SIG = AK_USER_DEFINE_SIG,
 		FS_GAME_OBSTACLE_PUSH_SIG,
 	};
+
+	/*	SIGNAL BOSS		*/
+	enum
+	{
+		FS_GAME_BOSS_SETUP_SIG = AK_USER_DEFINE_SIG,
+		FS_GAME_BOSS_APPEAR_SIG,
+	};
 /*****************************************************************************/
 /*  LIFE task define
  */
@@ -170,8 +178,8 @@ extern "C"
 /*
 	GAME ON TIMER
 */
-
-#define AC_GAME_OVER_INTERNAL	(2000)
+#define AC_GAME_DISPLAY_ON_TICK 	(100)
+#define AC_GAME_OVER_INTERNAL			(2000)
 	/* define signal */
 	enum
 	{

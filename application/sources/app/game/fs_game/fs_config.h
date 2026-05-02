@@ -21,6 +21,9 @@ using namespace std;
 
 #define FS_MAX_HISTORY      (12)
 
+#define FS_BOSS_MAX_BITMAP_FRAME    (2)
+#define FS_BOSS_APPEAR_SCORE        (2)
+
 typedef enum 
 {
     FS_GAME_ON,

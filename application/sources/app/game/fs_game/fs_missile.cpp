@@ -20,14 +20,11 @@ using namespace FsGame;
 * VARIABLE PROCESS MISSILE
 ***********************************************************/
 
-#define FS_MISSLE_SETUP_X (PLANE_ICON_WIDTH)
-#define FS_MISSLE_MOVE_X  (4)
-
 void task_fs_missle_handle(ak_msg_t *msg) {
 	switch (msg->sig) {
 		case FS_GAME_MISSLE_PUSH_SIG: {
 			APP_DBG_SIG("FS_GAME_MISSLE_PUSH\n");
-			FsGame::FsMissile *missle = new FsGame::FsMissile(missle_icon, {FS_MISSLE_SETUP_X, MAX_LCD_HEIGHT / 2});
+			FsGame::FsMissile *missle = new FsGame::FsMissile(missle_icon);
 			FsGame::ObjectEntry objEntry;
 			objEntry.type =	FsGame::ObjectType::Missile;
 			objEntry.obj =	missle;

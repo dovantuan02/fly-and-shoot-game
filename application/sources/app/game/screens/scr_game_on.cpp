@@ -37,27 +37,32 @@ view_screen_t scr_game_on = {
 FsGame::FsCore* g_fs_core = nullptr;
 
 // show infor (score and missle available)
-void fs_game_view_infor_fly() {
+void fs_game_view_infor_fly(int score, int missleAvailable) {
     view_render.setCursor(0, 57);
     view_render.print("SCORE:");
     if (g_fs_core != nullptr) {
         view_render.print(g_fs_core->getScore());
     }
-    // view_render.print(fs_game_score);  // TODO:
 
     view_render.setCursor(55, 57);
     view_render.print(" TRIGGERS:");
-    // view_render.print(FS_MAX_MISSLE - fs_vec_missile.size());
+    view_render.print(missleAvailable);
 }
 
 void view_scr_fs_game_on() {
     if (g_fs_core != nullptr) {
         if (g_fs_core->render() == FsGame::CrashType::PlaneCrash) {
             APP_DBG("Plane crash, game over -> score: %d\n", g_fs_core->getScore());
+            timer_remove_attr(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK);
             timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_PUSH_SIG);        
             timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
         }
-        fs_game_view_infor_fly();
+        int missleAvailable = 0; // TODO:
+        fs_game_view_infor_fly(g_fs_core->getScore(), missleAvailable);
+        if (g_fs_core->needBossAppear() == true) {
+            APP_DBG("Boss appear, score: %d\n", g_fs_core->getScore());
+            task_post_pure_msg(FS_GAME_TASK_BOSS_ID, FS_GAME_BOSS_APPEAR_SIG);
+        }
     }
 }
 
@@ -72,7 +77,7 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             if (g_fs_core == nullptr) {
                 APP_DBG("Create new screen\n");
                 g_fs_core = new FsGame::FsCore(
-                    [&view_render](int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h, uint16_t color) {
+                    [](int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h, uint16_t color) {
                         view_render.drawBitmap(x, y, bitmap, w, h, color);
                     });
             }
@@ -81,7 +86,7 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             task_post_pure_msg(FS_GAME_TASK_WALL_ID, FS_GAME_WALL_SETUP_SIG);
             task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_SETUP_SIG);
 
-            // set timer for display
+            timer_set(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK, AC_GAME_DISPLAY_ON_TICK, TIMER_PERIODIC);
             break;
         }
 
@@ -101,6 +106,14 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
                 APP_DBG("Clear screen\n");
                 delete g_fs_core;
                 g_fs_core = nullptr;
+            }
+            break;
+        }
+
+        case FS_GAME_DISPLAY_ON_TICK: {
+            APP_DBG_SIG("FS_GAME_DISPLAY_ON_TICK\n");
+            if (g_fs_core == nullptr) {
+                APP_DBG("Screen is not ready\n");
             }
             break;
         }
