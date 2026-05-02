@@ -1,5 +1,5 @@
-#ifndef FS_OBJECT_H
-#define FS_OBJECT_H
+#ifndef FS_CORE_H
+#define FS_CORE_H
 
 #include <cstdint>
 #include <vector>
@@ -136,7 +136,7 @@ typedef struct {
     FsObject* obj;
 } ObjectEntry;
 
-class FsScreen {
+class FsCore {
     typedef void (*RenderFunc)(int16_t x, int16_t y, const uint8_t* bitmap,
                                int16_t w, int16_t h, uint16_t color);
 
@@ -160,8 +160,8 @@ class FsScreen {
     const char* getType(ObjectType);
 
    public:
-    FsScreen(RenderFunc renderFunc);
-    ~FsScreen();
+    FsCore(RenderFunc renderFunc);
+    ~FsCore();
     int getObject(std::vector<FsObject*>& obj, ObjectType type);
     int addObject(ObjectEntry);
     // int removeObject(FsObject obj);

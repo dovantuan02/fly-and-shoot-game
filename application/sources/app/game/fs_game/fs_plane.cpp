@@ -7,12 +7,11 @@
 #include "fs_plane.h"
 #include "fs_tunnel_wall.h"
 #include "fs_obstacle.h"
-#include "fs_explosion.h"
 #include "fs_buzzer_def.h"
 
 #include "fs_bitmap.h"
 #include "scr_game_over.h"
-#include "fs_object.h"
+#include "fs_core.h"
 
 /***********************************************************
 * VARIABLE PROCESS PLANE
@@ -43,9 +42,9 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
 
 		case FS_GAME_PLANE_UP_SIG: {  
 			APP_DBG_SIG("FS_GAME_PLANE_UP\n");
-			extern FsGame::FsScreen* g_fs_screen;
+			extern FsGame::FsCore* g_fs_core;
 			std::vector<FsGame::FsObject*> planes;
-			if (g_fs_screen->getObject(planes, FsGame::ObjectType::Plane) == 0) {
+			if (g_fs_core->getObject(planes, FsGame::ObjectType::Plane) == 0) {
 				FsGame::Coordinate coor = planes[0]->getCoordinate();
 				coor.y = coor.y - FS_PLANE_Y_UP - 5;
 				planes[0]->move(coor);

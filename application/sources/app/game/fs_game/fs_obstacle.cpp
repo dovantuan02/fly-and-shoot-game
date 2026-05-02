@@ -9,7 +9,7 @@
 #include "fs_config.h"
 
 #include "fs_bitmap.h"
-#include "fs_object.h"
+#include "fs_core.h"
 /***********************************************************
 * PROCESS OBSTACLE HANDLE
 ***********************************************************/
@@ -24,7 +24,7 @@ typedef struct {
 static fs_obstacle_inf_t obstacle_inf[] = {
 	{bom_icon, 		{ObstacleType::Boom, 	0, {0, 0}}},
 	{mine_I_icon, 	{ObstacleType::MineI, 	1, {0, 0}}},
-	{mine_II_icon, 	{ObstacleType::Boom, 	2, {0, 0}}}
+	{mine_II_icon, 	{ObstacleType::MineII, 	2, {0, 0}}}
 };
 
 void task_fs_obstacle_handle(ak_msg_t *msg) {
@@ -57,10 +57,6 @@ void task_fs_obstacle_handle(ak_msg_t *msg) {
 		// APP_DBG("Object Obstacle Info: {%d, %d}\n", obj.info.coordinate.x, obj.info.coordinate.y);
 
 		task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ACTIVE_OBJECT, (uint8_t*)&objEntry, sizeof(FsGame::ObjectEntry));
-		break;
-	}
-
-	case FS_GAME_OBSTACLE_ON_TICK_SIG: {
 		break;
 	}
 

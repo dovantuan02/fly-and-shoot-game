@@ -5,7 +5,6 @@
 #include "timer.h"
 #include "buzzer.h"
 
-#include "fs_explosion.h"
 #include "fs_plane.h"
 #include "fs_missile.h"
 #include "fs_obstacle.h"
@@ -13,7 +12,7 @@
 #include "fs_buzzer_def.h"
 
 #include "fs_bitmap.h"
-#include "fs_object.h"
+#include "fs_core.h"
 
 using namespace FsGame;
 
@@ -35,20 +34,6 @@ void task_fs_missle_handle(ak_msg_t *msg) {
 			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ACTIVE_OBJECT, (uint8_t*)&objEntry, sizeof(FsGame::ObjectEntry));
 			break;
 		} 
-
-		case FS_GAME_MISSLE_RESET_SIG: {
-			APP_DBG_SIG("FS_GAME_MISSLE_RESET\n");
-			break;
-		} 
-
-		case FS_GAME_MISSLE_ON_TICK_SIG: {
-			break;
-		}
-
-		case FS_GAME_MISSLE_CRASH_SIG: {
-			break;
-		}
-		
 		default:
 			break;
 	}

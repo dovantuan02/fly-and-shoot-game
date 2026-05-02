@@ -1,4 +1,4 @@
-#include "fs_object.h"
+#include "fs_core.h"
 
 #include "app_dbg.h"
 #include "fs_bitmap.h"
@@ -225,7 +225,7 @@ int FsExplosion::render() {
  * Screen class implementation
  *******************************/
 
-FsScreen::FsScreen(RenderFunc renderFunc)
+FsCore::FsCore(RenderFunc renderFunc)
     : renderFunc(renderFunc),
       mCrashedPlane(nullptr),
       mPlaneCrashBlinkTick(0),
@@ -233,14 +233,14 @@ FsScreen::FsScreen(RenderFunc renderFunc)
     listObject.clear();
 }
 
-FsScreen::~FsScreen() {
+FsCore::~FsCore() {
     renderFunc = nullptr;
     mCrashedPlane = nullptr;
     listObject.clear();
     listObject.shrink_to_fit();
 }
 
-int FsScreen::getObject(vector<FsObject*> &obj, ObjectType type) {
+int FsCore::getObject(vector<FsObject*> &obj, ObjectType type) {
     for (auto it = listObject.begin(); it != listObject.end(); ++it) {
         ObjectEntry entry = *it;
         if (entry.type == type) {
@@ -253,7 +253,7 @@ int FsScreen::getObject(vector<FsObject*> &obj, ObjectType type) {
     return -1;
 }
 
-int FsScreen::addObject(ObjectEntry objectInfo) {
+int FsCore::addObject(ObjectEntry objectInfo) {
     if (objectInfo.type == ObjectType::Missile && setupMissile(objectInfo.obj) != 0) {
         delete objectInfo.obj;
         return -1;
@@ -264,7 +264,7 @@ int FsScreen::addObject(ObjectEntry objectInfo) {
     return 0;
 }
 
-const char *FsScreen::getType(ObjectType type) {
+const char *FsCore::getType(ObjectType type) {
     switch (type)
     {
     case ObjectType::Boss:
@@ -284,7 +284,7 @@ const char *FsScreen::getType(ObjectType type) {
     }
 }
 
-int FsScreen::computePlaneCrash(FsObject* plane, FsObject* wall) {
+int FsCore::computePlaneCrash(FsObject* plane, FsObject* wall) {
     if (plane == NULL || wall == NULL || plane->getBitmap() == NULL ||
         wall->getBitmap() == NULL) {
         return 0;
@@ -323,7 +323,7 @@ int FsScreen::computePlaneCrash(FsObject* plane, FsObject* wall) {
     return 0;
 }
 
-int FsScreen::computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle) {
+int FsCore::computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle) {
     if (plane == NULL || obstacle == NULL || plane->getBitmap() == NULL ||
         obstacle->getBitmap() == NULL ||
         plane->isVisible() != Visibility::Visible ||
@@ -365,7 +365,7 @@ int FsScreen::computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle) {
     return CrashType::NoCrash;
 }
 
-int FsScreen::computeMissileCrash(FsObject* missile, FsObject* obstacle) {
+int FsCore::computeMissileCrash(FsObject* missile, FsObject* obstacle) {
     if (missile == NULL || obstacle == NULL ||
         missile->isVisible() != Visibility::Visible ||
         obstacle->isVisible() != Visibility::Visible) {
@@ -408,7 +408,7 @@ int FsScreen::computeMissileCrash(FsObject* missile, FsObject* obstacle) {
     return CrashType::NoCrash;
 }
 
-int FsScreen::setupMissile(FsObject* missile) {
+int FsCore::setupMissile(FsObject* missile) {
     if (missile == NULL) {
         return -1;
     }
@@ -473,7 +473,7 @@ int FsScreen::setupMissile(FsObject* missile) {
     return 0;
 }
 
-void FsScreen::beginPlaneCrash(FsObject* plane) {
+void FsCore::beginPlaneCrash(FsObject* plane) {
     if (plane == NULL || mPlaneCrashBlinking) {
         return;
     }
@@ -496,7 +496,7 @@ void FsScreen::beginPlaneCrash(FsObject* plane) {
     mCrashedPlane->move(planeCoor);
 }
 
-CrashType FsScreen::renderPlaneCrashBlink() {
+CrashType FsCore::renderPlaneCrashBlink() {
     bool showPlane = (mPlaneCrashBlinkTick % 2) == 0;
 
     for (auto it = listObject.begin(); it != listObject.end(); ++it) {
@@ -530,7 +530,7 @@ CrashType FsScreen::renderPlaneCrashBlink() {
     return CrashType::NoCrash;
 }
 
-CrashType FsScreen::calculateCrash() {
+CrashType FsCore::calculateCrash() {
     /**
      * Plane: Tunnel Wall, Obstacle (bom, min I, mine II), missle when Boss appear
      * Missle: Obstacle (bom, min I, mine II)
@@ -594,7 +594,7 @@ CrashType FsScreen::calculateCrash() {
     return CrashType::NoCrash;
 }
 
-CrashType FsScreen::render() {
+CrashType FsCore::render() {
     if (mPlaneCrashBlinking) {
         return renderPlaneCrashBlink();
     }
@@ -657,6 +657,6 @@ CrashType FsScreen::render() {
     return calculateCrash();
 }
 
-int FsScreen::getScore() const {
+int FsCore::getScore() const {
     return mTotalScore;
 }

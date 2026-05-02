@@ -1,4 +1,0 @@
-#ifndef FS_EXPLOSION_H
-#define FS_EXPLOSION_H
-
-#endif  //FS_EXPLOSION_H
