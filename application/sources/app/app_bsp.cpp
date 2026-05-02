@@ -95,6 +95,7 @@ void btn_down_callback(void* b) {
     button_t* me_b = (button_t*)b;
     switch (me_b->state) {
         case BUTTON_SW_STATE_PRESSED: {
+            APP_DBG_SIG("BUTTON_DOWN_PRESSED\n");
             if (fs_state_game == FS_GAME_OFF) {
                 task_post_pure_msg(AC_TASK_DISPLAY_ID,\
                                    AC_DISPLAY_BUTON_DOWN_PRESSED);

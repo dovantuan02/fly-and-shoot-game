@@ -85,44 +85,24 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 		}
 
 		case FS_GAME_DISPLAY_OVER_DOWN_PRESSED: {
+			APP_DBG_SIG("FS_GAME_DISPLAY_OVER_DOWN_PRESSED\n");
 			fs_state_game = FS_GAME_OFF;
 			
-			SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
+			// SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
 			break;
 		}
 
 		case FS_GAME_DISPLAY_OVER_ON_TICK: {
-			APP_DBG("FS_GAME_DISPLAY_OVER_ON_TICK\n");
+			APP_DBG_SIG("FS_GAME_DISPLAY_OVER_ON_TICK\n");
 			fs_state_game = FS_GAME_OVER;
 
-			timer_set(AC_TASK_DISPLAY_ID,\
-						AC_DISPLAY_SHOW_IDLE,\
-						AC_DISPLAY_IDLE_INTERVAL,\
-						TIMER_ONE_SHOT);
-
-			// remove timer active objects
-			timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID       , FS_GAME_OBSTACLE_PUSH_SIG);
-			timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID       , FS_GAME_OBSTACLE_ON_TICK_SIG);
-
-			timer_remove_attr(FS_GAME_TASK_WALL_ID           , FS_GAME_WALL_ON_TICK_SIG);
-			timer_remove_attr(FS_GAME_TASK_PLANE_ID          , FS_GAME_PLANE_ON_TICK_SIG);
-
-			timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_ON_TICK_SIG);
-			timer_remove_attr(FS_GAME_TASK_EXPLOSION_ID      , FS_GAME_EXPLOSION_PUSH_SIG);
-
-			timer_remove_attr(AC_TASK_DISPLAY_ID             , FS_GAME_DISPLAY_ON_TICK);
-
-			task_post_pure_msg(FS_GAME_TASK_MISSLE_ID        , FS_GAME_MISSLE_RESET_SIG);
-			task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_RESET_SIG);
-			task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_SETUP_SIG);
-			task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID      , FS_GAME_OBSTACLE_SETUP_SIG);
-			
+			task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_ON_ID, FS_GAME_DISPLAY_ON_CLEAR_OBJECT);
 			SCREEN_TRAN(task_scr_fs_game_over_handle, &scr_game_over);
-			
 			break;
 		}
 
 		case FS_GAME_DISPLAY_OVER_MODE_PRESSED: {
+			APP_DBG_SIG("FS_GAME_DISPLAY_OVER_MODE_PRESSED\n");
 			if (fs_state_game == FS_GAME_OVER) {
 				SCREEN_TRAN(task_scr_fs_game_on_handle, &scr_game_on);
 				fs_state_game = FS_GAME_ON;
@@ -132,6 +112,7 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 		}
 
 		case AC_DISPLAY_SHOW_IDLE: {
+			APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
 			SCREEN_TRAN(scr_idle_handle, &scr_idle);
 			break;
 		}

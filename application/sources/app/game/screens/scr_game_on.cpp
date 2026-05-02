@@ -63,11 +63,15 @@ void fs_game_view_infor_fly() {
 }
 
 void view_scr_fs_game_on() {
-
-    if (g_fs_screen) {
-        g_fs_screen->render();
+    if (g_fs_screen != nullptr) {
+        if (g_fs_screen->render() == FsGame::CrashType::PlaneCrash) {
+            APP_DBG("Plane crash, game over -> score: %d\n", g_fs_screen->getScore());
+            timer_remove_attr(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK);
+            timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_PUSH_SIG);        
+            timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+        }
+        fs_game_view_infor_fly();
     }
-    fs_game_view_infor_fly();
 }
 
 /***********************************************************
@@ -103,13 +107,23 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             break;
         }
         case FS_GAME_DISPLAY_ON_ACTIVE_OBJECT: {
+            if (g_fs_screen == nullptr) {
+                APP_DBG("Screen is not ready\n");
+                break;
+            }
             FsGame::ObjectEntry obj;
             memcpy(&obj, get_data_common_msg(msg), sizeof(FsGame::ObjectEntry));
             g_fs_screen->addObject(obj);
             break;
         }
         case FS_GAME_DISPLAY_ON_CLEAR_OBJECT: {
-            delete g_fs_screen;
+            APP_DBG_SIG("FS_GAME_DISPLAY_ON_CLEAR_OBJECT\n");
+            if (g_fs_screen != nullptr) {
+                timer_remove_attr(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK);
+                APP_DBG("Clear screen\n");
+                delete g_fs_screen;
+                g_fs_screen = nullptr;
+            }
             break;
         }
         default:

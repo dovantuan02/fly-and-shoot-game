@@ -42,12 +42,16 @@ void task_fs_plane_hanle(ak_msg_t *msg) {
 		}
 
 		case FS_GAME_PLANE_UP_SIG: {  
+			APP_DBG_SIG("FS_GAME_PLANE_UP\n");
 			extern FsGame::FsScreen* g_fs_screen;
 			std::vector<FsGame::FsObject*> planes;
 			if (g_fs_screen->getObject(planes, FsGame::ObjectType::Plane) == 0) {
 				FsGame::Coordinate coor = planes[0]->getCoordinate();
-				coor.y = coor.y - FS_PLANE_Y_UP - 10;
+				coor.y = coor.y - FS_PLANE_Y_UP - 5;
 				planes[0]->move(coor);
+			}
+			else {
+				APP_DBG("Plane is not available\n");
 			}
 			break;
 		}

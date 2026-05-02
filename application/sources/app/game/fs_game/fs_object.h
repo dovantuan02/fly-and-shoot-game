@@ -11,7 +11,8 @@ enum Direction { LeftToRight, RightToLeft, UpToDown, DownToUp };
 enum MissileType { Normal, Split };
 enum ObjectType { Plane, Missile, Explosion, Obstacle, Boss, TunnelWall };
 enum Speed { Slow = 3, Medium, Fast };
-enum ObstacleType {Boom, MineI, MineII};
+enum ObstacleType { None, Boom, MineI, MineII };
+enum CrashType { NoCrash, PlaneCrash, BoomCrash, MineICrash, MineIICrash }; // TODO: missle crash when boss appear
 
 struct Coordinate {
     int16_t x;
@@ -55,13 +56,17 @@ class FsObject {
     Direction getDir() const;
     int changeCharacter(const unsigned char* newBitmap);
     const unsigned char* getBitmap() const { return this->mInfo.bitmap; }
-    virtual int updateWall();
-    virtual int render();
+    virtual int updateWall() { return 0; };
+    virtual int render() { return 0; };
+    virtual ObstacleType getType() const { return ObstacleType::None; }
+    virtual uint8_t getScore() const { return 0; }
 };
 
 class FsPlane : public FsObject {
    public:
-    FsPlane(const unsigned char* bitmap, Coordinate firstCoordinate) : FsObject({bitmap, firstCoordinate, Visibility::Visible, Direction::UpToDown}) {};
+    FsPlane(const unsigned char* bitmap, Coordinate firstCoordinate)
+        : FsObject({bitmap, firstCoordinate, Visibility::Visible,
+                    Direction::UpToDown}) {};
     ~FsPlane() override = default;
 };
 
@@ -102,8 +107,11 @@ class FsObstacle : public FsObject {
     uint8_t mScore;
 
    public:
-    FsObstacle(const unsigned char* bitmap,  ObstacleInfo newObstacle);
+    FsObstacle(const unsigned char* bitmap, ObstacleInfo newObstacle);
     ~FsObstacle() override = default;
+
+    ObstacleType getType() const override;
+    uint8_t getScore() const override;
 };
 
 class FsBoss : public FsExplosion, public FsMissile {
@@ -116,16 +124,16 @@ class FsBoss : public FsExplosion, public FsMissile {
     ~FsBoss() override;
 };
 
-class FsTunnelWall  : public FsObject {
-public:
-    FsTunnelWall(int16_t xTop, int16_t xBot);
+class FsTunnelWall : public FsObject {
+   public:
+    FsTunnelWall(const unsigned char* bitmap, int16_t xTop, int16_t xBot);
     ~FsTunnelWall() override = default;
     int updateWall() override;
 };
 
 typedef struct {
     ObjectType type;
-    FsObject *obj;
+    FsObject* obj;
 } ObjectEntry;
 
 class FsScreen {
@@ -135,18 +143,30 @@ class FsScreen {
    private:
     RenderFunc renderFunc;
     std::vector<ObjectEntry> listObject;
+    FsObject* mCrashedPlane;
+    uint8_t mPlaneCrashBlinkTick;
+    bool mPlaneCrashBlinking;
+
+    uint16_t mTotalScore;
+
+   private:
     int computePlaneCrash(FsObject* plane, FsObject* wall);
+    int computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle);
     int computeMissileCrash(FsObject* missile, FsObject* obstacle);
     int setupMissile(FsObject* missile);
-    int calculateCrash();
-    const char *getType(ObjectType);
+    CrashType calculateCrash();
+    CrashType renderPlaneCrashBlink();
+    void beginPlaneCrash(FsObject* plane);
+    const char* getType(ObjectType);
+
    public:
     FsScreen(RenderFunc renderFunc);
     ~FsScreen();
-    int getObject(std::vector<FsObject*> &obj, ObjectType type);
+    int getObject(std::vector<FsObject*>& obj, ObjectType type);
     int addObject(ObjectEntry);
     // int removeObject(FsObject obj);
-    int render();
+    CrashType render();
+    int getScore() const;
 };
 
 }  // namespace FsGame
