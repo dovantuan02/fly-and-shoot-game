@@ -31,6 +31,18 @@
 #define APP_DBG(fmt, ...)
 #endif
 
+#if defined(APP_ERR_EN)
+#define APP_ERR(fmt, ...)       xprintf(KRED "[%lu][ERR]" KCYN "[%s:%d] " KNRM fmt KNRM, __DBG_TIME__, __DBG_POS__, ##__VA_ARGS__)
+#else
+#define APP_ERR(fmt, ...)
+#endif
+
+#if defined(APP_WRN_EN)
+#define APP_WRN(fmt, ...)       xprintf(KYEL "[%lu][WRN]" KCYN "[%s:%d] " KNRM fmt KNRM, __DBG_TIME__, __DBG_POS__, ##__VA_ARGS__)
+#else
+#define APP_WRN(fmt, ...)
+#endif
+
 #if defined(APP_PRINT_EN)
 #define APP_PRINT(fmt, ...)     xprintf(KWHT "[%lu][PRINT]" KCYN "[%s:%d] " KNRM fmt KNRM, __DBG_TIME__, __DBG_POS__, ##__VA_ARGS__)
 #else

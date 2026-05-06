@@ -279,11 +279,16 @@ FsBoss::FsBoss(BossInfo bossInfo)
         }
     }
     
+    mLevel = bossInfo.level;
     setSpeed(Slow);
 }
 
 FsBoss::~FsBoss() {
     setVisible(Invisible);
+}
+
+ObstacleType FsBoss::getType() const {
+    return ObstacleType::BossObstacle;
 }
 
 uint8_t FsBoss::getScore() const {
@@ -298,6 +303,7 @@ int FsBoss::decreaseHp() {
     if (mHp > 0) {
         --mHp;
     }
+    APP_DBG("-----> Boss decrease HP, current HP=%d\n", mHp);
     return 0;
 }
 
@@ -314,7 +320,7 @@ bool FsBoss::needMissile(Coordinate *missle) {
         return false;
     }
 
-    if (mFrame == 1) {
+    if (mFrame == mLevel) {
         missle->x = getCoordinate().x;
         missle->y = getCoordinate().y + BOSS_HEIGHT / 2 - MISSLE_ICON_HEIGHT / 2;
         return true;
@@ -337,24 +343,31 @@ int FsBoss::render() {
     
     // NOTE: coordidate + boss = max lcd width => Boss appear 
     Coordinate coor = getCoordinate();
-    if (coor.x + (BOSS_WIDTH + 5) >= MAX_LCD_WIDTH) {
-        int ret = move();
-        APP_DBG("Boss is moving => ret: %d\n", ret);
-        return ret;
-    } else {
-        mBossAppear = true;
-        if (setDir(RandomY) != 0) {
-            APP_DBG("Failed to set boss direction\n");
+    if (!mBossAppear) {
+        if (coor.x + (BOSS_WIDTH * 2) >= MAX_LCD_WIDTH) {
+            int ret = move();
+            APP_DBG("Boss is moving => ret: %d\n", ret);
+            return ret;
         }
+        mBossAppear = true;
+        setDir(RandomY);
+    } else {
         move();
     }
     /**
      * Animate Boss
      */
-    if (mFrame >= FS_BOSS_MAX_BITMAP_FRAME) {
+    uint8_t idx = 0;
+    if (mFrame >= mLevel) {
         mFrame = 0;
     }
-    const unsigned char* bossBitmap = mBossBitmap[mFrame];
+    // TODO:
+    if (mFrame % mLevel == 0) {
+        idx = 1;
+    } else {
+        idx = 0;
+    }
+    const unsigned char* bossBitmap = mBossBitmap[idx];
     if (bossBitmap == NULL) {
         APP_DBG("Boss bitmap is null, skip render\n");
         return -1;
@@ -453,7 +466,7 @@ const char *FsCore::getType(ObjectType type) {
 int FsCore::computePlaneCrash(FsObject* plane, FsObject* wall) {
     if (plane == NULL || wall == NULL || plane->getBitmap() == NULL ||
         wall->getBitmap() == NULL) {
-        return 0;
+        return CrashType::Error;
     }
 
     Coordinate planeCoor = plane->getCoordinate();
@@ -467,7 +480,7 @@ int FsCore::computePlaneCrash(FsObject* plane, FsObject* wall) {
     int16_t overlapBottom = std::min(planeCoor.y + PLANE_ICON_HEIGHT, wallCoor.y + MAP_HEIGHT);
 
     if (overlapLeft >= overlapRight || overlapTop >= overlapBottom) {
-        return 0;
+        return CrashType::NoCrash;
     }
 
     for (int16_t screenY = overlapTop; screenY < overlapBottom; ++screenY) {
@@ -486,31 +499,31 @@ int FsCore::computePlaneCrash(FsObject* plane, FsObject* wall) {
         }
     }
 
-    return 0;
+    return CrashType::NoCrash;
 }
 
-int FsCore::computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle) {
-    if (plane == NULL || obstacle == NULL || plane->getBitmap() == NULL ||
-        obstacle->getBitmap() == NULL ||
+int FsCore::computePlaneCrash(FsObject* plane, FsObject* something, uint16_t w, uint16_t h) {
+    if (plane == NULL || something == NULL || plane->getBitmap() == NULL ||
+        something->getBitmap() == NULL ||
         plane->isVisible() != Visibility::Visible ||
-        obstacle->isVisible() != Visibility::Visible) {
+        something->isVisible() != Visibility::Visible) {
         return CrashType::NoCrash;
     }
 
     Coordinate planeCoor = plane->getCoordinate();
-    Coordinate obstacleCoor = obstacle->getCoordinate();
+    Coordinate obstacleCoor = something->getCoordinate();
 
     if (!_rect_overlap(planeCoor, PLANE_ICON_WIDTH, PLANE_ICON_HEIGHT,
-                         obstacleCoor, MINE_ICON_WIDTH, MINE_ICON_HEIGHT)) {
+                         obstacleCoor, w, h)) {
         return CrashType::NoCrash;
     }
 
     int16_t overlapLeft = std::max(planeCoor.x, obstacleCoor.x);
     int16_t overlapTop = std::max(planeCoor.y, obstacleCoor.y);
     int16_t overlapRight = std::min(planeCoor.x + PLANE_ICON_WIDTH,
-                                    obstacleCoor.x + MINE_ICON_WIDTH);
+                                    obstacleCoor.x + w);
     int16_t overlapBottom = std::min(planeCoor.y + PLANE_ICON_HEIGHT,
-                                     obstacleCoor.y + MINE_ICON_HEIGHT);
+                                     obstacleCoor.y + h);
 
     for (int16_t screenY = overlapTop; screenY < overlapBottom; ++screenY) {
         for (int16_t screenX = overlapLeft; screenX < overlapRight; ++screenX) {
@@ -520,7 +533,7 @@ int FsCore::computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle) {
             int16_t obstacleY = screenY - obstacleCoor.y;
 
             bool planePixelOn = FS_BITMAP_PIXEL_ON(plane->getBitmap(), PLANE_ICON_WIDTH, planeX, planeY);
-            bool obstaclePixelOn = FS_BITMAP_PIXEL_ON(obstacle->getBitmap(), MINE_ICON_WIDTH, obstacleX, obstacleY);
+            bool obstaclePixelOn = FS_BITMAP_PIXEL_ON(something->getBitmap(), w, obstacleX, obstacleY);
 
             if (planePixelOn && obstaclePixelOn) {
                 return CrashType::PlaneCrash;
@@ -531,35 +544,52 @@ int FsCore::computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle) {
     return CrashType::NoCrash;
 }
 
-int FsCore::computeMissileCrash(FsObject* missile, FsObject* obstacle) {
-    if (missile == NULL || obstacle == NULL ||
+int FsCore::computeMissileCrash(FsObject* missile, FsObject* something, uint16_t w, uint16_t h) {
+    if (missile == NULL || something == NULL ||
         missile->isVisible() != Visibility::Visible ||
-        obstacle->isVisible() != Visibility::Visible) {
+        something->isVisible() != Visibility::Visible) {
         return CrashType::NoCrash;
     }
 
     Coordinate missileCoor = missile->getCoordinate();
-    Coordinate obstacleCoor = obstacle->getCoordinate();
-
-    if (!_rect_overlap(missileCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, obstacleCoor, MINE_ICON_WIDTH, MINE_ICON_HEIGHT)) {
+    Coordinate somethingCoor = something->getCoordinate();
+    ObstacleType obsType = something->getType();
+    
+    if (!_rect_overlap(missileCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, somethingCoor, w, h)) {
         return CrashType::NoCrash;
     }
 
     Coordinate explosionCoor = {
-        static_cast<int16_t>(obstacleCoor.x - 1),
-        static_cast<int16_t>(obstacleCoor.y - 1),
+        static_cast<int16_t>(somethingCoor.x - 1),
+        static_cast<int16_t>(somethingCoor.y - 1),
     };
     ObjectEntry explosionEntry;
     explosionEntry.type = ObjectType::Explosion;
     explosionEntry.obj = new FsExplosion(explosionCoor);
-    mListObject.push_back(explosionEntry);
+    if (explosionEntry.obj != NULL) {
+        mListObject.push_back(explosionEntry);
+    }
+    else {
+        APP_WRN("Create Explosion failed !!\n");
+    }
 
     missile->setVisible(Visibility::Invisible);
-    obstacle->setVisible(Visibility::Invisible);
-    APP_DBG("Missile crash obstacle: missile {%d, %d}, obstacle {%d, %d}\n", missileCoor.x, missileCoor.y, obstacleCoor.x, obstacleCoor.y);
+    something->setVisible(Visibility::Invisible);
+
+    if (obsType == ObstacleType::BossObstacle) {
+        FsBoss *boss = (FsBoss *)something;
+        // APP_DBG("Boss Coor {%d, %d}, Missle Coor {%d, %d}\n", somethingCoor.x, somethingCoor.y, missileCoor.x, missileCoor.y);
+        boss->decreaseHp();
+        something->setVisible(Visibility::Visible); // NOTE: need Boss disapear
+        if (boss->getHp() > 0) {
+            return CrashType::NoCrash;
+        }
+    }
     
-    mTotalScore += obstacle->getScore();
-    switch (obstacle->getType())
+    APP_DBG("Missile crash obstacle: missile {%d, %d}, something {%d, %d}\n", missileCoor.x, missileCoor.y, somethingCoor.x, somethingCoor.y);
+    
+    mTotalScore += something->getScore();
+    switch (obsType)
     {
     case ObstacleType::Boom:
         return CrashType::BoomCrash;
@@ -567,11 +597,13 @@ int FsCore::computeMissileCrash(FsObject* missile, FsObject* obstacle) {
         return CrashType::MineICrash;
     case ObstacleType::MineII:
         return CrashType::MineIICrash;
+    case ObstacleType::BossObstacle:
+        return CrashType::BossCrash;
     default:
         break;
     }
-    APP_DBG("Unknown obstacle type: %d\n", obstacle->getType());
-    return CrashType::NoCrash;
+    APP_DBG("Unknown something type: %d\n", something->getType());
+    return CrashType::Error;
 }
 
 int FsCore::setupMissile(FsObject* missile) {
@@ -703,31 +735,37 @@ CrashType FsCore::calculateCrash() {
      *  - Plane Missle
      *  - Boss Missle
      */
-    std::vector<FsObject*> planes;
-    std::vector<FsObject*> walls;
-    std::vector<FsObject*> missiles;
-    std::vector<FsObject*> obstacles;
+    std::vector<FsObject*> vPlane;
+    std::vector<FsObject*> vWall;
+    std::vector<FsObject*> vMissile;
+    std::vector<FsObject*> vObstacle;
+    std::vector<FsObject*> vMissleBoss;
+    std::vector<FsObject*> vBoss;
 
-    if (getObject(missiles, ObjectType::Missile) == 0 &&
-        getObject(obstacles, ObjectType::Obstacle) == 0) {
-        for (auto missile : missiles) {
-            for (auto obstacle : obstacles) {
-                computeMissileCrash(missile, obstacle);
+    if (getMissle(vMissile, MissileOwner::PlaneOwner) == 0 &&
+        (getObject(vObstacle, ObjectType::Obstacle) == 0 || getObject(vBoss, ObjectType::Boss) == 0)) {
+        for (auto missile : vMissile) {
+            for (auto obstacle : vObstacle) {
+                computeMissileCrash(missile, obstacle, MINE_ICON_WIDTH, MINE_ICON_HEIGHT);
+            }
+
+            for (auto boss : vBoss) {
+                computeMissileCrash(missile, boss, BOSS_WIDTH, BOSS_HEIGHT);
             }
         }
     }
 
-    if (getObject(planes, ObjectType::Plane) != 0) {
+    if (getObject(vPlane, ObjectType::Plane) != 0) {
         return CrashType::NoCrash;
     }
 
-    for (auto plane : planes) {
+    for (auto plane : vPlane) {
         if (plane->isVisible() != Visibility::Visible) {
             continue;
         }
 
-        if (getObject(walls, ObjectType::TunnelWall) == 0) {
-            for (auto wall : walls) {
+        if (getObject(vWall, ObjectType::TunnelWall) == 0) {
+            for (auto wall : vWall) {
                 if (wall->isVisible() != Visibility::Visible) {
                     continue;
                 }
@@ -743,13 +781,26 @@ CrashType FsCore::calculateCrash() {
             }
         }
 
-        if (getObject(obstacles, ObjectType::Obstacle) == 0) {
-            for (auto obstacle : obstacles) {
-                if (computePlaneObstacleCrash(plane, obstacle) == CrashType::PlaneCrash) {
+        if (getObject(vObstacle, ObjectType::Obstacle) == 0) {
+            for (auto obstacle : vObstacle) {
+                if (computePlaneCrash(plane, obstacle, MINE_ICON_WIDTH, MINE_ICON_HEIGHT) == CrashType::PlaneCrash) {
                     Coordinate planeCoor = plane->getCoordinate();
                     Coordinate obstacleCoor = obstacle->getCoordinate();
 
                     APP_DBG("Plane crash obstacle: plane {%d, %d}, obstacle {%d, %d}\n", planeCoor.x, planeCoor.y, obstacleCoor.x, obstacleCoor.y);
+                    beginPlaneCrash(plane);
+                    return CrashType::NoCrash;
+                }
+            }
+        }
+
+        if (getMissle(vMissleBoss, MissileOwner::BossOwner) == 0)  {
+            for (auto missleBoss : vMissleBoss) {
+                if (computePlaneCrash(plane, missleBoss, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT) == CrashType::PlaneCrash) {
+                    Coordinate planeCoor = plane->getCoordinate();
+                    Coordinate missleCoor= missleBoss->getCoordinate();
+
+                    APP_DBG("Plane crash missle: plane {%d, %d}, missle's boss {%d, %d}\n", planeCoor.x, planeCoor.y, missleCoor.x, missleCoor.y);
                     beginPlaneCrash(plane);
                     return CrashType::NoCrash;
                 }
@@ -874,35 +925,7 @@ int FsCore::getMissle(std::vector<FsObject*>& missles, MissileOwner owner) {
 }
 
 int FsCore::bossBattle() {
-    std::vector<FsObject*> misslesPlane;
-    std::vector<FsObject*> misslesBoss;
-
-    getMissle(misslesPlane, MissileOwner::PlaneOwner);
-    getMissle(misslesBoss, MissileOwner::BossOwner);
-
-    for (auto misslePlane : misslesPlane) {
-        Coordinate planeCoor = misslePlane->getCoordinate();
-        for (auto missleBoss : misslesBoss) {
-            Coordinate bossCoor = missleBoss->getCoordinate();
-            if (_rect_overlap(planeCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT,
-                                bossCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT)) {
-                APP_DBG("Missile crash missile: plane missile {%d, %d}, boss missile {%d, %d}\n", planeCoor.x, planeCoor.y, bossCoor.x, bossCoor.y);
-                
-                Coordinate explosionCoor = {
-                    static_cast<int16_t>(bossCoor.x - 1),
-                    static_cast<int16_t>(bossCoor.y - 1),
-                };
-                ObjectEntry explosionEntry;
-                explosionEntry.type = ObjectType::Explosion;
-                explosionEntry.obj = new FsExplosion(explosionCoor);
-                mListObject.push_back(explosionEntry);
-
-                misslePlane->setVisible(Visibility::Invisible);
-                missleBoss->setVisible(Visibility::Invisible);
-            }
-        }
-    }
-
+    // NOTE: BOSS auto generate missle 
     std::vector<FsObject*> bosses;
     if (getObject(bosses, ObjectType::Boss) == 0) {
         for (auto boss : bosses) {
@@ -914,16 +937,65 @@ int FsCore::bossBattle() {
             if (fsBoss == NULL) {
                 continue;
             }
-
+            if (fsBoss->getHp() <= 0) {
+                fsBoss->setDir(Direction::LeftToRight); // NOTE: disapear Boss
+                continue;
+            }
             Coordinate bossCoor = boss->getCoordinate();
             if (fsBoss->needMissile(&bossCoor) == true) {
                 ObjectEntry missileEntry;
                 missileEntry.type = ObjectType::Missile;
                 missileEntry.obj = new FsMissile(fsBoss->getMissileBitmap(), bossCoor, MissileOwner::BossOwner, Direction::RightToLeft);
+                if (missileEntry.obj == NULL) {
+                    APP_WRN("Create Missle for boss failed !!\n");
+                    continue;
+                }
                 mListObject.push_back(missileEntry);
-                APP_DBG("Boss launch missile: boss {%d, %d}, missile {%d, %d}\n", bossCoor.x, bossCoor.y, bossCoor.x, bossCoor.y);
+                // APP_DBG("Boss launch missile: boss {%d, %d}, missile {%d, %d}\n", bossCoor.x, bossCoor.y, bossCoor.x, bossCoor.y);
             }
         }
     }
+
+    std::vector<FsObject*> misslesPlane;
+    std::vector<FsObject*> misslesBoss;
+    if (getMissle(misslesPlane, MissileOwner::PlaneOwner) != 0 
+        || getMissle(misslesBoss, MissileOwner::BossOwner) != 0) {
+        // NOTE: Missle's Boss or Missle's Plane dont available
+        return 0;
+    }
+
+
+    for (auto misslePlane : misslesPlane) {
+        Coordinate misslePlaneCoor = misslePlane->getCoordinate();
+        for (auto missleBoss : misslesBoss) {
+            Coordinate missleBossCoor = missleBoss->getCoordinate();
+            if (_rect_overlap(misslePlaneCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT,
+                                missleBossCoor, MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT)) {
+                APP_DBG("Crash Missile: plane {%d, %d}, boss {%d, %d}\n", 
+                    misslePlaneCoor.x, misslePlaneCoor.y, missleBossCoor.x, missleBossCoor.y);
+                
+                Coordinate explosionCoor = {
+                    static_cast<int16_t>(missleBossCoor.x - 1),
+                    static_cast<int16_t>(missleBossCoor.y - 1),
+                };
+                ObjectEntry explosionEntry;
+                explosionEntry.type = ObjectType::Explosion;
+                explosionEntry.obj = new FsExplosion(explosionCoor);
+                if (explosionEntry.obj == NULL) {
+                    APP_WRN("Create Explosion failed !!\n");
+                    misslePlane->setVisible(Visibility::Invisible);
+                    missleBoss->setVisible(Visibility::Invisible);
+                    continue;
+                }
+                mListObject.push_back(explosionEntry);
+
+                misslePlane->setVisible(Visibility::Invisible);
+                missleBoss->setVisible(Visibility::Invisible);
+            }
+            
+        }
+    }
+
+    
     return 0;
 }

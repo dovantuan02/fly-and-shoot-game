@@ -28,6 +28,11 @@ void task_fs_boss_handle(ak_msg_t *msg) {
 			.bossBitmap = {boss_I, boss_II},
 		};
 		FsBoss *boss = new FsBoss(bossInfo);
+		if (boss == NULL){
+			APP_WRN("Create Boss failed !!\n");
+			timer_set(FS_GAME_TASK_BOSS_ID, FS_GAME_BOSS_APPEAR_SIG, AC_GAME_BOSS_RETRY_APPEAR, TIMER_ONE_SHOT);
+			break;
+		}
 		ObjectEntry objEntry;
 		objEntry.type =	ObjectType::Boss;
 		objEntry.obj =	boss;

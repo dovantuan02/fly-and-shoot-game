@@ -25,6 +25,10 @@ void task_fs_missle_handle(ak_msg_t *msg) {
 		case FS_GAME_MISSLE_PUSH_SIG: {
 			APP_DBG_SIG("FS_GAME_MISSLE_PUSH\n");
 			FsGame::FsMissile *missle = new FsGame::FsMissile(missle_icon);
+			if (missle == NULL) {
+				APP_WRN("Create Missle failed !!\n");
+				break;
+			}
 			FsGame::ObjectEntry objEntry;
 			objEntry.type =	FsGame::ObjectType::Missile;
 			objEntry.obj =	missle;

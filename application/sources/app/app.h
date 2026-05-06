@@ -180,6 +180,7 @@ extern "C"
 */
 #define AC_GAME_DISPLAY_ON_TICK 	(100)
 #define AC_GAME_OVER_INTERNAL			(2000)
+#define AC_GAME_BOSS_RETRY_APPEAR	(1000)
 	/* define signal */
 	enum
 	{

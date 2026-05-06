@@ -13,8 +13,8 @@ enum MissileType { Normal, Split };
 enum MissileOwner { PlaneOwner, BossOwner };
 enum ObjectType { Plane, Missile, Explosion, Obstacle, Boss, TunnelWall };
 enum Speed { Slow = 3, Medium, Fast };
-enum ObstacleType { None, Boom, MineI, MineII };
-enum CrashType { NoCrash, PlaneCrash, BoomCrash, MineICrash, MineIICrash }; // TODO: missle crash when boss appear
+enum ObstacleType { None, Boom, MineI, MineII, BossObstacle };
+enum CrashType { Error, NoCrash, PlaneCrash, BoomCrash, MineICrash, MineIICrash, BossCrash }; // TODO: missle crash when boss appear
 
 struct Coordinate {
     int16_t x;
@@ -113,7 +113,7 @@ class FsObstacle : public FsObject {
 
 class FsBoss : public FsObject {
    public:
-    enum BossLevel { First = 1, Easy, Normal, Hard, End };
+    enum BossLevel { Easy = 5, Normal, Hard };
     struct BossInfo {
         BossLevel level;
         uint8_t score;
@@ -127,6 +127,7 @@ class FsBoss : public FsObject {
     uint8_t mScore;
     uint8_t mHp;
     uint8_t mFrame;
+    BossLevel mLevel = BossLevel::Easy;
     bool mBossAppear;
     const unsigned char* mMissileBitmap;
     const unsigned char* mBossBitmap[FS_BOSS_MAX_BITMAP_FRAME];
@@ -134,6 +135,7 @@ class FsBoss : public FsObject {
    public:
     FsBoss(BossInfo bossInfo);
     ~FsBoss() override;
+    ObstacleType getType() const override;
     uint8_t getScore() const override;
     int getHp() const;
     int decreaseHp();
@@ -169,8 +171,8 @@ class FsCore {
 
    private:
     int computePlaneCrash(FsObject* plane, FsObject* wall);
-    int computePlaneObstacleCrash(FsObject* plane, FsObject* obstacle);
-    int computeMissileCrash(FsObject* missile, FsObject* obstacle);
+    int computePlaneCrash(FsObject* plane, FsObject* something, uint16_t w, uint16_t h);
+    int computeMissileCrash(FsObject* missile, FsObject* something, uint16_t w, uint16_t h);
     int setupMissile(FsObject* missile);
     CrashType calculateCrash();
     CrashType renderPlaneCrashBlink();

@@ -129,6 +129,8 @@ CONSOLE_OPTION +=			\
 		-DAPP_PRINT_EN		\
 		-DSYS_DBG_EN		\
 		-DAPP_DBG_EN		\
+		-DAPP_ERR_EN		\
+		-DAPP_WRN_EN		\
 		-DAPP_DBG_SIG_EN	\
 		-DAPP_DBG_TIME_EN	\
 

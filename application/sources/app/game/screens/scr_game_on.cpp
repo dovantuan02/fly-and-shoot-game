@@ -111,7 +111,7 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
         }
 
         case FS_GAME_DISPLAY_ON_TICK: {
-            APP_DBG_SIG("FS_GAME_DISPLAY_ON_TICK\n");
+            // APP_DBG_SIG("FS_GAME_DISPLAY_ON_TICK\n");
             if (g_fs_core == nullptr) {
                 APP_DBG("Screen is not ready\n");
             }
