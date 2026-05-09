@@ -13,6 +13,7 @@
 #include "scr_game_on.h"
 #include "scr_game_over.h"
 #include "fs_config.h"
+#include "fs_core.h"
 
 /***********************************************************
 * VIEW - GAME OVER
@@ -34,18 +35,20 @@ view_screen_t scr_game_over = {
 	.focus_item = 0,
 };
 
-// add score to table 
-static inline void fs_add_score(uint16_t fs_game_score) {
+extern FsGame::FsCore* g_fs_core;
+
+static inline void fs_add_score(uint16_t score) {
 	for (int i = FS_MAX_HISTORY - 1; i > 0; i--) {
 		fs_game_score_history[i] = fs_game_score_history[i - 1];
 	}
-	// fs_game_score_history[0] = fs_game_score; // TODO:
+	fs_game_score_history[0] = score;
 }
 
 // write table score to eeprom
 void fs_write_history_epprom() {
-	// fs_add_score(fs_game_score); // TODO:
-	
+	if (g_fs_core != NULL) {
+		fs_add_score(g_fs_core->getScore());
+	}
 	eeprom_write(EEPROM_HISTORY_ADDR,\
 				(uint8_t *)&fs_game_score_history,\
 				FS_MAX_HISTORY);
@@ -57,12 +60,15 @@ void fs_write_history_epprom() {
 
 // show score now
 void view_scr_fs_game_over() {
+	APP_DBG("Screen game over appear !\n");
 	view_render.setCursor(40, 10);
 	view_render.print("GAME OVER");
 	view_render.drawRoundRect(10, 25, 110, 18, 5, WHITE);
 	view_render.setCursor(20, 30);
 	view_render.print("YOUR SCORE : ");
-	// view_render.print(fs_game_score); //TODO:
+	if (g_fs_core != NULL) {
+		view_render.print(g_fs_core->getScore());
+	}
 	view_render.setCursor(0, 54);
 	view_render.print(" MENU         RE-PLAY");
 }
@@ -76,7 +82,7 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 		case SCREEN_ENTRY: {
 			APP_DBG_SIG("SCREEN_ENTRY_GAME_OVER\n");
 			// SAVE SCORE TO HISTORY
-			// fs_write_history_epprom(); // TODO:
+			// fs_write_history_epprom();
 			timer_set(AC_TASK_DISPLAY_ID,\
 						AC_DISPLAY_SHOW_IDLE,\
 						AC_DISPLAY_IDLE_INTERVAL,\

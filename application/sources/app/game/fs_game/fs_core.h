@@ -4,10 +4,13 @@
 #include <cstdint>
 #include <vector>
 
+// #define BLACK 0
+// #define WHITE 1
+
 namespace FsGame {
 
 enum GameLevel { Easy = 1, Standard , Challenge };
-enum Visibility { Visible, Invisible };
+enum Visibility { Visible, Invisible, Blink};
 enum Direction { LeftToRight, RightToLeft, UpToDown, DownToUp , RandomX, RandomY, Random, DirectionMax };
 enum MissileType { Normal, Split };
 enum MissileOwner { PlaneOwner, BossOwner };
@@ -15,7 +18,8 @@ enum ObjectType { Plane, Missile, Explosion, Obstacle, Boss, TunnelWall };
 enum Speed { Slow = 3, Medium, Fast };
 enum ObstacleType { None, Boom, MineI, MineII, BossObstacle };
 enum CrashType { Error, NoCrash, PlaneCrash, BoomCrash, MineICrash, MineIICrash, BossCrash }; // TODO: missle crash when boss appear
-
+enum ColorType { Black, White };
+enum LifeState { Die, Alive };
 struct Coordinate {
     int16_t x;
     int16_t y;
@@ -38,7 +42,10 @@ class FsObject {
    private:
     struct ObjectInfo mInfo;
     Speed mSpeed;
-
+    ColorType mColor;
+    uint8_t mFrame; // NOTE: use to Blink object
+    uint8_t mBlinkOut = 5 * 2;
+    LifeState mLifeState = Alive;
    protected:
     void setCoordinate(Coordinate coordinate);
 
@@ -49,8 +56,10 @@ class FsObject {
     Coordinate getCoordinate() const;
     int move();
     int move(Coordinate newCoordinate);
+    ColorType getColor() const;
+    uint8_t setColor(ColorType);
 
-    Visibility isVisible() const;
+    Visibility getVisible() const;
     void setVisible(Visibility);
     int setSpeed(Speed speed);
     Speed getSpeed() const;
@@ -62,15 +71,19 @@ class FsObject {
     virtual int render() { return 0; };
     virtual ObstacleType getType() const { return ObstacleType::None; }
     virtual uint8_t getScore() const { return 0; }
+    void setLifeState(LifeState);
+    LifeState getAlive() const;
+    uint8_t getBlinkCount() const;
 };
 
 class FsPlane : public FsObject {
-    uint8_t mFrame;
     GameLevel mLevel;
+    uint8_t mFrame;
    public:
     FsPlane(const unsigned char* bitmap, Coordinate firstCoordinate, GameLevel level = GameLevel::Easy);
     ~FsPlane() override = default;
-
+    void setDie();
+    int getDie() const;
     int render() override;
 };
 
@@ -161,13 +174,15 @@ class FsCore {
     typedef void (*RenderFunc)(int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h, uint16_t color);
 
    private:
+    const uint8_t mMinMissle = 4;
     RenderFunc mRenderFunc;
     std::vector<ObjectEntry> mListObject;
-    FsObject* mCrashedPlane;
-    uint8_t mPlaneCrashBlinkTick;
-    bool mPlaneCrashBlinking;
     uint16_t mTotalScore;
     bool mBossAppear;
+    bool mPlaneDie;
+    int mStepScoreBossApear;
+    uint8_t mMissle;
+    GameLevel mLevel;
 
    private:
     int computePlaneCrash(FsObject* plane, FsObject* wall);
@@ -175,13 +190,13 @@ class FsCore {
     int computeMissileCrash(FsObject* missile, FsObject* something, uint16_t w, uint16_t h);
     int setupMissile(FsObject* missile);
     CrashType calculateCrash();
-    CrashType renderPlaneCrashBlink();
-    void beginPlaneCrash(FsObject* plane);
     const char* getType(ObjectType);
 
-    int clearObstacle();
+    int setupBattle();
     int getMissle(std::vector<FsObject*>& missles, MissileOwner owner);
     int bossBattle();
+    CrashType planeCrash();
+    std::vector<ObjectEntry>::iterator deleteObject(std::vector<ObjectEntry>::iterator it);
 
    public:
     FsCore(RenderFunc mRenderFunc, GameLevel level = GameLevel::Easy);
@@ -191,6 +206,7 @@ class FsCore {
     CrashType render();
     int getScore() const;
     bool needBossAppear();
+    int getMisslePlane() const;
 };
 
 }  // namespace FsGame

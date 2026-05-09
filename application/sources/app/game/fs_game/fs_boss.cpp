@@ -21,9 +21,9 @@ void task_fs_boss_handle(ak_msg_t *msg) {
 		APP_DBG_SIG("FS_GAME_BOSS_APPEAR_SIG\n");
 		FsBoss::BossInfo bossInfo = {
 			.level = FsBoss::BossLevel::Easy,
-			.score = 10,
+			.score = FS_BOSS_MAX_SCORE,
 			.hp = 3,
-			.coordinate = {MAX_LCD_WIDTH, MAP_HEIGHT / 2 - BOSS_HEIGHT / 2},
+			.coordinate = {MAX_LCD_WIDTH, MAP_HEIGHT / 2 - BOSS_ICON_HEIGHT / 2},
 			.missileBitmap = missle_icon,
 			.bossBitmap = {boss_I, boss_II},
 		};

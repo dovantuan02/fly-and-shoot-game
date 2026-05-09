@@ -40,9 +40,7 @@ FsGame::FsCore* g_fs_core = nullptr;
 void fs_game_view_infor_fly(int score, int missleAvailable) {
     view_render.setCursor(0, 57);
     view_render.print("SCORE:");
-    if (g_fs_core != nullptr) {
-        view_render.print(g_fs_core->getScore());
-    }
+    view_render.print(g_fs_core->getScore());
 
     view_render.setCursor(55, 57);
     view_render.print(" TRIGGERS:");
@@ -51,18 +49,22 @@ void fs_game_view_infor_fly(int score, int missleAvailable) {
 
 void view_scr_fs_game_on() {
     if (g_fs_core != nullptr) {
-        if (g_fs_core->render() == FsGame::CrashType::PlaneCrash) {
+        FsGame::CrashType objCrash = g_fs_core->render();
+        if (objCrash == FsGame::CrashType::PlaneCrash) {
             APP_DBG("Plane crash, game over -> score: %d\n", g_fs_core->getScore());
             timer_remove_attr(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK);
             timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_PUSH_SIG);        
-            timer_set(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK, AC_GAME_OVER_INTERNAL, TIMER_ONE_SHOT);
+            task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK);
         }
-        int missleAvailable = 0; // TODO:
-        fs_game_view_infor_fly(g_fs_core->getScore(), missleAvailable);
+        else if (objCrash == FsGame::CrashType::BossCrash) {
+            // Continue game
+            task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_SETUP_SIG);
+        }
         if (g_fs_core->needBossAppear() == true) {
             APP_DBG("Boss appear, score: %d\n", g_fs_core->getScore());
             task_post_pure_msg(FS_GAME_TASK_BOSS_ID, FS_GAME_BOSS_APPEAR_SIG);
         }
+        fs_game_view_infor_fly(g_fs_core->getScore(), g_fs_core->getMisslePlane());
     }
 }
 
@@ -97,7 +99,10 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             }
             FsGame::ObjectEntry obj;
             memcpy(&obj, get_data_common_msg(msg), sizeof(FsGame::ObjectEntry));
-            g_fs_core->addObject(obj);
+            int ret = 0;
+            if ((ret = g_fs_core->addObject(obj)) != 0) {
+                APP_WRN("Game core add object failed -> ret=%d\n", ret);
+            }
             break;
         }
         case FS_GAME_DISPLAY_ON_CLEAR_OBJECT: {
