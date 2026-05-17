@@ -94,7 +94,7 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 			APP_DBG_SIG("FS_GAME_DISPLAY_OVER_DOWN_PRESSED\n");
 			fs_state_game = FS_GAME_OFF;
 			
-			// SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
+			SCREEN_TRAN(task_scr_fs_menu_handler, &scr_menu);
 			break;
 		}
 
