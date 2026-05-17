@@ -17,7 +17,7 @@ enum MissileOwner { PlaneOwner, BossOwner };
 enum ObjectType { Plane, Missile, Explosion, Obstacle, Boss, TunnelWall };
 enum Speed { Slow = 3, Medium, Fast };
 enum ObstacleType { None, Boom, MineI, MineII, BossObstacle };
-enum CrashType { Error, NoCrash, PlaneCrash, BoomCrash, MineICrash, MineIICrash, BossCrash }; // TODO: missle crash when boss appear
+enum CrashType { Error, NoCrash, PlaneCrash, BoomCrash, MineICrash, MineIICrash, BossCrash };
 enum ColorType { Black, White };
 enum LifeState { Die, Alive };
 struct Coordinate {

@@ -1,9 +1,7 @@
 #ifndef FS_CONFIG_H
 #define FS_CONFIG_H
 
-#include "stdio.h"
-#include <vector>
-
+#include <stdio.h>
 #include "ak.h"
 
 using namespace std;
@@ -18,6 +16,9 @@ using namespace std;
 
 #define MAX_LCD_WIDTH       (128)
 #define MAX_LCD_HEIGHT      (64)
+
+#define FS_COOR_Y_MAP_I     (0)
+#define FS_COOR_Y_MAP_II    (MAX_LCD_HEIGHT - 10)
 
 #define FS_MAX_HISTORY      (12)
 
@@ -43,7 +44,6 @@ typedef enum {
 
 typedef struct {
     bool fs_setting_sound = false;
-    uint8_t fs_setting_missle = 5;
     fs_game_mode_t fs_setting_game_mode = FS_GAME_MODE_EASY;
 } fs_game_setting_t;
 

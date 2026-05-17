@@ -36,6 +36,10 @@ view_screen_t scr_game_on = {
 
 FsGame::FsCore* g_fs_core = nullptr;
 
+static void fs_game_render_help(int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h, uint16_t color) {
+    view_render.drawBitmap(x, y, bitmap, w, h, color);
+}
+
 // show infor (score and missle available)
 void fs_game_view_infor_fly(int score, int missleAvailable) {
     view_render.setCursor(0, 57);
@@ -53,7 +57,7 @@ void view_scr_fs_game_on() {
         if (objCrash == FsGame::CrashType::PlaneCrash) {
             APP_DBG("Plane crash, game over -> score: %d\n", g_fs_core->getScore());
             timer_remove_attr(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK);
-            timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_PUSH_SIG);        
+            timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_PUSH_SIG);
             task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK);
         }
         else if (objCrash == FsGame::CrashType::BossCrash) {
@@ -61,8 +65,9 @@ void view_scr_fs_game_on() {
             task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_SETUP_SIG);
         }
         if (g_fs_core->needBossAppear() == true) {
-            APP_DBG("Boss appear, score: %d\n", g_fs_core->getScore());
-            task_post_pure_msg(FS_GAME_TASK_BOSS_ID, FS_GAME_BOSS_APPEAR_SIG);
+            int score = g_fs_core->getScore();
+            APP_DBG("Boss appear, score: %d\n", score);
+            task_post_common_msg(FS_GAME_TASK_BOSS_ID, FS_GAME_BOSS_APPEAR_SIG, (uint8_t*)&score, sizeof(int));
         }
         fs_game_view_infor_fly(g_fs_core->getScore(), g_fs_core->getMisslePlane());
     }
@@ -78,10 +83,7 @@ void task_scr_fs_game_on_handle(ak_msg_t* msg) {
             APP_DBG_SIG("SCREEN_ENTRY\n");
             if (g_fs_core == nullptr) {
                 APP_DBG("Create new screen\n");
-                g_fs_core = new FsGame::FsCore(
-                    [](int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h, uint16_t color) {
-                        view_render.drawBitmap(x, y, bitmap, w, h, color);
-                    });
+                g_fs_core = new FsGame::FsCore(fs_game_render_help, (FsGame::GameLevel)(fs_game_setting.fs_setting_game_mode - 1));
             }
             // set up and reset active object
             task_post_pure_msg(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_SETUP_SIG);

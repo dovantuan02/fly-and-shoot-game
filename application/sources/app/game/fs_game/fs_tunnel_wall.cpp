@@ -24,12 +24,18 @@ void task_fs_wall_handle(ak_msg_t *msg) {
 		case FS_GAME_WALL_SETUP_SIG: {
 			ObjectEntry firstWall;
 			firstWall.type = ObjectType::TunnelWall;
+			/** FIFO Map
+			 * 0 ________________ 128_______ _ _ _ _
+			 *  |                |
+			 * 	|      MAP I     | 		MAP II
+			 *  |________________|__________ _ _ _ _
+			 */
 			firstWall.obj = new FsTunnelWall(map_I, 0);
 			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ACTIVE_OBJECT, (uint8_t*)&firstWall, sizeof(ObjectEntry));
 
 			ObjectEntry secondWall;
 			secondWall.type = ObjectType::TunnelWall;
-			secondWall.obj = new FsTunnelWall(map_II, MAP_WIDTH);
+			secondWall.obj = new FsTunnelWall(map_II, MAX_LCD_WIDTH);
 			task_post_common_msg(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_ACTIVE_OBJECT, (uint8_t*)&secondWall, sizeof(ObjectEntry));
 			break;
 		}
