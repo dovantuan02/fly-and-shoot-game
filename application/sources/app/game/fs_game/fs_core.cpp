@@ -1,3 +1,4 @@
+#include <vector>
 #include "fs_config.h"
 
 #include "fs_core.h"
@@ -399,7 +400,9 @@ bool FsBoss::needMissile(Coordinate *missle) {
         return false;
     }
 
-    if (mFrame == mLevel) {
+    int delay = 10 - mLevel;
+    // NOTE: easy=5: slow, standar: normal, challenge: fast
+    if ((mFrame % delay) == 0) { // 5 4 3
         missle->x = getCoordinate().x;
         missle->y = getCoordinate().y + BOSS_ICON_HEIGHT / 2 - MISSLE_ICON_HEIGHT / 2;
         return true;
@@ -431,6 +434,12 @@ int FsBoss::render() {
         mBossAppear = true;
         setDir(RandomY);
     } else {
+        if (coor.y < FS_COOR_Y_MAP_I + 5) {
+            setDir(UpToDown);
+        }
+        else if (coor.y > FS_COOR_Y_MAP_II - BOSS_ICON_HEIGHT) {
+            setDir(DownToUp);
+        }
         move();
     }
     /**
@@ -467,14 +476,13 @@ FsTunnelWall::FsTunnelWall(const unsigned char* bitmap, int16_t xTop)
 }
 
 int FsTunnelWall::updateWall() {
-    Coordinate coordinate = getCoordinate();
-    coordinate.x -= getSpeed();
+    Coordinate coor = getCoordinate();
+    coor.x -= getSpeed();
 
-    if (coordinate.x <= -MAP_WIDTH) {
-        coordinate.x += MAP_WIDTH * 2;
+    if (coor.x <= -MAP_WIDTH) {
+        coor.x += MAP_WIDTH * 2;
     }
-
-    setCoordinate(coordinate);
+    setCoordinate(coor);
     return 0;
 }
 
@@ -544,7 +552,8 @@ int FsCore::addObject(ObjectEntry objectInfo) {
 }
 
 int FsCore::getMisslePlane() const {
-    return mMissle;
+    int max = mMinMissle + mLevel;// TODO: check 
+    return max - mMissle;
 }
 
 const char *FsCore::getType(ObjectType type) {

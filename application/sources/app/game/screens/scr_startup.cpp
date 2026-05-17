@@ -53,7 +53,6 @@ view_screen_t scr_startup = {
 
 void fs_default_setting() {
 	fs_game_setting.fs_setting_game_mode = FS_GAME_MODE_EASY;
-	fs_game_setting.fs_setting_missle = 5;
 	fs_game_setting.fs_setting_sound = true;
 }
 
@@ -89,6 +88,8 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
 			view_render.initialize();
 			view_render_display_on();
 			
+			// eeprom_erase(EEPROM_SETTING_ADDR, 8); // NOTE: if u need erase old data
+
 			// read all data from eeprom
 			if (eeprom_read(EEPROM_HISTORY_ADDR,(uint8_t *)&fs_game_score_history, FS_MAX_HISTORY) == EEPROM_DRIVER_OK) {
 				for (uint8_t i = 0; i < FS_MAX_HISTORY; i++) {
@@ -97,11 +98,9 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
 			}
 			if (eeprom_read(EEPROM_SETTING_ADDR,(uint8_t *)&fs_game_setting, sizeof(fs_game_setting)) == EEPROM_DRIVER_OK) {
 				APP_DBG("GAME SETTING MODE   :  %d\n", fs_game_setting.fs_setting_game_mode);
-				APP_DBG("GAME SETTING MISSLE :  %d\n", fs_game_setting.fs_setting_missle);
 				APP_DBG("GAME SETTING SOUND  :  %d\n", fs_game_setting.fs_setting_sound);
 
 				if (fs_game_setting.fs_setting_game_mode == 0 
-					&& fs_game_setting.fs_setting_missle == 0 
 					&& fs_game_setting.fs_setting_sound == 0) {
 					fs_default_setting();
 				}

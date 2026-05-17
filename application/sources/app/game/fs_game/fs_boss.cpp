@@ -11,6 +11,18 @@
 
 using namespace FsGame;
 
+static FsBoss::BossLevel fs_game_calculate_level(int score) {
+	if (score >= 30) {
+		return FsBoss::BossLevel::Hard;
+	}
+	else if (score >= 20) {
+		return FsBoss::BossLevel::Normal;
+	}
+	else {
+		return FsBoss::BossLevel::Easy;
+	}
+}
+
 void task_fs_boss_handle(ak_msg_t *msg) {
 	switch (msg->sig) {
 	case FS_GAME_BOSS_SETUP_SIG: {
@@ -19,10 +31,12 @@ void task_fs_boss_handle(ak_msg_t *msg) {
 	}
 	case FS_GAME_BOSS_APPEAR_SIG: {
 		APP_DBG_SIG("FS_GAME_BOSS_APPEAR_SIG\n");
+		int currScore;
+		memcpy(&currScore, get_data_common_msg(msg), sizeof(int));
 		FsBoss::BossInfo bossInfo = {
-			.level = FsBoss::BossLevel::Easy,
+			.level = fs_game_calculate_level(currScore),
 			.score = FS_BOSS_MAX_SCORE,
-			.hp = 3,
+			.hp = 10 + (currScore / 2),
 			.coordinate = {MAX_LCD_WIDTH, MAP_HEIGHT / 2 - BOSS_ICON_HEIGHT / 2},
 			.missileBitmap = missle_icon,
 			.bossBitmap = {boss_I, boss_II},
