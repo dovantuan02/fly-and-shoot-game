@@ -146,7 +146,6 @@ void fs_view_scr_menu_switch(fs_option_menu_t mode)
 		case FS_MENU_START: {
 			APP_DBG("GAME  FS_MENU_START\n");
 			fs_state_game = FS_GAME_ON;
-			fs_game_score = 0;
 			APP_DBG("fs_state_game : %d\n", fs_state_game);
 			SCREEN_TRAN(task_scr_fs_game_on_handle, &scr_game_on);
 			break;

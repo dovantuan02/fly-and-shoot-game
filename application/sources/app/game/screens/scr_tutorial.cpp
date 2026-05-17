@@ -30,12 +30,11 @@ view_screen_t scr_tutorial = {
 	.focus_item = 0,
 };
 
-// view tutorial 
 void view_scr_fs_tutorial()
 {
 	QRCode qrcode;
 	uint8_t qrcodeData[qrcode_getBufferSize(8)];
-	qrcode_initText(&qrcode, qrcodeData, 8, 0, "https://github.com/DoVanTuan2805/_fly-and-shoot-game");
+	qrcode_initText(&qrcode, qrcodeData, 8, 0, "https://github.com/dovantuan02/fly-and-shoot-game");
 
 	for (uint8_t y = 0; y < qrcode.size; y++) {
 		for (uint8_t x = 0; x < qrcode.size; x++) {

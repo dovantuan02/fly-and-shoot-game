@@ -12,11 +12,6 @@
 ***********************************************************/
 
 /*
-*   fs_game_score : VARIABLE GLOBAL SAVE SCORE NOW
-*/
-uint8_t fs_game_score = 0;
-
-/*
 *   fs_state_game : VARIABLE GLOBAL STATE GAME's MANEGERMENT
 */
 fs_game_state_t fs_state_game = FS_GAME_OFF;
@@ -56,9 +51,8 @@ view_screen_t scr_startup = {
 	.focus_item = 0,
 };
 
-void fs_init_setting() {
+void fs_default_setting() {
 	fs_game_setting.fs_setting_game_mode = FS_GAME_MODE_EASY;
-	fs_game_setting.fs_setting_missle = 5;
 	fs_game_setting.fs_setting_sound = true;
 }
 
@@ -94,33 +88,25 @@ void task_scr_fs_startup_handle(ak_msg_t *msg) {
 			view_render.initialize();
 			view_render_display_on();
 			
+			// eeprom_erase(EEPROM_SETTING_ADDR, 8); // NOTE: if u need erase old data
+
 			// read all data from eeprom
-			if (eeprom_read(EEPROM_HISTORY_ADDR,\
-							(uint8_t *)&fs_game_score_history,\
-							FS_MAX_HISTORY) == EEPROM_DRIVER_OK) {
+			if (eeprom_read(EEPROM_HISTORY_ADDR,(uint8_t *)&fs_game_score_history, FS_MAX_HISTORY) == EEPROM_DRIVER_OK) {
 				for (uint8_t i = 0; i < FS_MAX_HISTORY; i++) {
 					// APP_DBG("SCORE HISTORY [%d] :  %d\n", i, fs_game_score_history[i]);
 				}
 			}
-			if (eeprom_read(EEPROM_SETTING_ADDR,\
-							(uint8_t *)&fs_game_setting,\
-							sizeof(fs_game_setting)) == EEPROM_DRIVER_OK) {
+			if (eeprom_read(EEPROM_SETTING_ADDR,(uint8_t *)&fs_game_setting, sizeof(fs_game_setting)) == EEPROM_DRIVER_OK) {
 				APP_DBG("GAME SETTING MODE   :  %d\n", fs_game_setting.fs_setting_game_mode);
-				APP_DBG("GAME SETTING MISSLE :  %d\n", fs_game_setting.fs_setting_missle);
 				APP_DBG("GAME SETTING SOUND  :  %d\n", fs_game_setting.fs_setting_sound);
 
-				if (fs_game_setting.fs_setting_game_mode == 0 &&\
-					fs_game_setting.fs_setting_missle == 0 &&\
-					fs_game_setting.fs_setting_sound == 0) {
-
-					fs_init_setting();
+				if (fs_game_setting.fs_setting_game_mode == 0 
+					&& fs_game_setting.fs_setting_sound == 0) {
+					fs_default_setting();
 				}
 			}
 
-			timer_set(AC_TASK_DISPLAY_ID,\
-						AC_DISPLAY_SHOW_MENU,\
-						AC_DISPLAY_STARTUP_INTERVAL,\
-						TIMER_ONE_SHOT);
+			timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_MENU, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
 			break;
 		}
 

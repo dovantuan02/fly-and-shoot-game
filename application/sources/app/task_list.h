@@ -34,8 +34,8 @@ enum
 	FS_GAME_TASK_PLANE_ID,
 	FS_GAME_TASK_MISSLE_ID,
 	FS_GAME_TASK_WALL_ID,
-	FS_GAME_TASK_EXPLOSION_ID,
 	FS_GAME_TASK_OBSTACLE_ID,
+	FS_GAME_TASK_BOSS_ID,
 	FS_GAME_TASK_DISPLAY_GAME_OVER_ID,
 
 #if defined(TASK_ZIGBEE_EN)
@@ -119,8 +119,6 @@ extern void task_scr_fs_game_over_handle(ak_msg_t *);
 extern void task_fs_plane_hanle(ak_msg_t *);
 extern void task_fs_missle_handle(ak_msg_t *);
 extern void task_fs_wall_handle(ak_msg_t *);
-extern void task_fs_explosion_handle(ak_msg_t *);
-// extern void task_fs_mine_handle(ak_msg_t *);
-// extern void task_fs_bom_handle(ak_msg_t *);
 extern void task_fs_obstacle_handle(ak_msg_t *);
+extern void task_fs_boss_handle(ak_msg_t *);
 #endif //__TASK_LIST_H__

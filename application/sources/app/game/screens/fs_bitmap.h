@@ -30,4 +30,9 @@ extern const unsigned char mine_II_icon [] PROGMEM;
 extern const unsigned char map_I [] PROGMEM;
 extern const unsigned char map_II [] PROGMEM;
 
+#define BOSS_ICON_HEIGHT  13
+#define BOSS_ICON_WIDTH   14
+extern const unsigned char boss_I [] PROGMEM;
+extern const unsigned char boss_II [] PROGMEM;
+
 #endif  //FS_BITMAP_H
