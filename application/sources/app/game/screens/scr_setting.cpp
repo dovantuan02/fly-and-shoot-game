@@ -17,6 +17,7 @@
 typedef enum {
 	FS_SETTING_FISRT = 0,
 	FS_SETTING_GAME_MODE,
+	FS_SETTING_MAX_MISSLE,
 	FS_SETTING_STATE_SOUND,
 	FS_SETTING_EXIT,
 	FS_SETTING_END
@@ -26,7 +27,7 @@ typedef enum {
 #define FS_MAX_TITLE_SETTING    (4)
 
 fs_option_setting_t fs_option_setting = FS_SETTING_GAME_MODE;
-static const char *fs_arr_title_setting[FS_MAX_TITLE_SETTING] = {"GAME MODE: ", "SOUND    : ", "EXIT"};
+static const char *fs_arr_title_setting[FS_MAX_TITLE_SETTING] = {"GAME MODE: ", "MISSLE   : ", "SOUND    : ", "EXIT"};
 
 /***********************************************************
 * VIEW - MENU
@@ -87,6 +88,11 @@ static inline fs_game_mode_t fs_setting_switch_game_mode( fs_game_mode_t curr_se
 	}
 }
 
+static inline void fs_setting_change_missile() {
+	fs_game_setting.fs_setting_missle++;
+	fs_game_setting.fs_setting_missle = fs_game_setting.fs_setting_missle > 5 ? 1 : fs_game_setting.fs_setting_missle;
+}
+
 static inline void fs_setting_change_state_sound() {
 	fs_game_setting.fs_setting_sound = fs_game_setting.fs_setting_sound ^ 1;
 }
@@ -136,7 +142,8 @@ static void fs_view_setting() {
 				if (fs_game_setting.fs_setting_game_mode == FS_GAME_MODE_EASY) {
 					view_render.print("EASY");
 				} 
-				else if (fs_game_setting.fs_setting_game_mode == FS_GAME_MODE_NORMAL) {
+				else if (fs_game_setting.fs_setting_game_mode ==
+						FS_GAME_MODE_NORMAL) {
 					view_render.print("NORMAL");
 				} 
 				else {
@@ -144,7 +151,11 @@ static void fs_view_setting() {
 				}
 			} 
 			else if (i == 1) {
-				view_render.print(fs_game_setting.fs_setting_sound == false ? "OFF" : "ON");
+				view_render.print(fs_game_setting.fs_setting_missle);
+			} 
+			else if (i == 2) {
+				view_render.print(
+					fs_game_setting.fs_setting_sound == false ? "OFF" : "ON");
 			}
 		}
 	}
@@ -201,6 +212,9 @@ void task_scr_fs_setting_handle(ak_msg_t *msg) {
 
 			if (fs_option_setting == FS_SETTING_GAME_MODE) {
 				fs_game_setting.fs_setting_game_mode = fs_setting_switch_game_mode(fs_game_setting.fs_setting_game_mode);
+			} 
+			else if (fs_option_setting == FS_SETTING_MAX_MISSLE) {
+				fs_setting_change_missile();
 			} 
 			else if (fs_option_setting == FS_SETTING_STATE_SOUND) {
 				fs_setting_change_state_sound();

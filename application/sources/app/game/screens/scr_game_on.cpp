@@ -1,130 +1,198 @@
-#include "scr_game_on.h"
-
 #include <queue>
 
 #include "app.h"
 #include "app_dbg.h"
-#include "fs_bitmap.h"
-#include "fs_config.h"
-#include "fs_missile.h"
-#include "fs_core.h"
-#include "fs_obstacle.h"
-#include "fs_plane.h"
-#include "fs_tunnel_wall.h"
 #include "task_display.h"
 #include "task_list.h"
 #include "timer.h"
 
+#include "fs_explosion.h"
+#include "fs_missile.h"
+#include "fs_plane.h"
+#include "fs_tunnel_wall.h"
+#include "fs_obstacle.h"
+#include "fs_config.h"
+
+#include "scr_game_on.h"
+#include "fs_bitmap.h"
+
 /***********************************************************
- * VIEW - GAME ON
- ***********************************************************/
+* VARIABLE AND ARRAY BITMAP VIEW GAME ON
+***********************************************************/
+
+#define FS_NUM_MINE_ICON        (2)
+#define FS_NUM_WALL_ICON        (2)
+#define FS_NUM_EXPLOSION_ICON   (2)
+
+static const unsigned char *fs_arr_wall_icon[FS_NUM_WALL_ICON] = {
+	map_I, map_II
+};
+
+static const unsigned char *fs_arr_explosion_icon[FS_NUM_EXPLOSION_ICON] = {
+	explosion_I_icon, explosion_II_icon
+};
+
+/***********************************************************
+* VIEW - GAME ON
+***********************************************************/
 
 static void view_scr_fs_game_on();
 
-view_dynamic_t dyn_view_game_on = {{
-                                       .item_type = ITEM_TYPE_DYNAMIC,
-                                   },
-                                   view_scr_fs_game_on};
-
-view_screen_t scr_game_on = {
-    &dyn_view_game_on,
-    ITEM_NULL,
-    ITEM_NULL,
-
-    .focus_item = 0,
+view_dynamic_t dyn_view_game_on = {
+	{
+		.item_type = ITEM_TYPE_DYNAMIC,
+	},
+	view_scr_fs_game_on
 };
 
-FsGame::FsCore* g_fs_core = nullptr;
+view_screen_t scr_game_on = {
+	&dyn_view_game_on,
+	ITEM_NULL,
+	ITEM_NULL,
 
-static void fs_game_render_help(int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h, uint16_t color) {
-    view_render.drawBitmap(x, y, bitmap, w, h, color);
+	.focus_item = 0,
+};
+
+// show plane
+void fs_game_view_plane() {
+	if (fs_plane.visible == true)
+		view_render.drawBitmap(fs_plane.coordinate.x, fs_plane.coordinate.y, \
+								plane_icon, \
+								PLANE_ICON_WIDTH, PLANE_ICON_HEIGHT, \
+								WHITE);
+}
+
+// show all missile available
+void fs_game_view_missle() {
+	if (!fs_vec_missile.empty()) {
+		for (auto _missle : fs_vec_missile) {
+			if (_missle.visible == true) {
+				view_render.drawBitmap(_missle.coordinate.x, _missle.coordinate.y, \
+										missle_icon, \
+										MISSLE_ICON_WIDTH, MISSLE_ICON_HEIGHT, \
+										WHITE);
+			}
+		}
+	}
+}
+
+// show all wall
+void fs_game_view_wall() {
+	if (!fs_vec_wall.empty()) {
+		for (uint8_t i = 0; i < NUM_WALL; i++) {
+			view_render.drawBitmap(fs_vec_wall[i].x, fs_vec_wall[i].y, \
+									fs_arr_wall_icon[fs_vec_wall[i].ver], \
+									MAP_WIDTH, MAP_HEIGHT, \
+									WHITE);
+		}
+	}
+}
+
+// show all explosion available
+void fs_game_view_explosion() {
+	for (auto _explosion : fs_vec_explosion) {
+		view_render.drawBitmap(_explosion.coordinate.x, _explosion.coordinate.y,\
+							fs_arr_explosion_icon[_explosion.ver],\
+							EXPLOSION_ICON_WIDTH, EXPLOSION_ICON_HEIGHT,\
+							WHITE);
+	}
+}
+
+// show all obstacle
+void fs_game_view_obstacle() {
+	if (!fs_vec_obstacle.empty()) {
+		for(size_t i = 0; i < fs_vec_obstacle.size(); i++) {
+			view_render.drawBitmap(fs_vec_obstacle[i].coordinate.x, fs_vec_obstacle[i].coordinate.y,\
+									fs_vec_obstacle[i].bitmap,\
+									FS_OBSTACLE_WIDTH, FS_OBSTACLE_HEIGHT,
+									WHITE
+									);
+		}
+	}
 }
 
 // show infor (score and missle available)
-void fs_game_view_infor_fly(int score, int missleAvailable) {
-    view_render.setCursor(0, 57);
-    view_render.print("SCORE:");
-    view_render.print(g_fs_core->getScore());
+void fs_game_view_infor_fly() {
+	view_render.setCursor(0, 57);
+	view_render.print("SCORE:");
+	view_render.print(fs_game_score);
 
-    view_render.setCursor(55, 57);
-    view_render.print(" TRIGGERS:");
-    view_render.print(missleAvailable);
+	view_render.setCursor(55, 57);
+	view_render.print(" TRIGGERS:");
+	view_render.print(FS_MAX_MISSLE - fs_vec_missile.size());
 }
 
 void view_scr_fs_game_on() {
-    if (g_fs_core != nullptr) {
-        FsGame::CrashType objCrash = g_fs_core->render();
-        if (objCrash == FsGame::CrashType::PlaneCrash) {
-            APP_DBG("Plane crash, game over -> score: %d\n", g_fs_core->getScore());
-            timer_remove_attr(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK);
-            timer_remove_attr(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_PUSH_SIG);
-            task_post_pure_msg(FS_GAME_TASK_DISPLAY_GAME_OVER_ID, FS_GAME_DISPLAY_OVER_ON_TICK);
-        }
-        else if (objCrash == FsGame::CrashType::BossCrash) {
-            // Continue game
-            task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_SETUP_SIG);
-        }
-        if (g_fs_core->needBossAppear() == true) {
-            int score = g_fs_core->getScore();
-            APP_DBG("Boss appear, score: %d\n", score);
-            task_post_common_msg(FS_GAME_TASK_BOSS_ID, FS_GAME_BOSS_APPEAR_SIG, (uint8_t*)&score, sizeof(int));
-        }
-        fs_game_view_infor_fly(g_fs_core->getScore(), g_fs_core->getMisslePlane());
-    }
+	fs_game_view_wall();
+	fs_game_view_obstacle();
+	fs_game_view_explosion();
+	
+	fs_game_view_plane();
+	fs_game_view_missle();
+	fs_game_view_infor_fly();
 }
 
 /***********************************************************
- * SCREEN GAME ON HANDLE
- ***********************************************************/
+* SCREEN GAME ON HANDLE
+***********************************************************/
 
-void task_scr_fs_game_on_handle(ak_msg_t* msg) {
-    switch (msg->sig) {
-        case SCREEN_ENTRY: {
-            APP_DBG_SIG("SCREEN_ENTRY\n");
-            if (g_fs_core == nullptr) {
-                APP_DBG("Create new screen\n");
-                g_fs_core = new FsGame::FsCore(fs_game_render_help, (FsGame::GameLevel)(fs_game_setting.fs_setting_game_mode - 1));
-            }
-            // set up and reset active object
-            task_post_pure_msg(FS_GAME_TASK_PLANE_ID, FS_GAME_PLANE_SETUP_SIG);
-            task_post_pure_msg(FS_GAME_TASK_WALL_ID, FS_GAME_WALL_SETUP_SIG);
-            task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID, FS_GAME_OBSTACLE_SETUP_SIG);
+void task_scr_fs_game_on_handle(ak_msg_t *msg) {
+	switch (msg->sig) {
+		case SCREEN_ENTRY: {
+			APP_DBG_SIG("SCREEN_ENTRY\n");
+			// set up and reset active object
+			task_post_pure_msg(FS_GAME_TASK_PLANE_ID         , FS_GAME_PLANE_SETUP_SIG);
+			task_post_pure_msg(FS_GAME_TASK_WALL_ID          , FS_GAME_WALL_SETUP_SIG);
+			task_post_pure_msg(FS_GAME_TASK_EXPLOSION_ID     , FS_GAME_EXPLOSION_RESET_SIG);
+			task_post_pure_msg(FS_GAME_TASK_OBSTACLE_ID		 , FS_GAME_OBSTACLE_RESET_SIG);
+			
+			// set timer for display 
+			timer_set(AC_TASK_DISPLAY_ID,\
+					FS_GAME_DISPLAY_ON_TICK,\
+					AC_DISPLAY_GAME_ON_INTERVAL,\
+					TIMER_PERIODIC);
 
-            timer_set(AC_TASK_DISPLAY_ID, FS_GAME_DISPLAY_ON_TICK, AC_GAME_DISPLAY_ON_TICK, TIMER_PERIODIC);
-            break;
-        }
+			// set timer for move wall 150ms 
+			timer_set(FS_GAME_TASK_WALL_ID,\
+					FS_GAME_WALL_ON_TICK_SIG,\
+					AC_WALL_INTERVAL,\
+					TIMER_PERIODIC);
 
-        case FS_GAME_DISPLAY_ON_ACTIVE_OBJECT: {
-            if (g_fs_core == nullptr) {
-                APP_DBG("Screen is not ready\n");
-                break;
-            }
-            FsGame::ObjectEntry obj;
-            memcpy(&obj, get_data_common_msg(msg), sizeof(FsGame::ObjectEntry));
-            int ret = 0;
-            if ((ret = g_fs_core->addObject(obj)) != 0) {
-                APP_WRN("Game core add object failed -> ret=%d\n", ret);
-            }
-            break;
-        }
-        case FS_GAME_DISPLAY_ON_CLEAR_OBJECT: {
-            APP_DBG_SIG("FS_GAME_DISPLAY_ON_CLEAR_OBJECT\n");
-            if (g_fs_core != nullptr) {
-                APP_DBG("Clear screen\n");
-                delete g_fs_core;
-                g_fs_core = nullptr;
-            }
-            break;
-        }
+			// set timer for move explosion 150ms 
+			timer_set(FS_GAME_TASK_EXPLOSION_ID,\
+					FS_GAME_EXPLOSION_ON_TICK_SIG,\
+					AC_EXPLOSION_INTERVAL,\
+					TIMER_PERIODIC);
 
-        case FS_GAME_DISPLAY_ON_TICK: {
-            // APP_DBG_SIG("FS_GAME_DISPLAY_ON_TICK\n");
-            if (g_fs_core == nullptr) {
-                APP_DBG("Screen is not ready\n");
-            }
-            break;
-        }
-        default:
-            break;
-    }
+			// set timer for move plane 100ms 
+			timer_set(FS_GAME_TASK_PLANE_ID,\
+					FS_GAME_PLANE_ON_TICK_SIG,\
+					AC_PLANE_INTERVAL,\
+					TIMER_PERIODIC);
+			
+			// set timer add obstacle
+			timer_set(FS_GAME_TASK_OBSTACLE_ID,\
+					FS_GAME_OBSTACLE_PUSH_SIG,\
+					AC_OBSTACLE_ADD_INTERNAL,\
+					TIMER_PERIODIC);
+			
+			// set timer move obstacle
+			timer_set(FS_GAME_TASK_OBSTACLE_ID,\
+					FS_GAME_OBSTACLE_ON_TICK_SIG,\
+					AC_OBSTACLE_INTERVAL,\
+					TIMER_PERIODIC);
+			break;
+		}
+
+		case FS_GAME_DISPLAY_ON_TICK: {  
+			// POST SIGNAL CHECK ALL CRASH
+			task_post_pure_msg(FS_GAME_TASK_PLANE_ID    , FS_GAME_PLANE_CRASH_SIG);
+			task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_CRASH_SIG);
+			task_post_pure_msg(FS_GAME_TASK_MISSLE_ID   , FS_GAME_MISSLE_ON_TICK_SIG);
+			break;
+		}
+
+		default:
+			break;
+	}
 }

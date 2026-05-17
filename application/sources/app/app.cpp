@@ -154,7 +154,7 @@ int main_app() {
     button_enable(&btn_down);
 
     /* siren init */
-    // BUZZER_Init(); // TODO:
+    BUZZER_Init();
     // BUZZER_Disable();
     // BUZZER_PlayTones(tones_startup);
 

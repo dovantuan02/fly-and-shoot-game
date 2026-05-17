@@ -1,7 +1,9 @@
 #ifndef FS_CONFIG_H
 #define FS_CONFIG_H
 
-#include <stdio.h>
+#include "stdio.h"
+#include <vector>
+
 #include "ak.h"
 
 using namespace std;
@@ -14,16 +16,10 @@ using namespace std;
 #define FS_ROUND_RECT_X     (5)
 #define FS_ROUND_RECT_Y     (6)
 
-#define MAX_LCD_WIDTH       (128)
+#define MAX_LCD_WDITH       (128)
 #define MAX_LCD_HEIGHT      (64)
 
-#define FS_COOR_Y_MAP_I     (0)
-#define FS_COOR_Y_MAP_II    (MAX_LCD_HEIGHT - 10)
-
 #define FS_MAX_HISTORY      (12)
-
-#define FS_BOSS_MAX_BITMAP_FRAME    (2)
-#define FS_BOSS_MAX_SCORE           (5)
 
 typedef enum 
 {
@@ -43,12 +39,19 @@ typedef enum {
 #define FS_GAME_MODE_OPTION_MAX     (FS_GAME_MODE_END - FS_GAME_MODE_FISRT -1)
 
 typedef struct {
+    int8_t x;
+    int8_t y;
+} fs_game_coordinate_t;
+
+typedef struct {
     bool fs_setting_sound = false;
+    uint8_t fs_setting_missle = 5;
     fs_game_mode_t fs_setting_game_mode = FS_GAME_MODE_EASY;
 } fs_game_setting_t;
 
 extern fs_game_state_t fs_state_game;
 extern fs_game_setting_t fs_game_setting;
+extern uint8_t fs_game_score;
 extern uint16_t fs_game_score_history[FS_MAX_HISTORY];
 
 #endif  //FS_CONFIG_H
