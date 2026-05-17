@@ -49,13 +49,8 @@ void fs_write_history_epprom() {
 	if (g_fs_core != NULL) {
 		fs_add_score(g_fs_core->getScore());
 	}
-	eeprom_write(EEPROM_HISTORY_ADDR,\
-				(uint8_t *)&fs_game_score_history,\
-				FS_MAX_HISTORY);
-
-	eeprom_read(EEPROM_HISTORY_ADDR,\
-				(uint8_t *)&fs_game_score_history,\
-				FS_MAX_HISTORY);
+	eeprom_write(EEPROM_HISTORY_ADDR,(uint8_t *)&fs_game_score_history,FS_MAX_HISTORY);
+	eeprom_read(EEPROM_HISTORY_ADDR,(uint8_t *)&fs_game_score_history,FS_MAX_HISTORY);
 }
 
 // show score now
@@ -82,7 +77,7 @@ void task_scr_fs_game_over_handle(ak_msg_t *msg) {
 		case SCREEN_ENTRY: {
 			APP_DBG_SIG("SCREEN_ENTRY_GAME_OVER\n");
 			// SAVE SCORE TO HISTORY
-			// fs_write_history_epprom();
+			fs_write_history_epprom();
 			timer_set(AC_TASK_DISPLAY_ID,\
 						AC_DISPLAY_SHOW_IDLE,\
 						AC_DISPLAY_IDLE_INTERVAL,\

@@ -247,7 +247,9 @@ int FsPlane::render() {
     return 0;
 
 MOVE:
-    move();
+    if (move() != 0) {
+        setDie();
+    }
     ++mFrame;
     return 0;
 }
@@ -536,7 +538,7 @@ int FsCore::addObject(ObjectEntry objectInfo) {
         mBossAppear = true;
     } else if (objectInfo.type == ObjectType::Missile) {
         int max = mMinMissle + mLevel; // TODO: check 
-        if (mMissle > max){
+        if (mMissle >= max){
             APP_WRN("Missle [%d] is out range level [%d]\n", mMissle, mLevel);
             delete objectInfo.obj;
             objectInfo.obj = NULL;
