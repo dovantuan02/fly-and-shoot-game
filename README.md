@@ -13,7 +13,7 @@
 # FLY AND SHOOT Game trên AK-Embedded Base Kit
 
 <center>
-<img alt="FLY AND SHOOT BANNER" src="resource/images/banner_game.png" />
+<img alt="FLY AND SHOOT BANNER" src="resource/images/banner_game_800x800.png" />
 </center>
 
 <hr>
@@ -24,7 +24,7 @@
 
 Điểm nổi bật của Fly and Shoot trong dòng game AK:
 
-- **Bắn đạn phá vật cản:** Khác với các game AK chỉ né tránh, Fly and Shoot cho phép tàu bay bắn đạn để tiêu diệt quặng, bom và ghi điểm — tạo lối chơi chủ động.
+- **Bắn đạn phá vật cản:** Khác với các game AK chỉ né tránh, Fly and Shoot cho phép tàu bay bắn đạn để tiêu diệt quặng, bom và ghi điểm tạo lối chơi chủ động.
 - **Đạn dược có giới hạn:** Số đạn tối đa (1-5 viên) cấu hình được trong màn hình SETTING, buộc người chơi tính toán thời điểm bắn.
 - **Cơ chế Event-Driven đầy đủ:** Toàn bộ game (7 task, nhiều signal/timer) xây dựng trên nền tảng Task & Signal, phản ứng theo sự kiện một cách tự nhiên.
 - **Độ khó:** Chọn EASY, NORMAL, HARD trong cài đặt để tăng tốc độ và mật độ vật cản.
