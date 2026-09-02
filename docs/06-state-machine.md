@@ -1,6 +1,6 @@
 # VI. State-machine các màn hình
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)
 
 ![STATE MACHINE SCREENS](../resource/images/state_machine_screen.png)
 
@@ -41,4 +41,4 @@ Các màn hình cụ thể trong game:
 
 Code các màn hình nằm trong folder `application/sources/app/game/screens/`.
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)

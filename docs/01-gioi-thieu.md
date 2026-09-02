@@ -1,6 +1,6 @@
 # I. Giới thiệu
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)
 
 ## 1.1. Giới thiệu sơ lược về phần cứng
 
@@ -55,4 +55,4 @@ Người chơi nhấn nút [MODE] để bắn đạn. Khi đạn chạm trúng q
 
 Điểm được lưu khi trò chơi kết thúc. Khi game over, nhấn [MODE] để chơi tiếp, nhấn [DOWN] để quay về menu.
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)

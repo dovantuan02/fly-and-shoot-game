@@ -1,6 +1,6 @@
 # III. Chi tiết code các đối tượng trong game
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)
 
 ## 3.1. Tàu bay (Plane)
 
@@ -383,4 +383,4 @@ static inline void fs_game_wall_reset() {
 }
 ```
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)

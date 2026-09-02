@@ -1,6 +1,6 @@
 # II. Thiết kế các Task, Signal trong game
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)
 
 ## 2.1. Event-Driven hoạt động như thế nào?
 
@@ -106,4 +106,4 @@ Như hình trên, game chia làm 3 phần chính:
 
 Vì vậy, các đối tượng của game cũng chia làm 3 phần chính.
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)

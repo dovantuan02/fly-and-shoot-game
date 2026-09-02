@@ -1,6 +1,6 @@
 # V. Âm thanh của game
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)
 
 Âm thanh tạo sự sinh động khi chơi. Sử dụng [Online Tone Generator](https://www.szynalski.com/tone-generator/) để tạo code của các âm thanh.
 
@@ -28,4 +28,4 @@ static const Tone_TypeDef tones_missle_push[] =
     - 7500 là tần số phát xung cho buzzer.
     - 8 (ms) là thời gian phát xung cho buzzer.
 
-[⬅ Quay lại README](../README.md)
+[Quay lại README](../README.md)
